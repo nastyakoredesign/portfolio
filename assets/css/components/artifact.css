@@ -1,11 +1,4 @@
-/* ==========================================================================
-   artifact.css — артефакт у розкритому рядку: кадр + підпис
-   Figma: Artifact (81:33) з Media/artifact (81:34). Process, далі «Logic from specs».
-   Без лайтбокса у проході 1 (spec: клік → повний розмір — окремо).
-   HTML: <figure class="artifact"> з .artifact__media (заглушка або <img>) і <figcaption>.
-   ========================================================================== */
 
-/* Auto Layout vertical: кадр → підпис, gap 8 */
 .artifact {
   display: flex;
   flex-direction: column;
@@ -13,8 +6,6 @@
   margin: 0;
 }
 
-/* Кадр у Figma 576 × 320 (Mobile 326 × 200) і росте пропорційно: aspect-ratio, без висоти.
-   --size-process-media лишається дзеркалом Figma. Радіус: Desktop radius/control, Mobile radius/media */
 .artifact__media {
   display: flex;
   align-items: center;
@@ -35,7 +26,6 @@
   object-fit: cover;
 }
 
-/* body/base, text-secondary, ≤ 20 слів */
 .artifact__caption {
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);

@@ -1,37 +1,24 @@
-/* ==========================================================================
-   hero.css — перший екран Головної
-   Figma: Hero у «Home — Desktop 1440» (151:5) і «Home — Mobile 390» (66:174),
-   фінальний стан — 148:133. Spec: docs/specs/hero-v2-spec.md
-   Курсор, тег курсора й рух інших частин — в окремих файлах (hero-cursor, cursor-tag, scroll-cue).
-   ========================================================================== */
 
-/* ---------- Hero: Auto Layout vertical на весь перший екран ----------
-   Висота = екран мінус хедер, тож скрол-підказка стоїть рівно на нижньому краї. */
 .hero {
   position: relative;
   display: flex;
   flex-direction: column;
   min-height: calc(100svh - var(--site-header-height));
-  padding-bottom: 40px; /* check:ignore — з Figma (151:5), токена 40 немає */
+  padding-bottom: 40px; /* check:ignore */
   background: var(--color-accent-tint);
 }
 
-/* ---------- Фон: колонки-лінії сітки й лінійки (декоративний шар) ----------
-   Інтро фону (spec 4.1, ~1,1 с): колонки промальовуються, лінійки виїжджають із країв.
-   Колонки — спільний components/column-grid.css (колір лінії — змінна).
-   На Desktop вони починаються під верхньою лінійкою (y 20, Figma 151:7),
-   лінійки — components/rulers.css. На Mobile лінійок і відступу немає. */
 .hero__bg {
   --grid-line-color: color-mix(in srgb, var(--color-accent) 16%, transparent);
   position: absolute;
   inset: 0;
-  overflow: hidden; /* лінійки в інтро виїжджають з-під хедера й зліва, не накладаючись на хедер */
+  overflow: hidden;
   pointer-events: none;
 }
 
 @media (width >= 768px) {
   .hero {
-    --ruler-size: 20px; /* check:ignore — товщина лінійки з Figma (151:8), токена немає */
+    --ruler-size: 20px; /* check:ignore */
   }
 
   .hero__bg {
@@ -39,8 +26,6 @@
   }
 }
 
-/* ---------- Код у куті (Figma 151:23): лише Desktop від 1024 ----------
-   На 768–1023 він уже дотикається до скрол-підказки, тому ховаємо. */
 .hero__code {
   display: none;
 }
@@ -49,17 +34,16 @@
   .hero__code {
     display: block;
     position: absolute;
-    right: 40px;  /* check:ignore — з Figma (151:23), токена 40 немає */
-    bottom: 60px; /* check:ignore — з Figma (151:23) */
+    right: 40px;  /* check:ignore */
+    bottom: 60px; /* check:ignore */
     color: color-mix(in srgb, var(--color-text-secondary) 90%, transparent);
-    font-size: var(--font-size-caption); /* 12, JetBrains Mono */
+    font-size: var(--font-size-caption);
     line-height: var(--line-height-caption);
   }
 }
 
-/* ---------- Вміст: Hero/Content — стек по центру, gap 24 ---------- */
 .hero__content {
-  position: relative; /* над фоном */
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -69,12 +53,11 @@
   text-align: center;
 }
 
-/* ---------- Бейдж «Open to new roles» — Figma: Badge/Availability ---------- */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
-  padding: 6px var(--space-16) 6px 14px; /* check:ignore — з Figma (Badge/Availability), токенів 6 і 14 немає */
+  padding: 6px var(--space-16) 6px 14px; /* check:ignore */
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
   background: var(--color-bg);
@@ -90,10 +73,6 @@
   background: var(--color-status-available);
 }
 
-/* Пульс-ореол точки (spec 1): та сама точка, scale 1 → 2.4, opacity .4 → 0.
-   Рішення Насті 11.11 (WCAG 2.2.2): стартує після інтро фону й ротації ролі
-   (data-motion на .hero ставить hero-role.js), 3 цикли ≈ 5 с і стоп.
-   Знову — на hover, після повернення до верху сторінки (motion-replay.js). */
 .badge__dot::after {
   content: "";
   position: absolute;
@@ -107,23 +86,13 @@
   animation: badge-pulse var(--duration-pulse) var(--ease-out) 3 forwards;
 }
 
-/* @keyframes badge-pulse — у base.css: той самий пульс у пігулці 404 і «Кейсу у роботі» (status-page.css) */
 
-/* ---------- Заголовок: роль у рамці Selection ----------
-   Розмір ролі задаємо всьому h1, щоб висота рядка дорівнювала висоті ролі.
-   clamp(): не менше 40 px, 11.2 % ширини екрана, не більше токена display
-   (104 на Desktop, 44 на Mobile). Так «Product designer» (найширша роль) з рамкою влазить
-   і на 360 px, і на 768 px, де на 104 px було б задовго. */
 .hero__title {
   font-size: clamp(2.5rem, 11.2vw, var(--font-size-display));
   line-height: var(--line-height-display);
   letter-spacing: var(--letter-spacing-tight);
 }
 
-/* Відступи рамки від тексту: 16 по горизонталі, 4 по вертикалі.
-   Ширину (на час ротації) ставить hero-role.js явним px — рамка Selection
-   їде за нею transition-ом; слово всередині по центру (flex). Після ротації
-   ширина знову від слова (Hug). */
 .hero__role {
   --selection-inset-x: var(--space-16);
   --selection-inset-y: var(--space-4);
@@ -134,16 +103,12 @@
   transition: width var(--duration-slow) var(--ease-out);
 }
 
-/* Зона наведення = вся рамка (з відступами 16 / 4), а не лише текст:
-   сама рамка Selection має pointer-events: none. Перезапуск ротації — hero-role.js */
 .hero__role::before {
   content: "";
   position: absolute;
   inset: calc(-1 * var(--selection-inset-y)) calc(-1 * var(--selection-inset-x));
 }
 
-/* Слово ролі: старе йде вгору й зникає (exit), нове заїжджає знизу (enter).
-   Стани ставить hero-role.js атрибутом data-phase; без нього слово просто стоїть. */
 .hero__role-text {
   display: inline-block;
   transition:
@@ -158,28 +123,22 @@
   transition-timing-function: var(--ease-in);
 }
 
-/* Стартова поза нового слова: знизу й невидиме, без переходу */
 .hero__role-text[data-phase="pre-in"] {
   opacity: 0;
   transform: translateY(var(--space-8));
   transition: none;
 }
 
-/* Невидима копія слова для вимірювання ширини наступного слова */
 .hero__role-text--probe {
   position: absolute;
   visibility: hidden;
 }
 
-/* Друге слово — акцентом */
 .hero__role em {
   color: var(--color-accent);
   font-style: normal;
 }
 
-/* ---------- Lead і місто ----------
-   balance ділить lead на рівні рядки (у Figma на Desktop — два рядки,
-   а ширина 882 px не має токена). */
 .hero__lead {
   font-size: var(--font-size-lead);
   line-height: var(--line-height-lead);
@@ -190,48 +149,35 @@
   color: var(--color-text-secondary);
 }
 
-/* ---------- Скрол-підказка: текст + коло зі стрілкою → #work ---------- */
 .scroll-cue {
-  position: relative; /* над фоном */
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   align-self: center;
   gap: var(--space-12);
   color: var(--color-accent-active);
-  font-size: var(--font-size-ui); /* стиль ui/label: 16 / 130 %, Medium (Figma 362:657, 14.10) */
+  font-size: var(--font-size-ui);
   font-weight: 500;
   line-height: var(--line-height-ui);
   text-decoration: none;
 }
 
-/* Коло інвертоване (16.10, Настя): у спокої accent — кличе до наступної дії,
-   на hover і pressed — біле без обводки. Figma: Scroll cue 362:657, розкадровка 367:3054. */
 .scroll-cue__circle {
   display: grid;
   place-items: center;
-  width: 48px;  /* з Figma (Circle 48), токена немає */
+  width: 48px;
   height: 48px;
   border: 1px solid var(--color-accent);
   border-radius: 50%;
   background: var(--color-accent);
   color: var(--color-on-accent);
-  /* Колір повертається за 280 ms (Figma 367:3054, «out») */
   transition:
-    background-color 280ms var(--ease-out), /* check:ignore — тривалість з Figma 367:3054 */
+    background-color 280ms var(--ease-out), /* check:ignore */
     border-color 280ms var(--ease-out),     /* check:ignore */
     color 280ms var(--ease-out);            /* check:ignore */
 }
 
-/* ---------- Hover «слизняк» (Figma 367:3054) ----------
-   Hover (лише з курсором): коло з'їжджає на 12 px вниз і тягнеться, як крапля
-   (розтяг у русі, стиск при посадці), біліє без обводки, стрілка accent — 320 ms.
-   Курсор пішов: коло так само пружно повертається з невеликим перельотом угору — 280 ms.
-   Стрілка не деформується: її масштаб — обернений до масштабу кола.
-   «Out» теж потребує @keyframes, який не можна повісити на «не :hover», бо він
-   заграв би при завантаженні. Тож scroll-cue.js ставить data-leaving на pointerleave.
-   Без JS: коло просто біліє й стоїть знизу, без пружності.
-   Колір — переходом (transition), ключові кадри — лише рух. */
 .scroll-cue__circle svg {
   display: block;
 }
@@ -241,7 +187,7 @@
     border-color: transparent;
     background: var(--color-bg);
     color: var(--color-accent);
-    transform: translateY(var(--space-12)); /* кінцева поза, якщо анімацію вимкнено */
+    transform: translateY(var(--space-12));
     animation: scroll-cue-in 320ms var(--ease-out) forwards; /* check:ignore */
     transition-duration: 320ms; /* check:ignore */
   }
@@ -259,13 +205,12 @@
   animation: scroll-cue-arrow-out 280ms var(--ease-out); /* check:ignore */
 }
 
-/* Ключові кадри руху з Figma 367:3054: зсув по Y і розтяг (колір — переходом) */
 @keyframes scroll-cue-in {
   0% { transform: translateY(0) scale(1, 1); }
-  21.9% { transform: translateY(8px) scale(0.875, 1.208); }    /* 70 ms: відривається */
-  46.9% { transform: translateY(17px) scale(0.792, 1.292); }   /* 150 ms: розтяг у русі */
-  71.9% { transform: translateY(15px) scale(1.125, 0.875); }   /* 230 ms: посадка, стиск */
-  100% { transform: translateY(12px) scale(1, 1); }            /* 320 ms */
+  21.9% { transform: translateY(8px) scale(0.875, 1.208); }
+  46.9% { transform: translateY(17px) scale(0.792, 1.292); }
+  71.9% { transform: translateY(15px) scale(1.125, 0.875); }
+  100% { transform: translateY(12px) scale(1, 1); }
 }
 
 @keyframes scroll-cue-arrow-in {
@@ -276,9 +221,9 @@
 
 @keyframes scroll-cue-out {
   0% { transform: translateY(12px) scale(1, 1); }
-  28.6% { transform: translateY(2px) scale(0.833, 1.25); }     /* 80 ms: тягнеться вгору */
-  60.7% { transform: translateY(-4px) scale(0.958, 1.083); }   /* 170 ms: переліт угору */
-  100% { transform: translateY(0) scale(1, 1); }               /* 280 ms: спокій */
+  28.6% { transform: translateY(2px) scale(0.833, 1.25); }
+  60.7% { transform: translateY(-4px) scale(0.958, 1.083); }
+  100% { transform: translateY(0) scale(1, 1); }
 }
 
 @keyframes scroll-cue-arrow-out {
@@ -286,24 +231,18 @@
   60.7% { transform: scale(1.043, 0.923); }
 }
 
-/* ---------- Bob кола (Figma «Circle 48 (bob ×3, then still)») ----------
-   translateY 0 → 6 → 0, 1,2 с ease-in-out. Рішення Насті 11.11 (WCAG 2.2.2): 4 цикли ≈ 5 с
-   і стоп, разом із пульсом бейджа. Старт після ротації (data-motion на .hero).
-   :where() знижує специфічність, тож hover «слизняка» на час наведення перекриває bob,
-   а після нього bob грає знову ~5 с. Focus і повернення до верху — motion-replay.js. */
 :where(.hero[data-motion="settled"]) .scroll-cue__circle {
   animation: scroll-cue-bob var(--duration-bob) var(--ease-in-out) 4 forwards;
 }
 
 @keyframes scroll-cue-bob {
   50% {
-    transform: translateY(6px); /* check:ignore — з spec 5, токена 6 немає */
+    transform: translateY(6px); /* check:ignore */
   }
 }
 
-/* Focus: кільце 2 px навколо кола (6 px від краю), а не навколо всього посилання */
 .scroll-cue:focus-visible {
-  outline-color: transparent; /* для Windows High Contrast */
+  outline-color: transparent;
 }
 
 .scroll-cue:focus-visible .scroll-cue__circle {
@@ -311,9 +250,6 @@
   outline-offset: var(--space-4);
 }
 
-/* Pressed: як hover (біле без обводки, стрілка темніша accent-active), коло стиснуте
-   1.125 × 0.875 від низу (Figma 54 × 42 при 48 × 48; низ лишається на 12 px нижче спокою).
-   Перекриває анімацію hover; стрілка лишається недеформованою. */
 .scroll-cue:active .scroll-cue__circle {
   border-color: transparent;
   background: var(--color-bg);
@@ -328,31 +264,26 @@
   animation: none;
 }
 
-/* ---------- Мод Mobile (≤ 767 px) ---------- */
 @media (width < 768px) {
   .hero {
     padding-bottom: var(--space-32);
   }
 
-  /* Бейдж менший, щоб не змагався з роллю (Figma 66:177, 07.10): стиль ui/caption */
   .badge {
-    padding: var(--space-4) 14px var(--space-4) var(--space-12); /* check:ignore — 14 з Figma, токена немає */
+    padding: var(--space-4) 14px var(--space-4) var(--space-12); /* check:ignore */
     font-size: var(--font-size-caption);
     line-height: var(--line-height-caption);
   }
 
-  /* Точка 6×6 (Figma 151:47), токена 6 немає */
   .badge__dot {
     width: 6px;  /* check:ignore */
     height: 6px; /* check:ignore */
   }
 
-  /* На Mobile lead переноситься звичайно, як у Figma (4 рядки) */
   .hero__lead {
     text-wrap: pretty;
   }
 
-  /* Рамка ближче до тексту: 8 по горизонталі */
   .hero__role {
     --selection-inset-x: var(--space-8);
   }

@@ -1,15 +1,4 @@
-/* ==========================================================================
-   input-field.css — превʼю компонента Input field продукту (Figma: 854:85260 / 440:17167)
-   Це UI клієнта, а не сайту: кольори й розміри — з hero-flow-tokens.css (мод Centology),
-   шрифт Akkurat у Figma → Inter (як у hero-flow). Декор: aria-hidden на всій обгортці в розмітці.
-   Базовий вигляд — Default, з Label, Hint text, Left і Right icon; інші стани й властивості
-   вмикає панель у кейсі DS (stage.css) через радіо + :has(). Стани з Figma 854:85260 (Type × State).
-   ========================================================================== */
 
-/* Перефарбування лише при зміні бренду (правки Насті 09.11), як перемикання бренду в hero Centology.
-   Анімуються самі змінні бренду (--primary-*), а не властивості елементів: тому зміна стану
-   (Active, View, Disabled…) — миттєва, як перемикання варіанта, а зміна бренду — плавна.
-   Змінні зареєстровані як колір (@property) у hero-flow-tokens.css — без цього браузер не вміє їх плавно змінювати */
 .input-field,
 .brand-switcher__swatch {
   transition:
@@ -21,12 +10,11 @@
     --primary-900 var(--hf-duration-switch) var(--ease-in-out);
 }
 
-/* Поле: Label → Input 36 → Hint (gap 4 і 6), у Figma 440 × 80 */
 .input-field {
   display: flex;
   flex-direction: column;
-  gap: 6px; /* check:ignore — Figma 854:85262, розміри продукту */
-  inline-size: 440px; /* check:ignore — Figma 877:50841 */
+  gap: 6px; /* check:ignore */
+  inline-size: 440px; /* check:ignore */
   max-inline-size: 100%;
   font-family: var(--hf-font);
   text-align: start;
@@ -64,16 +52,13 @@
   color: var(--primary-400);
 }
 
-/* Іконки — вгорі поля: коли тегів багато і вони переносяться в кілька рядків, іконки
-   лишаються біля першого рядка (правка Насті 09.11). margin 2 = центр першого рядка 20 */
 .input-field__control > svg {
   flex: none;
   align-self: flex-start;
-  margin-block-start: 2px; /* check:ignore — розміри продукту */
+  margin-block-start: 2px; /* check:ignore */
   color: var(--neutral-250);
 }
 
-/* Content (Figma 854:85270): теги й плейсхолдер в одному рядку, що переноситься; відступ зліва 4 */
 .input-field__content {
   display: flex;
   flex: 1;
@@ -90,7 +75,6 @@
   white-space: nowrap;
 }
 
-/* Tag (Figma Tag у Input field): pill 20, primary/100, текст primary/900, хрестик 14. Показує панель (Tag = On) */
 .input-field__tag {
   display: none;
   align-items: center;
@@ -104,7 +88,7 @@
   letter-spacing: 0.25px; /* check:ignore */
   line-height: 13px; /* check:ignore */
   white-space: nowrap;
-  animation: input-field-tag-in var(--duration-base) var(--ease-in-out); /* fade, коли Tag = On */
+  animation: input-field-tag-in var(--duration-base) var(--ease-in-out);
 }
 
 @keyframes input-field-tag-in {
@@ -118,14 +102,13 @@
   color: var(--primary-400);
 }
 
-/* Права іконка: шеврон вниз; вгору — лише в стані Active (stage.css) */
 .input-field__icon-right--up {
   display: none;
 }
 
 .input-field__hint {
   display: block;
-  min-height: 20px; /* check:ignore — Figma 854:85279: блок підказки 20 */
+  min-height: 20px; /* check:ignore */
   color: var(--neutral-250);
   font-size: var(--hf-font-size-small);
   line-height: 14px; /* check:ignore */

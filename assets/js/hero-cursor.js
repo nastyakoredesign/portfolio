@@ -1,19 +1,11 @@
-/* ==========================================================================
-   hero-cursor.js — hero «слідкує» за курсором (лише миша, Desktop)
-   Spec: docs/specs/hero-v2-spec.md, розділ 4.3.
-   Підсвічує колонку сітки під курсором (data-active); працює в hero Головної і кейсу. Тег «Guest» біля
-   курсора — окремий спільний скрипт cursor-tag.js (той самий тег у Work).
-   pointermove лише запам'ятовує, де курсор; колонку рахує requestAnimationFrame.
-   Усе декоративне, aria-hidden.
-   ========================================================================== */
 (function () {
-  var hero = document.querySelector('.hero, .case-hero'); // Головна або кейс
+  var hero = document.querySelector('.hero, .case-hero');
   if (!hero) return;
 
   var media = window.matchMedia('(hover: hover) and (pointer: fine) and (width >= 768px)');
   var columns = Array.prototype.slice.call(hero.querySelectorAll('.column-grid span'));
 
-  var pointer = null;      // { x, y } у координатах вікна
+  var pointer = null;
   var frameId = 0;
   var activeColumn = null;
 
@@ -62,7 +54,6 @@
     hide();
   });
 
-  // Сторінка гортається під нерухомою мишею: підсвітка має йти за hero
   window.addEventListener('scroll', function () {
     if (pointer) start();
   }, { passive: true });

@@ -1,14 +1,4 @@
-/* ==========================================================================
-   code-card.css — картка в секції Code
-   Figma: «Code card/This site» (58:8) і «Code card/Design review skill» (58:12),
-   превʼю-вікна «Media/code — tokens.css» (68:727) і «Media/flow — design review skill» (68:729).
-   Превʼю — HTML/CSS, не картинка: код і схема — справжній текст.
-   Картка статична; Hover/Focus мають посилання всередині (Text link Dark, text-link.css).
-   ========================================================================== */
 
-/* ---------- Картка: Auto Layout vertical, padding 24, gap 16 ----------
-   Padding 24 замість 32 з Figma — як Card/Body у Work (рішення 09.10):
-   так на 360 px у вікно влазить найдовший рядок коду. */
 .code-card {
   display: flex;
   flex-direction: column;
@@ -19,10 +9,6 @@
   background: var(--color-ink-raised);
 }
 
-/* ---------- Вікно превʼю ----------
-   Висота size/code-media (232 / 280), padding 16, Clip content.
-   Обведення — box-shadow inset, а не border: як stroke у Figma, воно не забирає
-   місця в Auto Layout. З border схема (200 px) не влазила б у вікно 232 на Desktop. */
 .code-card__media {
   height: var(--size-code-media);
   padding: var(--space-16);
@@ -32,9 +18,6 @@
   overflow: hidden;
 }
 
-/* Варіант для коду: рядки притиснуті донизу (justify-end), зайві зверху
-   обрізаються, а градієнт «Top fade» м'яко ховає верхній край.
-   Це фінальний кадр анімації набору (і вигляд без JS / з reduced-motion). */
 .code-card__media--code {
   position: relative;
   display: flex;
@@ -42,22 +25,16 @@
   justify-content: flex-end;
 }
 
-/* Top fade: ink → прозорий, 40 px (у Figma — шар Top fade, без токена висоти).
-   Відступ 1 px — всередині обведення, як stroke у Figma поверх шарів. */
 .code-card__media--code::before {
   content: "";
   position: absolute;
   inset: 1px 1px auto;
-  height: 40px; /* check:ignore — декоративний градієнт, токена висоти немає */
+  height: 40px; /* check:ignore */
   border-radius: calc(var(--radius-control) - 1px) calc(var(--radius-control) - 1px) 0 0;
   background: linear-gradient(var(--color-ink), transparent);
   transition: opacity var(--duration-base) var(--ease-out);
 }
 
-/* ---------- Набір коду (assets/js/code-typing.js, code-typing-spec.md) ----------
-   Під час набору код починається згори (State 0: курсор у рядку 1),
-   а коли курсор доходить до низу вікна, JS піднімає код (transform).
-   Top fade з'являється, щойно зверху є схований код (data-scrolled). */
 .code-card__media--code[data-typing] {
   justify-content: flex-start;
 }
@@ -70,17 +47,16 @@
   opacity: 0;
 }
 
-/* Курсор 2 × 20, code-token. Під час набору не блимає; у кінці — 3 блимання по 530 мс */
 .code-snippet__caret {
   display: inline-block;
-  width: 2px; /* check:ignore — курсор із spec, 2 × 20 */
+  width: 2px; /* check:ignore */
   height: 20px; /* check:ignore */
   vertical-align: text-bottom;
   background: var(--color-code-token);
 }
 
 .code-snippet__caret[data-blink] {
-  animation: code-caret-blink 530ms steps(1) 3; /* check:ignore — таймінг із spec, як у hero */
+  animation: code-caret-blink 530ms steps(1) 3; /* check:ignore */
 }
 
 @keyframes code-caret-blink {
@@ -89,14 +65,12 @@
   }
 }
 
-/* Варіант для схеми: вміст по центру вікна */
 .code-card__media--flow {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Назва — у розмітці h3, на вигляд стиль heading/h4 (як .section-title: h2, що виглядає як h1) */
 .code-card__title {
   font-size: var(--font-size-h4);
   line-height: var(--line-height-h4);
@@ -107,27 +81,20 @@
   color: var(--color-on-ink-secondary);
 }
 
-/* Посилання притиснуте донизу, коли сусідня картка вища (як «Open case →» у Work) */
 .code-card__link {
   align-self: flex-start;
   margin-top: auto;
 }
 
-/* ---------- Код: стиль code/base (JetBrains Mono, 16 / 150 %) ----------
-   Шрифт для pre/code задає base.css. Рядки не переносяться — так виглядає
-   справжній код; найдовший рядок (24 символи) влазить і на 360 px. */
 .code-snippet {
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
 }
 
-/* Підсвітка як у Figma: назви змінних і @media — code-token */
 .code-snippet__name {
   color: var(--color-code-token);
 }
 
-/* ---------- Схема скіла: Flow ----------
-   Рядки-кроки один під одним, між ними «↓», gap 8. */
 .flow {
   display: flex;
   flex-direction: column;
@@ -138,17 +105,12 @@
   line-height: var(--line-height-body);
 }
 
-/* Flow/step: чипи в рядок, між ними «+» */
 .flow__row {
   display: flex;
   align-items: center;
   gap: var(--space-8);
 }
 
-/* Chip: вузол діаграми, radius/control (не пігулка — рішення 05.10).
-   Обведення — box-shadow inset, як у вікна: чип 40 px заввишки, як у Figma.
-   «Findings → review board» (245 px) на 360 px ледь влазить у вікно (246);
-   на ще вужчому екрані чип перенесеться на 2 рівні рядки, а не обріжеться. */
 .flow__step {
   padding: var(--space-8) var(--space-12);
   box-shadow: inset 0 0 0 1px var(--color-ink-border);
@@ -158,12 +120,10 @@
   text-wrap: balance;
 }
 
-/* Останній крок — результат, accent-on-dark */
 .flow__step--result {
   color: var(--color-accent-on-dark);
 }
 
-/* «+» і «↓» */
 .flow__sep {
   color: var(--color-on-ink-secondary);
 }

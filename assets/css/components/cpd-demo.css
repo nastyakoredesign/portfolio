@@ -1,24 +1,6 @@
-/* ==========================================================================
-   cpd-demo.css — демо сторінки Training & CPD у секції Process кейсу Centology
-   Figma: CPD start 584:20327 → CPD end 591:587 (1440 × 1100), у макеті Process — 446:1088 (716 × 468).
-   Spec: docs/specs/process-cpd-animation-spec.md.
-   Сцена 1440 × 1100 масштабується як одна картинка (transform: scale), тому всередині —
-   px продукту, а не токени сайту (як у hero-flow, рішення 16.10). Кольори — лише токени
-   продукту з hero-flow-tokens.css (мод Centology діє і на .cpd-demo) та color-mix() з ними.
-   Перевикористано компоненти hero-flow.css: hf-topbar, hf-icon-button, hf-badge, hf-avatar,
-   hf-page, hf-main, hf-toggle, hf-dot, hf-total, hf-button, hf-chip-button, hf-table, hf-pagination.
-   Стан — атрибути на .cpd-demo (ставить cpd-demo.js, у HTML — кінцевий стан):
-   data-chart start|end — стовпчики; data-page start|end — новий рядок, CPD Data, кругові, пагінація;
-   data-banner on|off; data-camera page|chart; data-tooltip; data-cursor;
-   data-playing — під час програвання (лише тоді є transitions: статичний стан і зміна ширини вікна без анімації).
-   Розмітка: .cpd-demo (рамка) → .cpd-demo__screen (role="img") → .cpd-demo__page (сцена) + кнопка паузи
-   (.hero-flow__toggle — та сама, що в hero, поза role="img", щоб її було видно скрінрідеру й клавіатурі).
-   ========================================================================== */
 
-/* ---------- Рамка: Desktop 716 × 468 (видно верхні ~940 px сторінки), росте пропорційно ---------- */
 .cpd-demo {
-  /* Дані графіка, години (spec, п. 5). Structured = IDD.structured + PTS.structured — інваріант */
-  --cpd-hour: 7.95px; /* висота 1 h: 318 px сітки на 40 h */
+  --cpd-hour: 7.95px;
   --hours-idd-s: 11.5;
   --hours-idd-u: 6;
   --hours-pts-s: 9.5;
@@ -27,7 +9,6 @@
   --hours-unstructured: 15.5;
   --hours-structured: calc(var(--hours-idd-s) + var(--hours-pts-s));
 
-  /* Кольори даних. Темніші «Unstructured» у Figma — базовий колір + 20 % чорного */
   --cpd-structured: var(--primary-600);
   --cpd-unstructured: var(--additional-mint);
   --cpd-other-s: var(--additional-blue);
@@ -37,19 +18,14 @@
   --cpd-pts-s: var(--additional-orange);
   --cpd-pts-u: color-mix(in srgb, var(--additional-orange) 80%, black);
 
-  /* Камера (загальний план); наближення — нижче, [data-camera="chart"] */
   --cam-x: 0px;
   --cam-y: 0px;
   --cam-k: 1;
-  /* Точки вістря курсора на стовпчиках (координати сторінки) — по центру стовпчика.
-     Total і Structured — у START, Total END — без банера (сторінка на 59 вище).
-     З них рахуються і курсор, і тултіп (див. «Тултіпи» і «Курсор») */
-  --point-total-x: 355px;      /* стовпчик Total 325…385 */
+  --point-total-x: 355px;
   --point-total-y: 330px;
-  --point-structured-x: 494px; /* стовпчик Structured 464…524 */
+  --point-structured-x: 494px;
   --point-structured-y: 450px;
   --point-total-end-y: 300px;
-  /* Курсор поза кадром дій — звідси він в'їжджає */
   --cursor-x: 470px;
   --cursor-y: 540px;
 
@@ -57,17 +33,15 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 716 / 468;
-  border: 1px solid var(--color-accent); /* як у Figma 446:1088 (змінено 20.10) і рамка hero-демо */
+  border: 1px solid var(--color-accent);
   border-radius: var(--radius-control);
   background: var(--neutral-200);
 }
 
-/* Початковий стан графіка: IDD structured 9 h → Structured і Total.structured 18 h 30 m */
 .cpd-demo[data-chart="start"] {
   --hours-idd-s: 9;
 }
 
-/* Сцена 1440 × 1100. Масштаб = ширина рамки / 1440 (tan(atan2()) ділить довжини без JS), далі камера */
 .cpd-demo__page {
   --cpd-scale: tan(atan2(100cqw, 1440px));
   position: relative;
@@ -87,9 +61,6 @@
   flex-shrink: 0;
 }
 
-/* Камера на панелі графіка (754 × 490): панель цілком у кадрі, по центру.
-   Кадр — 1440 × 941 px сцени (1440 · 468 / 716); центр панелі по x — 244 + 754 / 2 = 621,
-   по y — 185 + 245 = 430 з банером і 371 без нього (банер + gap = 59). Текст осі ≈ 9 px на 1440 */
 .cpd-demo[data-camera="chart"] {
   --cam-k: 1.83;
   --cam-x: calc(720px - var(--cam-k) * 621px);
@@ -100,12 +71,9 @@
   --cam-y: calc(1440px * 468 / 716 / 2 - var(--cam-k) * 371px);
 }
 
-/* ==========================================================================
-   Sidebar Menu (591:589): 220, розгорнутий, Auto Layout vertical, gap 24
-   ========================================================================== */
 .cpd-sidebar {
   position: relative;
-  z-index: 1; /* кнопка згортання виходить за край меню на Top Bar */
+  z-index: 1;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -116,7 +84,6 @@
   background: var(--neutral-100);
 }
 
-/* Лого 144 і кнопка згортання (hf-sidebar__collapse), gap 55 — кнопка лягає на край меню */
 .cpd-sidebar__brand {
   display: flex;
   align-items: center;
@@ -134,7 +101,6 @@
   gap: 10px;
 }
 
-/* Side Menu Button: іконка 20 у полі 30, gap 6, Body / Medium primary-500 */
 .cpd-sidebar__item {
   display: flex;
   align-items: center;
@@ -160,7 +126,6 @@
   color: var(--primary-600);
 }
 
-/* Menu Block: заголовок групи (Heading / Small primary-600, шеврон) + підпункти, gap 4 */
 .cpd-sidebar__group {
   display: flex;
   flex-direction: column;
@@ -190,15 +155,10 @@
   gap: 1px;
 }
 
-/* Підпункти — крапки primary-300 */
 .cpd-sidebar__sub svg {
   color: var(--primary-300);
 }
 
-/* ==========================================================================
-   Банер SPS (584:20333) — поки норми не досягнуто (data-banner="on"). Потім згортається
-   (висота → 0 і gap 12 сторінки), вміст під ним плавно підіймається
-   ========================================================================== */
 .cpd-banner {
   display: flex;
   flex-shrink: 0;
@@ -214,14 +174,11 @@
 
 .cpd-demo[data-banner="off"] .cpd-banner {
   height: 0;
-  margin-bottom: -12px; /* забрати й gap 12 між банером і панеллю фільтрів */
+  margin-bottom: -12px;
   opacity: 0;
-  translate: 0 -8px; /* схований вміст трохи вище — з'являючись, «опускається» на місце */
+  translate: 0 -8px;
 }
 
-/* ==========================================================================
-   Панель фільтрів і лічильників (591:596), 36
-   ========================================================================== */
 .cpd-toolbar {
   display: flex;
   flex-shrink: 0;
@@ -255,7 +212,6 @@
   gap: 4px;
 }
 
-/* YTD / MAX — вимкнені: текст кольору лінії */
 .cpd-chip {
   padding: 6px 7px;
   border: 1px solid var(--primary-200);
@@ -267,12 +223,10 @@
   line-height: 14px;
 }
 
-/* Toggle у CPD ширший, ніж у hero-flow: 43 у Figma */
 .cpd-toolbar .hf-toggle {
   width: 43px;
 }
 
-/* Input field SPS: 180, padding 8 + 4 до тексту, шеврон primary-400 */
 .cpd-select {
   display: flex;
   align-items: center;
@@ -298,7 +252,6 @@
   padding: 4px;
 }
 
-/* CPD Data і Days to Expiry ділять 307 порівну */
 .cpd-stats {
   width: 307px;
 }
@@ -308,9 +261,6 @@
   justify-content: space-between;
 }
 
-/* ==========================================================================
-   Панелі (591:628): CPD Summary + CPD by Activity / Topic, 490 заввишки, gap 18
-   ========================================================================== */
 .cpd-panels {
   display: grid;
   flex-shrink: 0;
@@ -329,7 +279,6 @@
   background: var(--neutral-100);
 }
 
-/* Title: Heading / Small primary-600 на primary-100 */
 .cpd-panel__title {
   padding: 8px 16px;
   background: var(--primary-100);
@@ -342,7 +291,6 @@
   padding: 0 16px 16px;
 }
 
-/* ---------- Графік CPD Summary (584:20373): вісь Y 24, сітка 698 × 330, вісь X, легенда ---------- */
 .cpd-chart {
   display: flex;
   flex-direction: column;
@@ -353,7 +301,6 @@
   height: 330px;
 }
 
-/* Підписи 40h…0h: justify-between, центр підпису = лінія сітки */
 .cpd-chart__y {
   display: flex;
   flex-direction: column;
@@ -371,7 +318,6 @@
   flex: 1;
 }
 
-/* 9 горизонтальних ліній кожні 39.75 (5 h): 40h…5h — primary-50, 0h — primary-200 */
 .cpd-chart__lines {
   position: absolute;
   inset: 5px 1px 6px;
@@ -389,14 +335,12 @@
   background: var(--primary-200);
 }
 
-/* Дві вертикальні лінії по краях сітки */
 .cpd-chart__frame {
   position: absolute;
   inset: 6px 0;
   border-inline: 1px solid var(--primary-200);
 }
 
-/* Стовпчики: 5 колонок по 138.8, низ — лінія 0h (y 324) */
 .cpd-chart__bars {
   position: absolute;
   top: 0;
@@ -407,7 +351,6 @@
   height: 324px;
 }
 
-/* Колонка: стовпчик 60 + маркер норми 10, gap 10, зсув 20 — разом по центру. У Other норми немає */
 .cpd-chart__col {
   display: flex;
   align-items: flex-end;
@@ -420,7 +363,6 @@
   padding-left: 0;
 }
 
-/* Стовпчик-стос: згори Unstructured, знизу Structured; кути 8 лише зверху */
 .cpd-bar {
   display: flex;
   flex-direction: column;
@@ -442,7 +384,6 @@
 .cpd-bar__seg--pts-s { --hours: var(--hours-pts-s); background: var(--cpd-pts-s); }
 .cpd-bar__seg--pts-u { --hours: var(--hours-pts-u); background: var(--cpd-pts-u); }
 
-/* Маркер норми (Required): primary-500 25 %, кути 2 */
 .cpd-bar__required {
   width: 10px;
   height: calc(var(--norm) * var(--cpd-hour));
@@ -455,19 +396,16 @@
 .cpd-chart__col--idd,
 .cpd-chart__col--pts { --norm: 15; }
 
-/* Ховер колонки — разом із тултіпом усі інші колонки (стовпчик + маркер норми) тьмяніють (Настя 20.10).
-   Лише коли є курсор: у статичному кінцевому кадрі (без JS) тултіп видно, а колонки — ні, як у Figma END */
 .cpd-demo:not([data-cursor="off"])[data-tooltip="total-start"] .cpd-chart__col:not(.cpd-chart__col--total),
 .cpd-demo:not([data-cursor="off"])[data-tooltip="total-end"] .cpd-chart__col:not(.cpd-chart__col--total),
 .cpd-demo:not([data-cursor="off"])[data-tooltip="structured"] .cpd-chart__col:not(.cpd-chart__col--structured) {
   opacity: 0.35;
 }
 
-/* Вісь X: колонки тієї ж ширини, що й стовпчики (зсув 25 = вісь Y + 1); Caption / Bold */
 .cpd-chart__x {
   display: flex;
   height: 22px;
-  margin-top: -2px; /* у Figma MainChart заходить на вісь на 2 px */
+  margin-top: -2px;
   padding: 0 0 8px 25px;
 }
 
@@ -486,12 +424,10 @@
   color: var(--primary-600);
 }
 
-/* START: Total і Structured нижче норми — підписи червоні */
 .cpd-demo[data-chart="start"] .cpd-chart__label--alert {
   color: var(--additional-red-300);
 }
 
-/* Легенда: по центру, переноситься на другий рядок, Small / Default primary-900 */
 .cpd-legend {
   display: flex;
   flex-wrap: wrap;
@@ -508,7 +444,6 @@
   padding: 4px;
 }
 
-/* Intetity Color Circle: крапка 6 у полі 14 × 16. Колір — модифікатор (той самий, що в секторів) */
 .cpd-dot {
   display: grid;
   flex-shrink: 0;
@@ -551,9 +486,6 @@
 .cpd-pie__slice--business { color: var(--cpd-pts-s); }
 .cpd-dot--pts-u { color: var(--cpd-pts-u); }
 
-/* ---------- Тултіпи (Tooltip / Total, Tooltip / Structured) ----------
-   Однаково від курсора (Настя 20.10): по центру над вістрям (= по центру стовпчика), низ — на 12 вище.
-   Позиції в координатах сітки: точка (--point-*) мінус початок сітки — x 285, y 238 з банером і 179 без нього */
 .cpd-tooltip {
   position: absolute;
   z-index: 1;
@@ -568,10 +500,10 @@
     0 1px 2px color-mix(in srgb, var(--neutral-400) 5%, transparent);
   font-size: var(--hf-font-size-small);
   opacity: 0;
-  transform: translate(-50%, -100%); /* left — центр тултіпа, top — його низ */
-  translate: 0 4px; /* схований — трохи нижче й менший: з'являючись, «підпливає» */
+  transform: translate(-50%, -100%);
+  translate: 0 4px;
   scale: 0.97;
-  transform-origin: 50% 0; /* після translate(-50%, -100%) це середина нижнього краю — над курсором */
+  transform-origin: 50% 0;
 }
 
 .cpd-tooltip--total-start {
@@ -607,7 +539,6 @@
   justify-content: space-between;
 }
 
-/* Назва — Label / Input (bold 11 / 14), значення — Small / Tag (11 / 1.2, трекінг 0.25) */
 .cpd-tooltip__key {
   display: flex;
   align-items: center;
@@ -621,7 +552,6 @@
   line-height: 1.2;
 }
 
-/* Рядок Total під лінією primary-200 */
 .cpd-tooltip__total {
   padding-top: 3px;
   border-top: 1px solid var(--primary-200);
@@ -629,12 +559,10 @@
   line-height: 15px;
 }
 
-/* Сума відносно норми: нижче — червона (у Figma Total — red-300, Structured — red-200), досягла — primary-600 */
 .cpd-tooltip__sum--low { color: var(--additional-red-300); }
 .cpd-tooltip__sum--low-soft { color: var(--additional-red-200); }
 .cpd-tooltip__sum--ok { color: var(--primary-600); }
 
-/* ---------- CPD by Activity / Topic (591:760): дві кругові 169 + легенда, gap 24 ---------- */
 .cpd-shares {
   display: flex;
   flex-direction: column;
@@ -657,11 +585,8 @@
   gap: 8px;
 }
 
-/* Кругова: кожен сектор — коло зі stroke 84.5 (= половина радіуса), довжина кола 360 (pathLength).
-   Сектори за годинниковою стрілкою від «9 години», у порядку легенди (як у Figma).
-   Кожен сектор малюється від свого початку до кінця кола, наступний лягає зверху — без щілин між секторами */
 .cpd-pie {
-  rotate: 180deg; /* початок кола SVG — «3 година» → «9 година» */
+  rotate: 180deg;
 }
 
 .cpd-pie__slice {
@@ -672,7 +597,6 @@
   stroke-dashoffset: calc(var(--from) / var(--sum) * -360);
 }
 
-/* Time per Activity: змінюється лише Workshop 9h → 11h 30m (останній сектор) */
 .cpd-pie--activity {
   --workshop: 11.5;
   --sum: calc(13.5 + 5.5 + 6 + var(--workshop));
@@ -687,7 +611,6 @@
 .cpd-pie__slice--test { --from: 19; }
 .cpd-pie__slice--workshop { --from: 25; }
 
-/* Time per Topic: змінюється Retail investment products 9h → 11h 30m (другий сектор) */
 .cpd-pie--topic {
   --retail: 11.5;
   --sum: calc(15 + var(--retail) + 6 + 4);
@@ -702,7 +625,6 @@
 .cpd-pie__slice--taxation { --from: calc(15 + var(--retail)); }
 .cpd-pie__slice--business { --from: calc(21 + var(--retail)); }
 
-/* Легенда кругових: назва (Small / Default, обрізається …) і значення (Label / Default), gap 10 */
 .cpd-share__list {
   display: flex;
   flex: 1;
@@ -732,9 +654,6 @@
   white-space: nowrap;
 }
 
-/* ==========================================================================
-   Записи CPD (591:837): кнопка сортування, таблиця hf-table з колонками CPD, пагінація
-   ========================================================================== */
 .cpd-records {
   display: flex;
   flex-direction: column;
@@ -746,12 +665,10 @@
   align-self: stretch;
 }
 
-/* Activity і Topic — Fill, решта фіксовані (Figma), остання — дії 108 */
 .hf-table--cpd .hf-table__row {
   grid-template-columns: 1fr 1fr 110px 120px 110px 100px 80px 200px 110px 108px;
 }
 
-/* Довгі назви обрізаються «…», як у Figma */
 .hf-table--cpd .hf-table__row > .cpd-table__clip {
   display: block;
   text-overflow: ellipsis;
@@ -769,7 +686,6 @@
   color: var(--additional-red-200);
 }
 
-/* Новий запис (Workshop 2h 30m) — лише в END: у START рядок згорнутий і прозорий */
 .hf-table--cpd .cpd-table__row--new {
   overflow: hidden;
 }
@@ -781,7 +697,6 @@
   translate: 0 -8px;
 }
 
-/* ---------- Значення, що змінюються між START і END: два шари в одній клітинці ---------- */
 .cpd-swap {
   display: inline-grid;
   justify-items: end;
@@ -797,7 +712,6 @@
   translate: 0 4px;
 }
 
-/* ---------- Курсор: проста стрілка (як у hero-flow), декоративний ---------- */
 .cpd-cursor {
   position: absolute;
   top: 0;
@@ -807,7 +721,7 @@
   height: 20px;
   color: var(--neutral-400);
   opacity: 0;
-  translate: calc(var(--cursor-x) - 4px) calc(var(--cursor-y) - 2.5px); /* вістря стрілки — у точці */
+  translate: calc(var(--cursor-x) - 4px) calc(var(--cursor-y) - 2.5px);
   pointer-events: none;
 }
 
@@ -815,16 +729,10 @@
   opacity: 1;
 }
 
-/* Курсор у точках --point-* (див. вище) */
 .cpd-demo[data-cursor="total"] { --cursor-x: var(--point-total-x); --cursor-y: var(--point-total-y); }
 .cpd-demo[data-cursor="structured"] { --cursor-x: var(--point-structured-x); --cursor-y: var(--point-structured-y); }
 .cpd-demo[data-cursor="total-end"] { --cursor-x: var(--point-total-x); --cursor-y: var(--point-total-end-y); }
 
-/* ==========================================================================
-   Програвання: переходи лише поки data-playing (таймлайн — cpd-demo.js, spec п. 6).
-   Камера, банер, стовпчики, кругові й новий рядок — одна тривалість і крива,
-   тож на Mobile панель графіка не зсувається, поки банер згортається
-   ========================================================================== */
 .cpd-demo[data-playing] .cpd-demo__page,
 .cpd-demo[data-playing] .cpd-bar__seg,
 .cpd-demo[data-playing] .cpd-pie__slice {
@@ -833,10 +741,6 @@
   transition-timing-function: var(--ease-in-out);
 }
 
-/* Банер і новий рядок (Настя 20.10: плавніше й не лінійно).
-   Поява: місце відкривається зі швидким стартом і довгим гальмуванням (--ease-out),
-   вміст через 200 мс «опускається» на місце й проявляється.
-   Зникнення: вміст коротко тьмяніє з розгоном (--ease-in), місце згортається через 120 мс */
 .cpd-demo[data-playing][data-banner="on"] .cpd-banner,
 .cpd-demo[data-playing][data-page="end"] .cpd-table__row--new {
   transition:
@@ -879,11 +783,6 @@
     opacity var(--duration-base) var(--ease-out);
 }
 
-/* ==========================================================================
-   Mobile: без камери й без цілої сторінки — лише панель графіка (Figma 446:1106, 358 × 232),
-   з тими самими тултіпами й ростом стовпчиків. Кадр = пропорція панелі 754 × 490.
-   З банером панель нижча (y 185, без нього — 126): зсув сцени міняється разом із висотою банера
-   ========================================================================== */
 @media (width < 768px) {
   .cpd-demo {
     --cpd-panel-y: -126px;
@@ -899,7 +798,6 @@
     transform: scale(tan(atan2(100cqw, 754px))) translate(-244px, var(--cpd-panel-y));
   }
 
-  /* Зсув сцени — тією ж кривою й затримкою, що й висота банера (див. вище), тож панель стоїть */
   .cpd-demo[data-playing][data-banner="on"] .cpd-demo__page {
     transition: transform var(--duration-intro) var(--ease-out);
   }

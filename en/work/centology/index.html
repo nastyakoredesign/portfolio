@@ -537,9 +537,6 @@
                 </button>
               </div>
               <script>
-                // Стартовий кадр до першого малювання (spec п. 7), лише якщо рух дозволено: тоді прохід
-                // почнеться, коли блок з'явиться в полі зору, і без блимання END → START.
-                // Страховка: cpd-demo.js не позначив блок до load (не завантажився) — повертаємо кінцевий кадр
                 (function () {
                   var demo = document.currentScript.previousElementSibling;
                   if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;

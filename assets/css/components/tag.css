@@ -1,9 +1,4 @@
-/* ==========================================================================
-   tag.css — теги домену в картці кейсу
-   Figma: компонент Tag (185:1115). Неінтерактивна мітка → пігулка (radius/pill).
-   ========================================================================== */
 
-/* Card/Tags: Auto Layout horizontal з Wrap, gap 8 */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -12,7 +7,6 @@
   list-style: none;
 }
 
-/* Tag: padding 4 / 12, stroke border, текст body/base text-secondary */
 .tag {
   padding: var(--space-4) var(--space-12);
   border: 1px solid var(--color-border);
@@ -21,10 +15,6 @@
   color: var(--color-text-secondary);
 }
 
-/* ---------- Мод Mobile (≤ 767 px): компактні пігулки ----------
-   Стиль ui/caption (12) і padding 4 / 8, як бейдж hero на Mobile; gap між
-   пігулками 4 (рішення 08–09.10). Висота тексту в каруселі спільна для всіх
-   карток, тож зайвий рядок пігулок в одній картці зменшував би зображення в усіх. */
 @media (width < 768px) {
   .tags {
     gap: var(--space-4);
@@ -37,8 +27,6 @@
   }
 }
 
-/* Tag/accent (Figma 942:66589, 943:66627): пігулка «removed» / «chosen» — рамка й текст accent, ui/caption, padding 2 / 8.
-   Після мобільного блоку, щоб його padding не перебивав */
 .tag--accent {
   padding: calc(var(--space-4) / 2) var(--space-8);
   border-color: var(--color-accent);

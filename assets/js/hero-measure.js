@@ -1,17 +1,3 @@
-/* ==========================================================================
-   hero-measure.js — вимірювання відстаней при наведенні на рамку (як Alt у Figma)
-   CSS: components/measure.css. Spec: docs/specs/hero-v2-spec.md, розділ 4.4
-   (Головна) і docs/specs/hifi-case.md → «Hero кейсу», п. 4 (кейс).
-   Наведення на рамку показує відстані від країв САМОЇ рамки:
-   - Головна: від бейджа до верху рамки ролі, від низу рамки до lead, а
-     горизонтально — від країв контейнера (сітки) до країв рамки, по її центру;
-   - кейс: від мета-пігулок до верху медіа, а горизонтально — від країв hero
-     (екрана) до країв медіа: ті самі числа, що підписані на лінійках.
-   Числа справжні: getBoundingClientRect() і Math.round — сайт сам показує,
-   що макет і код збігаються. Лише миша й ширина ≥ 768 px.
-   Конфіг кожного hero — в CONFIGS: селектори елементів. below — необов'язковий;
-   edges: 'container' (краї контейнера) або 'hero' (краї самого hero).
-   ========================================================================== */
 (function () {
   var CONFIGS = [
     { hero: '.hero', content: '.hero__content', frame: '.hero__role .selection',
@@ -32,7 +18,6 @@
     var below = config.below ? hero.querySelector(config.below) : null;
     if (!content || !frame || !above || (config.below && !below)) return;
 
-    // Шар вимірювань — над вмістом, як панель Alt у Figma
     var layer = document.createElement('div');
     layer.className = 'measure';
     layer.setAttribute('aria-hidden', 'true');
@@ -118,7 +103,6 @@
       if (pointer) schedule();
     }, { passive: true });
 
-    // Рамка змінила розмір (ротація ролі, ресайз): числа мають оновитись
     if ('ResizeObserver' in window) {
       var observer = new ResizeObserver(function () {
         if (pointer) schedule();

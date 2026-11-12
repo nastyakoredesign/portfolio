@@ -1,13 +1,4 @@
-/* ==========================================================================
-   spec-card.css — правило зі спеки текстом, не скріном (артефакт 2 у Process)
-   Figma: Media/artifact 446:1084 (змінено 20.10). Mobile — той самий вигляд, розміри з токенів.
-   Spec: docs/specs/process-cpd-animation-spec.md, п. 3.
-   HTML: .spec-card → p.spec-card__source + blockquote.spec-card__quote (абзац = цитата).
-   ========================================================================== */
 
-/* Auto Layout vertical, gap 24 (Mobile 12), padding 24; фон surface, лінія border.
-   Радіус: у Figma radius/card 12; беремо --radius-media — на Desktop те саме 12, на Mobile 4, як у інших кадрів.
-   Висота кадру — пропорцією в process.css; довший текст росте вниз, а не обрізається */
 .spec-card {
   display: flex;
   flex-direction: column;
@@ -18,8 +9,6 @@
   background: var(--color-surface);
 }
 
-/* Джерело — стиль heading/h4 (Commissioner SemiBold 20 / 130 %, FLAR 50), колір тексту (Figma 20.10).
-   Це підпис цитати, а не розділ сторінки, тому <p>, а не h3 — у змісті сторінки його не буде */
 .spec-card__source {
   font-family: var(--font-heading);
   font-size: var(--font-size-h4);
@@ -29,7 +18,6 @@
   text-wrap: balance;
 }
 
-/* Цитати: body/case 18 / 160 %, між ними той самий gap 24 */
 .spec-card__quote {
   display: flex;
   flex-direction: column;
@@ -38,7 +26,6 @@
   line-height: var(--line-height-body-case);
 }
 
-/* Mobile: gap 12, цитати body 16 / 150 % */
 @media (width < 768px) {
   .spec-card,
   .spec-card__quote {
@@ -51,8 +38,6 @@
   }
 }
 
-/* ---------- Revive: дві вимоги спеки (Figma 942:66582, 942:66586) ----------
-   Рядок: номер вимоги (ui/label) → текст body/case, gap 8. Знята вимога — text-secondary, текст закреслений (<del>) */
 .spec-card__row {
   display: flex;
   flex-direction: column;

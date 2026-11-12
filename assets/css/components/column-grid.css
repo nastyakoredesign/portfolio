@@ -1,17 +1,3 @@
-/* ==========================================================================
-   column-grid.css — колонки-лінії фону hero (Головна і кейс)
-   Figma: «layout grid · 12 col hairlines» (151:7) у Hero Desktop 1440,
-   Layout grid у Case/Hero (162:993). Рішення 14.10 (аудит узгодженості, п. 13).
-   Одна сітка на обидва hero: 12 колонок на Desktop, 4 на Mobile, лише лінії
-   по краях колонок (stroke left/right), без заливки. Декоративна.
-
-   Налаштування — змінними батька (як Variables у Figma):
-   --grid-line-color  колір ліній (Головна — accent 16 %, кейс — text 8 %);
-   --column-grid-top  відступ згори (Головна на Desktop — 20 px під лінійкою).
-
-   Розмітка: <div class="column-grid container"><span></span> × 12</div>
-   всередині aria-hidden-шару фону з position: absolute.
-   ========================================================================== */
 
 .column-grid {
   position: absolute;
@@ -26,15 +12,10 @@
   transition: background-color var(--duration-exit) var(--ease-out);
 }
 
-/* Колонка під курсором (hero Головної, hero-cursor.js): заливка accent 6 % */
 .column-grid span[data-active] {
   background-color: color-mix(in srgb, var(--color-accent) 6%, transparent);
 }
 
-/* ---------- Інтро (spec 4.1, ~1,1 с) ----------
-   Колонки «промальовуються» зверху вниз, зліва направо зі зсувом --duration-stagger
-   (--duration-intro 700 мс — «трішечки повільніше», 14.10). Той самий рух у hero
-   Головної й кейсу. При reduced-motion усе одразу на місці (base.css скорочує анімації). */
 .column-grid span {
   transform-origin: top;
   animation: column-draw var(--duration-intro) var(--ease-out) backwards;
@@ -60,7 +41,6 @@
   }
 }
 
-/* Mobile: 4 колонки, зайві 8 ховаємо, інакше сітка складе їх у 3 ряди з розривами */
 @media (width < 768px) {
   .column-grid span:nth-child(n + 5) {
     display: none;

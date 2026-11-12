@@ -1,28 +1,19 @@
-/* ==========================================================================
-   bridge.css — секція From design to code (ink) + картка Bridge card
-   Figma: Case/From design to code (74:208 Desktop, 142:207 Mobile), Column (74:209),
-   Row/Bridge (74:212), Bridge card (286:339), Bridge/Artifact (74:222).
-   Spec: docs/specs/hifi-case.md, п. 8. Заголовок і абзац ліворуч — свідомо (12.10).
-   ========================================================================== */
 
-/* Секція на ink: padding зверху space/section (96 / 64), знизу space/section-bottom (128 / 64), текст on-ink */
 .bridge {
-  position: relative; /* фон Dot grid (.cell-grid--dots, cell-grid.css) */
-  isolation: isolate; /* сітка з z-index −1 над фоном секції, під контентом */
+  position: relative;
+  isolation: isolate;
   padding-top: var(--space-section);
   padding-bottom: var(--space-section-bottom);
   background: var(--color-ink);
   color: var(--color-on-ink);
 }
 
-/* Column: Auto Layout vertical, gap 32 */
 .bridge__inner {
   display: flex;
   flex-direction: column;
   gap: var(--space-32);
 }
 
-/* body/case, on-ink-secondary; ширина читання 760 (Figma 74:211) */
 .bridge__lead {
   max-width: var(--layout-reading);
   font-size: var(--font-size-body-case);
@@ -30,8 +21,6 @@
   color: var(--color-on-ink-secondary);
 }
 
-/* Row/Bridge: Desktop — три картки в ряд, gap gutter; Mobile — стовпчик.
-   minmax(0, 1fr) — картки завжди рівні (Fill), довгий рядок коду не розширює свою колонку (Настя 06.11) */
 .bridge__cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -41,14 +30,10 @@
   list-style: none;
 }
 
-/* Bridge card (set 651:612): Auto Layout vertical, gap 12, padding 24; фон ink-raised, рамка ink-border.
-   Висота 136 у Figma — результат вмісту, тож без фіксованої: UA-тексти довші.
-   Grid з однією колонкою = Auto Layout vertical; заголовок і рядок коду лежать
-   в одній клітинці «head» одне над одним, тож підміна не зсуває картку */
 .bridge-card {
   display: grid;
   grid-template-areas: "head" "text";
-  align-content: start; /* картки в ряду однакові за висотою — вільне місце знизу, не між рядками */
+  align-content: start;
   gap: var(--space-12);
   position: relative;
   padding: var(--space-24);
@@ -57,18 +42,15 @@
   background: var(--color-ink-raised);
 }
 
-/* Структура h3, вигляд heading/h4 */
 .bridge-card__title {
   grid-area: head;
   font-size: var(--font-size-h4);
   line-height: var(--line-height-h4);
 }
 
-/* Рядок коду State=Hover: code/base (JetBrains Mono 16 / 150 %), code-token.
-   Декоративний (aria-hidden): для скрінрідера заголовок — h3. За замовчуванням прихований */
 .bridge-card__code {
   grid-area: head;
-  align-self: center; /* 24 рядка коду посередині 26 заголовка, як у Figma */
+  align-self: center;
   font-family: var(--font-code);
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
@@ -84,14 +66,11 @@
   color: var(--color-on-ink-secondary);
 }
 
-/* ---------- Hover «дизайн → код» (State=Hover): лише миша ----------
-   Рамка code-token — окремим шаром ::after, щоб анімувати лише opacity.
-   :focus-within — на випадок, якщо в картці з'явиться фокусований елемент */
 @media (hover: hover) and (pointer: fine) {
   .bridge-card::after {
     content: "";
     position: absolute;
-    inset: -1px; /* поверх рамки ink-border */
+    inset: -1px;
     border: 1px solid var(--color-code-token);
     border-radius: inherit;
     opacity: 0;
@@ -116,8 +95,6 @@
   }
 }
 
-/* Рядок коду «під'їжджає» знизу, заголовок іде вгору — як Smart Animate.
-   Зі «зменшити рух» зсуву немає, лишається тільки зміна прозорості */
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .bridge-card__code {
     transform: translateY(var(--space-4));
@@ -132,7 +109,6 @@
   }
 }
 
-/* Артефакт + підпис: Auto Layout vertical, gap 16 (Figma 637:24552 / 644:24571) */
 .bridge__artifact {
   display: flex;
   flex-direction: column;
@@ -140,31 +116,25 @@
   margin: 0;
 }
 
-/* Bridge/Artifact: у Figma 1200 × 603 (Mobile 358 × 488) — скрін review-дошки, <picture>.
-   Кадр росте пропорційно: висоти немає, є aspect-ratio (рішення 12.10) */
 .bridge__media {
-  position: relative; /* сюди «прилипає» картинка */
+  position: relative;
   display: block;
   aspect-ratio: 1200 / 603;
   overflow: clip;
-  border: 2px solid var(--color-code-token); /* check:ignore — рамка 2 px з Figma (74:222, 142:221) */
+  border: 2px solid var(--color-code-token); /* check:ignore */
   border-radius: var(--radius-card);
   background: var(--color-ink-raised);
 }
 
-/* Картинка накриває весь кадр і заходить на 1px за кожен край (кадр обрізає зайве):
-   iPhone Safari округлює дробову висоту кадру, і внизу проступала темна риска фону. */
 .bridge__media img {
   position: absolute;
-  inset: -1px; /* check:ignore — 1px запасу під округлення */
+  inset: -1px; /* check:ignore */
   display: block;
   width: calc(100% + 2px); /* check:ignore */
   height: calc(100% + 2px); /* check:ignore */
   object-fit: cover;
 }
 
-/* Варіант --table (кейс Design System, Figma 811:41273 1200 × 636, Mobile 811:42164 358 × 636):
-   скрін темної таблиці вже має власну рамку й фон, тож без рамки code-token */
 .bridge__media--table {
   aspect-ratio: 1200 / 636;
   border: 0;
@@ -172,14 +142,12 @@
   background: none;
 }
 
-/* ui/caption, як у Figma 74:224 / 142:223 */
 .bridge__caption {
   font-size: var(--font-size-caption);
   line-height: var(--line-height-caption);
   color: var(--color-on-ink-secondary);
 }
 
-/* Підсвічений фрагмент підпису — лише колір, не посилання (Figma 74:224) */
 .bridge__caption-accent {
   color: var(--color-code-token);
 }
@@ -198,9 +166,6 @@
   }
 }
 
-/* ---------- Кейс Revive: нотатки під артефактом (Figma handoff/notes 968:4917 Desktop, 968:6511 Mobile) ----------
-   Плашки й рамки Selection намальовані в самому зображенні; нотатки — справжній текст.
-   Desktop: дві нотатки в ряд, gap 32; Mobile: одна. Плашка — .selection-name (selection-name.css) */
 .bridge__notes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -210,7 +175,6 @@
   list-style: none;
 }
 
-/* Note: Auto Layout horizontal, gap 12, плашка 01 / 02 → іконка курсора → текст (body/base, on-ink) */
 .bridge-note {
   display: flex;
   align-items: flex-start;
@@ -219,13 +183,11 @@
   line-height: var(--line-height-body);
 }
 
-/* Іконка курсора (Tabler pointer / hand-finger) — по центру першого рядка (24): відступ 4 */
 .bridge-note__icon {
   flex: none;
   margin-top: var(--space-4);
 }
 
-/* Підпис Desktop / Mobile — різні тексти (Настя, 09.11); показ перемикає ширина */
 .bridge__caption--mobile {
   display: none;
 }
@@ -236,7 +198,6 @@
     display: none;
   }
 
-  /* Mobile: одна нотатка на всю ширину */
   .bridge__notes {
     grid-template-columns: 1fr;
   }

@@ -1,11 +1,4 @@
-/* ==========================================================================
-   section-head.css — шапка секції-«вітрини»: eyebrow + h2 по центру
-   Figma: TL;DR/Head (284:1678), далі Solutions, Next case/Head, Contact/Head.
-   Spec: docs/specs/hifi-case.md, п. 3 і «Рішення» (09.10, 12.10).
-   Eyebrow — підпис над заголовком, не заголовок (<p>); h2 несе зміст.
-   ========================================================================== */
 
-/* Auto Layout vertical по центру, eyebrow → заголовок 12 */
 .section-head {
   display: flex;
   flex-direction: column;
@@ -14,7 +7,6 @@
   text-align: center;
 }
 
-/* Стиль ui/label, accent */
 .eyebrow {
   color: var(--color-accent);
   font-size: var(--font-size-ui);

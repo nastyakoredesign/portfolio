@@ -1,11 +1,4 @@
-/* ==========================================================================
-   about-section.css — секція сторінки About: шапка ліворуч → вміст
-   Figma: About — Desktop 1440 (710:22435), Mobile 390 (710:22692):
-   My path (710:22466), How I work (710:22532), Design and code (734:26665).
-   Тексти — docs/specs/about-copy-en-draft.md.
-   ========================================================================== */
 
-/* Секція: padding space/section (96 / 64); Column — Auto Layout vertical, шапка → вміст gap 48 */
 .about-section {
   padding-block: var(--space-section);
 }
@@ -16,7 +9,6 @@
   gap: var(--space-48);
 }
 
-/* Фони секцій, як у Figma: My path — surface, How I work — accent-tint, Design and code — bg */
 .about-section--surface {
   background: var(--color-surface);
 }
@@ -25,13 +17,11 @@
   background: var(--color-accent-tint);
 }
 
-/* Шапка ліворуч: eyebrow + h2 (section-head.css), без центрування */
 .section-head--start {
   align-items: flex-start;
   text-align: left;
 }
 
-/* Абзаци body/case, text-secondary (як у текстових секціях кейсу) */
 .about-section__text {
   display: flex;
   flex-direction: column;
@@ -42,8 +32,6 @@
   line-height: var(--line-height-body-case);
 }
 
-/* Code/Row (734:26670): текст ліворуч (до layout/reading), діаграма 460 праворуч, по верху.
-   Нижче 1024 — одна колонка, діаграма під текстом (як патерн split, рішення 12.10) */
 .about-section__row {
   display: grid;
   grid-template-columns: 1fr 460px;
@@ -51,7 +39,6 @@
   align-items: start;
 }
 
-/* Text link «Site repository on GitHub» — під абзацами, у власну ширину */
 .about-section__text .text-link {
   align-self: flex-start;
 }
@@ -62,7 +49,6 @@
   }
 }
 
-/* Mobile: між текстом і діаграмою 32 (Figma Code/Row 734:27550), а не split-gap 24 */
 @media (width < 768px) {
   .about-section__row {
     gap: var(--space-32);

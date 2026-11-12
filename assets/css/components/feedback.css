@@ -1,16 +1,9 @@
-/* ==========================================================================
-   feedback.css — секція Feedback («What the team says»), одразу після Outcome
-   Figma: Case/Feedback (771:28376 Desktop, 771:28429 Mobile). Окрема секція з 24.10.
-   Картки відгуків — компонент Quote card (quote-card.css).
-   ========================================================================== */
 
-/* Фон surface, padding space/section зверху й знизу (96 / 64) */
 .feedback {
   padding-block: var(--space-section);
   background: var(--color-surface);
 }
 
-/* Column: заголовок → картки, gap 48 */
 .feedback__inner {
   display: flex;
   flex-direction: column;

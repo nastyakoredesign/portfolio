@@ -1,19 +1,8 @@
-/* ==========================================================================
-   case-card.css — картка кейсу в Work
-   Figma: компонент CaseCard (185:2314) — Type Default / Featured.
-   Spec: docs/specs/ds-components.md, docs/specs/work-grid-v2.md
-   Hover/Focus «стає фреймом»: рамка Selection по межах картки, кути 12 → 0
-   (і верхні кути медіа теж); вміст медіа трохи збільшується (scale 1.04). Рамка — <span class="selection selection--interactive">
-   останнім дочірнім елементом article; без неї картка лишається Default.
-   ========================================================================== */
 
-/* ---------- Картка: Auto Layout vertical (медіа → Card/Body) ----------
-   Без overflow: hidden — рамка Selection виходить за межі картки (маркери 9×9). */
 .case-card {
-  /* Рамка накриває 1px-бордер картки (у Figma Selection inset −1) */
   --selection-inset-x: 1px;
   --selection-inset-y: 1px;
-  position: relative; /* сюди «прилипає» розтягнуте посилання (::after) */
+  position: relative;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--color-border);
@@ -21,24 +10,17 @@
   background: var(--color-surface);
 }
 
-/* Медіа: висота size/card-media (330 / 280), верхні кути radius/card + Clip content */
 .case-card__media {
   height: var(--size-card-media);
   border-radius: var(--radius-card) var(--radius-card) 0 0;
   overflow: hidden;
 }
 
-/* Featured — лише на Desktop: ширина на весь ряд (медіа 1198 × 440 — пропорція нижче).
-   На Mobile це звичайна картка каруселі. */
 @media (width >= 768px) {
   .case-card--featured {
     grid-column: 1 / -1;
   }
 
-  /* Кадр медіа масштабується пропорційно (рішення 12.10, хотфікс 12.11): висота — з ширини,
-     як Constraints = Scale у Figma. На 1440 це рівно size/card-media (586 × 330) і featured
-     (1198 × 440); вужче кадр і композиція в ньому зменшуються разом, без порожнечі зверху
-     й без обрізаного верху. Кадр Centology має пропорцію featured — і в «Next case». */
   .case-card__media {
     height: auto;
     aspect-ratio: 586 / 330;
@@ -49,11 +31,6 @@
   }
 }
 
-/* Layout=Horizontal (Next case): медіа ліворуч, текст праворуч, дві рівні колонки — від 1024 px.
-   Вужче (планшет 768–1023) колонки стискали текст, тож картка лишається вертикальною: медіа над текстом
-   (той самий локальний брейкпоінт 1024, що в TL;DR, Context і Solutions).
-   Медіа не нижче size/card-media (330) і тягнеться на висоту тіла, щоб під ним не лишалось порожнього місця;
-   кути медіа — лише ліві. */
 @media (width >= 1024px) {
   .case-card--horizontal {
     display: grid;
@@ -68,9 +45,6 @@
   }
 }
 
-/* ---------- Hover / Focus: картка «стає фреймом» ----------
-   Hover — лише з курсором, Focus — завжди (фокус на посиланні всередині).
-   Кути картки й медіа → 0, з переходом. Рамку малює .selection (selection.css). */
 .case-card:has(> .selection),
 .case-card:has(> .selection) .case-card__media {
   transition: border-radius var(--duration-fast) var(--ease-out);
@@ -88,8 +62,6 @@
   border-radius: 0;
 }
 
-/* Pressed — лише з мишкою. На телефоні тап одразу веде на кейс, і рамка
-   встигала лише блимнути (Настя, 10.11): на touch Pressed-стану немає. */
 @media (hover: hover) and (pointer: fine) {
   .case-card:has(> .selection):active,
   .case-card:has(> .selection):active .case-card__media {
@@ -97,9 +69,6 @@
   }
 }
 
-/* Zoom вмісту медіа на Hover/Focus (22.10): властивість scale, не transform,
-   бо композиція вже позиціонується через translate. Обрізає .case-card__media (overflow: hidden).
-   Без руху (prefers-reduced-motion) — без зуму. */
 .case-card__media .media__composition,
 .case-card__media .media-nda__skeleton {
   transition: scale var(--duration-slow) var(--ease-out);
@@ -119,16 +88,11 @@
   }
 }
 
-/* Pressed (з мишкою): фон картки не змінюється; лише рамка 2 px accent-active (selection.css) */
 
-/* Фокус картки показує рамка, тож кільце на самому посиланні не потрібне
-   (прозорий outline лишається для Windows High Contrast) */
 .case-card:has(> .selection) .case-card__link:focus-visible {
   outline-color: transparent;
 }
 
-/* ---------- Card/Body: padding 24, gap 24 ----------
-   flex: 1 — тіло займає всю висоту картки, тож CTA можна притиснути донизу. */
 .case-card__body {
   display: flex;
   flex: 1;
@@ -137,15 +101,12 @@
   padding: var(--space-24);
 }
 
-/* Card/Content: назва → опис → теги → внесок (gap 16) */
 .case-card__content {
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
 }
 
-/* Назва — heading/h3 з base.css. Переноситься звичайно, як у Figma
-   («Centology: web portal and / mobile app»), без balance із base.css */
 .case-card__title {
   text-wrap: pretty;
 }
@@ -154,14 +115,12 @@
   color: var(--color-text-secondary);
 }
 
-/* Card/Contribution: «My contribution» + рядок (gap 4) */
 .case-card__contribution {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
-/* Підпис — стиль ui/label, accent */
 .case-card__label {
   color: var(--color-accent);
   font-weight: 500;
@@ -169,18 +128,11 @@
   line-height: var(--line-height-ui);
 }
 
-/* ---------- CTA «Open case →» ----------
-   margin-top: auto притискає його донизу, коли сусідня картка в ряду вища.
-   ::after розтягує посилання на всю картку: клікається вся картка,
-   а посилання в розмітці одне. */
 .case-card__link {
   align-self: flex-start;
   margin-top: auto;
 }
 
-/* .text-link ставить position: relative (для рамки Selection) — тоді ::after
-   прилипало б до тексту, а не до картки. Тут рамки в посилання немає, тож
-   скидаємо; селектор складений, бо text-link.css підключений після цього файлу. */
 .case-card .case-card__link {
   position: static;
 }
@@ -191,8 +143,6 @@
   inset: 0;
 }
 
-/* ---------- Мод Mobile (≤ 767 px) ----------
-   Опис ховаємо (у Figma — змінна show/card-desc = false). */
 @media (width < 768px) {
   .case-card__desc {
     display: none;

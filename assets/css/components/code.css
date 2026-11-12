@@ -1,37 +1,21 @@
-/* ==========================================================================
-   code.css — секція Code на Головній
-   Figma: Code #code у «Home — Desktop 1440» (58:2) і «Home — Mobile 390» (66:256).
-   Spec: docs/specs/hifi-tokens.md (розділ «Рішення 02.10»)
-   Темна зона: фон ink на всю ширину, текст on-ink. Картки — code-card.css.
-   ========================================================================== */
 
-/* ---------- Секція: заголовок → картки, gap 48 ----------
-   Як .work: grid з однією колонкою = Auto Layout vertical. */
 .code {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-48);
-  padding-block: var(--space-section); /* 96 / 64 — мод Mobile перемикає tokens.css */
+  padding-block: var(--space-section);
   background: var(--color-ink);
   color: var(--color-on-ink);
 }
 
-/* Eyebrow шапки на темному: accent на ink ~2.5 : 1, accent-on-dark ≈ 8 : 1
-   (Figma Code/Head 58:4; перекриває .eyebrow із section-head.css) */
 .code .eyebrow {
   color: var(--color-accent-on-dark);
 }
 
-/* Фокус на темному: accent на ink-raised має лише ~2.5 : 1,
-   accent-on-dark — достатньо (як у хедері) */
 .code :focus-visible {
   outline-color: var(--color-accent-on-dark);
 }
 
-/* ---------- Row/Code cards: 2 колонки або 1 ----------
-   Той самий прийом, що в сітці Work: колонок стільки, скільки влазить карток
-   ≥ size/card-min-width (420). Дві — від 912 px, нижче — одна.
-   Картки в ряду однакової висоти (stretch у grid за замовчуванням). */
 .code__list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--size-card-min-width)), 1fr));

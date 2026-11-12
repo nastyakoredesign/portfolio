@@ -1,11 +1,4 @@
-/* ==========================================================================
-   why.css — «Why this way» у рішенні кейсу
-   Figma: компонент Why this way (286:327). Мітка ui/label accent + одне речення
-   body/case, ліва лінія accent 2 px. Завжди видиме (не в гармошці).
-   HTML: <p class="why"><span class="why__label">Why this way</span> текст</p>
-   ========================================================================== */
 
-/* Auto Layout vertical, gap 4, padding-left 16, лінія зліва */
 .why {
   display: flex;
   flex-direction: column;

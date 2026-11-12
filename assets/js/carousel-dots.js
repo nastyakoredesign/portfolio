@@ -1,11 +1,3 @@
-/* ==========================================================================
-   carousel-dots.js — точки під каруселлю показують, яка картка в центрі (Mobile)
-   Figma: Carousel/Dots (304:2979, 287:1687). Точки — декор, aria-hidden.
-   Ряд-карусель — сусід перед точками (.work__list, .solutions-carousel__row, .phones).
-   Під час прокрутки ряду шукаємо картку, центр якої найближчий до центру
-   ряду, і ставимо data-active на точку з тим самим номером.
-   Без JS лишається статична перша точка (CSS: .carousel-dots:not([data-ready])).
-   ========================================================================== */
 (function () {
   document.querySelectorAll('.carousel-dots').forEach(function (dots) {
     var row = dots.previousElementSibling;
@@ -30,8 +22,6 @@
         }
       });
 
-      // Краї ряду: коли видно кілька карток, крайня ніколи не стає в центр —
-      // тож на початку прокрутки активна перша точка, в кінці остання (Настя 09.11)
       var max = row.scrollWidth - row.clientWidth;
       if (row.scrollLeft <= 1) nearest = 0;
       else if (row.scrollLeft >= max - 1) nearest = row.children.length - 1;

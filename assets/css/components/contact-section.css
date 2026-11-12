@@ -1,25 +1,14 @@
-/* ==========================================================================
-   contact-section.css — секція Contact (кінець кожної сторінки)
-   Figma: компонент Contact section (396:3130); на сторінках — Home Desktop 52:2 / Mobile 66:157.
-   Spec: docs/specs/ds-components.md → «Contact (14.10)»
-   Склад: шапка (eyebrow + h2, .section-head) → lead → email + Copy (email-copy.css)
-   → ряд кнопок (cv-button.css, contact-button.css). Змінюються лише тексти.
-   ========================================================================== */
 
-/* Секція: усе по центру, gap 48 між блоками.
-   Як .work і .code: grid з однією колонкою = Auto Layout vertical. */
 .contact-section {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-48);
-  position: relative; /* фон-сітка .cell-grid (cell-grid.css) */
-  isolation: isolate; /* сітка з z-index −1 лишається над фоном секції, під текстом */
-  padding-block: var(--space-section); /* 96 / 64 — мод Mobile перемикає tokens.css */
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--space-section);
   background: var(--color-accent-tint);
 }
 
-/* Lead: стиль body/lead, ширина не більша за layout/reading.
-   .container центрує його (margin-inline: auto), max-width лише звужує. */
 .contact-section__lead {
   max-width: var(--layout-reading);
   font-size: var(--font-size-lead);
@@ -28,9 +17,6 @@
   text-wrap: balance;
 }
 
-/* Row/Contact links: CV button + Contact button ×3, по центру.
-   flex-wrap = Auto Layout Wrap: на Mobile ряд сам перенесеться у 2 рядки
-   (Download CV + LinkedIn, GitHub + Telegram), горизонтального скролу немає. */
 .contact-section__links {
   display: flex;
   flex-wrap: wrap;

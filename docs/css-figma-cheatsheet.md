@@ -91,7 +91,7 @@
 | `@media (width < 768px) { :root { --x: … } }` | Перемкнути мод змінних Desktop → Mobile | `tokens.css`, внизу |
 | `width: min(100% - 32px, 1200px)` | Fill container + Max width 1200 | `.container` у `base.css` |
 | `<link rel="stylesheet" href="…">` | Підключити бібліотеку до файлу | `<head>` у `en/index.html` |
-| `.case-card`, `.case-card__media`, `.case-card--featured` | Компонент / шар усередині компонента / варіант | правило назв класів у CLAUDE.md |
+| `.case-card`, `.case-card__media`, `.case-card--featured` | Компонент / шар усередині компонента / варіант | правило назв класів (BEM) |
 | `:focus-visible` | Варіант State=Focus (лише з клавіатури) | `base.css` |
 | `@media (prefers-reduced-motion: reduce)` | Прототип без Smart Animate — переходи Instant | `base.css` |
 | `.visually-hidden` | Шар, який не видно, але скрінрідер читає (як назва шару для доступності) | повний h1 у hero |

@@ -1,13 +1,4 @@
-/* ==========================================================================
-   wordmark.css — вордмарк «NASTYA KORE» (посилання на Головну)
-   Figma: текстовий стиль brand/wordmark; у коді — SVG <symbol id="wordmark">,
-   який хедер, меню й футер показують через <use>. Spec: docs/specs/header-v2-spec.md
-   Колір не задаємо: SVG малює currentColor, тож вордмарк бере колір від батька
-   (у хедері, меню й футері це --color-on-ink).
-   ========================================================================== */
 
-/* Висота SVG = кап-висота: 16 px при шрифті 21 px (Desktop),
-   тож на Mobile (шрифт 16) виходить ≈ 12 px. Ширина — сама, за пропорцією. */
 .wordmark {
   display: flex;
   align-items: center;
@@ -20,17 +11,10 @@
   height: calc(1em * 16 / 21);
 }
 
-/* ---------- Focus — звичайна рамка Selection (Figma 362:528) ----------
-   Hover і Pressed у вордмарка немає (рішення Насті 13.10). Фокус — рамка 2 px
-   accent-on-dark з 4 маркерами, як у Nav link, але з відступом 8 по горизонталі
-   й 4 від рядка шрифту, як у Text link.
-   Розмітка: <span class="selection selection--focus-only" aria-hidden="true"><i></i>…</span>.
-   Висота рамки = рядок шрифту (1em) + 4 зверху й знизу: SVG — це лише кап-висота,
-   тож рамку центруємо по SVG і міряємо від шрифту, як у Figma. */
 .wordmark {
   --selection-color: var(--color-accent-on-dark);
   --selection-handle-fill: var(--color-ink);
-  position: relative; /* сюди «прилипає» рамка Selection */
+  position: relative;
 }
 
 .wordmark > .selection {
@@ -40,8 +24,6 @@
   translate: 0 -50%;
 }
 
-/* Рамку малює Selection, тож кільце фокусу прозоре (лишається видимим
-   у Windows High Contrast) */
 .wordmark:has(> .selection):focus-visible {
   outline-color: transparent;
 }

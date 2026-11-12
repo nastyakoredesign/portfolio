@@ -1,18 +1,4 @@
-/* ==========================================================================
-   hero-flow-tokens.css — токени демо-порталу в hero кейсу Centology
-   Figma: колекція Tokens, моди Centology / LCA / EBC / DMA
-   (кадри 495:21720, 497:24680, 506:29281, 506:28284).
-   Це палітра продукту клієнта, а не сайту, тому не в tokens.css.
-   Назви = назви змінних у Figma (Primary/600 → --primary-600).
-   Змінити колір бренду = змінити один рядок тут. Більше ніде hex у демо немає.
-   Ці ж токени (мод Centology) бере демо CPD у секції Process — .cpd-demo
-   (рішення 20.10: одна палітра продукту на обидва демо). І кейс DS: превʼю Input field (.input-field) і квадратик redline Primary/600 (.brand-switcher__swatch);
-   бренд перемикає .toggle--brand у тому ж .brand-switcher.
-   ========================================================================== */
 
-/* ---------- Змінні бренду як колір (@property) ----------
-   Потрібно, щоб зміна бренду в кейсі DS перетікала плавно (transition у input-field.css).
-   initial-value — мод Centology */
 @property --primary-50 { syntax: "<color>"; inherits: true; initial-value: #f6f7fa; }
 @property --primary-100 { syntax: "<color>"; inherits: true; initial-value: #f4f5ff; }
 @property --primary-200 { syntax: "<color>"; inherits: true; initial-value: #dddee5; }
@@ -20,14 +6,13 @@
 @property --primary-600 { syntax: "<color>"; inherits: true; initial-value: #3e55ff; }
 @property --primary-900 { syntax: "<color>"; inherits: true; initial-value: #252d6e; }
 
-/* ---------- Спільне для всіх брендів ---------- */
 .hero-flow,
 .cpd-demo,
 .input-field,
 .brand-switcher__swatch {
   --neutral-100: #fffffe;
   --neutral-200: #fafafa;
-  --neutral-250: #787c82; /* підписи полів (Label / Input) */
+  --neutral-250: #787c82;
   --neutral-300: #58585f;
   --neutral-400: #141a23;
 
@@ -36,29 +21,24 @@
   --additional-orange: #f68700;
   --additional-red-200: #ff5a5a;
   --additional-red-500: #ee0000;
-  /* Демо CPD: кольори даних графіка й попереджень (Figma: Centology/Additional/…) */
-  --additional-mint: #00cccc;    /* Unstructured, Knowledge test, Taxation */
-  --additional-magenta: #b800f0; /* IDD */
-  --additional-red-300: #eb4646; /* підписи «нижче норми» */
-  --additional-red-400: #d73232; /* банер SPS */
-  /* Крапка Pending у таблиці: у Figma — Secondary/400 бібліотеки Centology, з брендом не змінюється */
+  --additional-mint: #00cccc;
+  --additional-magenta: #b800f0;
+  --additional-red-300: #eb4646;
+  --additional-red-400: #d73232;
   --status-pending: #eab400;
 
-  /* Типографіка продукту: Akkurat у Figma. Шрифту в нас немає → Inter (див. звіт) */
   --hf-font: "Akkurat", "Inter", system-ui, sans-serif;
-  --hf-font-size-caption: 10px; /* Caption / Default, Caption / Bold */
-  --hf-font-size-small: 11px;   /* Label / Default, Table Header, Small / Tag */
-  --hf-font-size-body: 12px;    /* Body / Default, Label / Bold */
-  --hf-font-size-medium: 14px;  /* Body / Medium, Heading / Small */
-  --hf-font-size-large: 16px;   /* Body / Large, Heading / Medium */
+  --hf-font-size-caption: 10px;
+  --hf-font-size-small: 11px;
+  --hf-font-size-body: 12px;
+  --hf-font-size-medium: 14px;
+  --hf-font-size-large: 16px;
 
-  /* Рух демо (бриф §5): панелі виїжджають 320 мс; затемнення — --duration-base сайту */
   --hf-duration-panel: 320ms;
-  --hf-duration-switch: 450ms; /* поява блюру й перемикача, вибір варіанта (Настя: плавніше) */
+  --hf-duration-switch: 450ms;
   --hf-ease-panel: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* ---------- Мод Centology (за замовчуванням) ---------- */
 .hero-flow,
 .hero-flow [data-brand="centology"],
 .hero-flow[data-brand="centology"],
@@ -72,8 +52,8 @@
   --primary-400: #aeb1c5;
   --primary-500: #6e75aa;
   --primary-600: #3e55ff;
-  --primary-700: #2a41eb; /* hover кнопки */
-  --primary-800: #162dd7; /* pressed */
+  --primary-700: #2a41eb;
+  --primary-800: #162dd7;
   --primary-900: #252d6e;
 
   --secondary-200: #ffd33e;
@@ -82,19 +62,18 @@
   --secondary-600: #3b2e00;
 }
 
-/* ---------- Мод LCA ---------- */
 .hero-flow[data-brand="lca"],
 .hero-flow [data-brand="lca"],
 .brand-switcher:has(.toggle--brand input[value="lca"]:checked) :is(.input-field, .brand-switcher__swatch) {
   --primary-50: #f6f9fa;
   --primary-100: #f0f8fb;
-  --primary-200: #d6e0e6; /* у продукті #e8eef1; світлота вирівняна з Centology (правка Насті 09.11) */
+  --primary-200: #d6e0e6;
   --primary-300: #e6f2f7;
   --primary-400: #aebec5;
   --primary-500: #54717e;
   --primary-600: #008ac4;
-  --primary-700: #1384b5; /* hover кнопки */
-  --primary-800: #1e7da6; /* pressed */
+  --primary-700: #1384b5;
+  --primary-800: #1e7da6;
   --primary-900: #134a61;
 
   --secondary-200: #ffd33e;
@@ -103,19 +82,18 @@
   --secondary-600: #3b2e00;
 }
 
-/* ---------- Мод EBC ---------- */
 .hero-flow[data-brand="ebc"],
 .hero-flow [data-brand="ebc"],
 .brand-switcher:has(.toggle--brand input[value="ebc"]:checked) :is(.input-field, .brand-switcher__swatch) {
-  --primary-50: #f5f8fa; /* у продукті #fafbfc — світліший за інші бренди; вирівняно на око (правка Насті 09.11) */
+  --primary-50: #f5f8fa;
   --primary-100: #f0f6fa;
-  --primary-200: #d8dfe4; /* у продукті #d3dbe0; світлота вирівняна з Centology (правка Насті 09.11) */
+  --primary-200: #d8dfe4;
   --primary-300: #dcedf7;
   --primary-400: #909ca3;
   --primary-500: #667680;
   --primary-600: #348abf;
-  --primary-700: #357eab; /* hover кнопки */
-  --primary-800: #2c6a8f; /* pressed */
+  --primary-700: #357eab;
+  --primary-800: #2c6a8f;
   --primary-900: #122836;
 
   --secondary-200: #ffd2ad;
@@ -124,19 +102,18 @@
   --secondary-600: #3a220f;
 }
 
-/* ---------- Мод DMA ---------- */
 .hero-flow[data-brand="dma"],
 .hero-flow [data-brand="dma"],
 .brand-switcher:has(.toggle--brand input[value="dma"]:checked) :is(.input-field, .brand-switcher__swatch) {
   --primary-50: #f5f7fa;
   --primary-100: #e6eef7;
-  --primary-200: #d9dfe5; /* у продукті #dee3e8; світлота вирівняна з Centology (правка Насті 09.11) */
+  --primary-200: #d9dfe5;
   --primary-300: #c3d7ee;
   --primary-400: #abb4bd;
   --primary-500: #6b829c;
   --primary-600: #2f527a;
-  --primary-700: #334961; /* hover кнопки */
-  --primary-800: #2b353f; /* pressed */
+  --primary-700: #334961;
+  --primary-800: #2b353f;
   --primary-900: #1e252d;
 
   --secondary-200: #ffc0ad;
