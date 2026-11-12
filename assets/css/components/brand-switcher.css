@@ -1,0 +1,135 @@
+/* ==========================================================================
+   brand-switcher.css — рядок керування над медіа рішень DS: перемикач брендів + redline
+   Figma: Controls (869:1703, 874:90892), Redline/Primary 600 (869:1713), Screen (869:1869).
+   Рішення 1: перемикач і екран Investment Plans у кадрі бренду; рішення 2: той самий рядок над сценою.
+   Redline — підпис значення токена бренду (JetBrains Mono, як code/base). Лише Desktop (Mobile — без redline).
+   HTML: .brand-switcher > .brand-switcher__controls (.toggle--brand + .brand-switcher__redline) + .brand-switcher__screen
+   ========================================================================== */
+
+/* Auto Layout vertical: рядок керування → кадр, gap 16 */
+.brand-switcher {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  min-width: 0;
+}
+
+.brand-switcher__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+
+/* Перемикач 400 (Figma Toggle Options=4), на вужчому — скільки є */
+.brand-switcher__controls .toggle {
+  flex: 0 1 400px; /* check:ignore — Figma 875:50724 */
+}
+
+.brand-switcher__redline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin: 0;
+  font-family: var(--font-code);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  white-space: nowrap;
+}
+
+.brand-switcher__swatch {
+  width: 16px; /* check:ignore — свотч 16 × 16, Figma 869:1714 */
+  height: 16px; /* check:ignore */
+  border-radius: var(--radius-control);
+  background: var(--primary-600); /* справжній Primary/600 бренду — hero-flow-tokens.css (рішення Насті 09.11); плавна зміна — input-field.css */
+}
+
+.brand-switcher__value {
+  color: var(--color-text-secondary);
+  animation: brand-value-in var(--duration-medium) var(--ease-in-out); /* fade при зміні бренду, див. нижче */
+}
+
+/* ---------- Перемикання бренду без JS: радіо в .toggle--brand + :has() ----------
+   Як мод змінних у Figma з Smart Animate: новий екран проявляється поверх старого
+   (--duration-medium, плавно як перемикання бренду в hero Centology), старий ховається, коли новий уже видно.
+   Колір свотча — у hero-flow-tokens.css */
+
+/* Кадр екрана: 1134 × 569, лінія border, пропорція як у експорті.
+   Усі 4 екрани лежать в одній клітинці сітки — один на одному, як шари у Frame */
+.brand-switcher__screen {
+  display: grid;
+  margin: 0;
+  overflow: clip;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-media);
+}
+
+/* Невибраний екран: прозорий; ховається із затримкою, щоб під новим не було «дірки» */
+.brand-switcher__screen picture {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0s var(--duration-medium), visibility 0s var(--duration-medium);
+}
+
+/* Вибраний екран: зверху, проявляється */
+.brand-switcher__screen picture[data-brand="centology"],
+.brand-switcher:has(.toggle--brand input[value="lca"]:checked) .brand-switcher__screen picture[data-brand="lca"],
+.brand-switcher:has(.toggle--brand input[value="ebc"]:checked) .brand-switcher__screen picture[data-brand="ebc"],
+.brand-switcher:has(.toggle--brand input[value="dma"]:checked) .brand-switcher__screen picture[data-brand="dma"] {
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--duration-medium) var(--ease-in-out);
+}
+
+.brand-switcher:has(.toggle--brand input:not([value="centology"]):checked) .brand-switcher__screen picture[data-brand="centology"] {
+  z-index: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0s var(--duration-medium), visibility 0s var(--duration-medium);
+}
+
+.brand-switcher__screen img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1134 / 569;
+}
+
+/* Значення в redline: видно лише вибраний бренд; при появі — короткий fade
+   (анімація запускається щоразу, коли елемент перестає бути display: none) */
+.brand-switcher__value:not([data-brand="centology"]),
+.brand-switcher:has(.toggle--brand input:not([value="centology"]):checked) .brand-switcher__value[data-brand="centology"] {
+  display: none;
+}
+
+.brand-switcher:has(.toggle--brand input[value="lca"]:checked) .brand-switcher__value[data-brand="lca"],
+.brand-switcher:has(.toggle--brand input[value="ebc"]:checked) .brand-switcher__value[data-brand="ebc"],
+.brand-switcher:has(.toggle--brand input[value="dma"]:checked) .brand-switcher__value[data-brand="dma"] {
+  display: inline;
+}
+
+@keyframes brand-value-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Mobile: без redline, екран — кадр 292 × 264 (Figma 889:94654) ---------- */
+@media (width < 768px) {
+  /* Рішення 2: Brand над сценою — лише Desktop (рішення Насті 05.11) */
+  .brand-switcher__controls--desktop-only,
+  .brand-switcher__redline {
+    display: none;
+  }
+
+  .brand-switcher__controls .toggle {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .brand-switcher__screen img {
+    aspect-ratio: 292 / 264;
+  }
+}

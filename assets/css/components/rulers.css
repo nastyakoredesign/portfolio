@@ -1,0 +1,156 @@
+/* ==========================================================================
+   rulers.css — лінійки фону hero (як лінійки у Figma, Shift+R)
+   Figma: ruler/top bg, ruler/left bg, ruler ticks, ruler/range (151:8 … 151:26).
+   Spec: docs/specs/hero-v2-spec.md, розділ 4. Декоративний шар (aria-hidden),
+   лише Desktop: на Mobile лінійок немає (spec, розділ 7).
+
+   Що малює CSS: смуги, риски, край, смуга діапазону.
+   Що рахує assets/js/rulers.js: межі рамки (px від краю hero), підписи кожні 200 px
+   і чотири підписи меж. Без JS лінійки з рисками на місці, без цифр і діапазону.
+
+   Розмітка: <div class="rulers" data-target=".hero__role .selection"> з
+   .rulers__top і .rulers__left, у кожній — <span class="rulers__range">.
+   Товщину лінійки задає батько змінною --ruler-size (hero.css).
+   ========================================================================== */
+
+.rulers {
+  --ruler-tick: color-mix(in srgb, var(--color-text) 30%, transparent);
+  --ruler-range: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+@media (width < 768px) {
+  .rulers {
+    display: none;
+  }
+}
+
+/* ---------- Смуги: bg 70 % + край 1 px ----------
+   Край лежить поруч зі смугою (як ruler/edge у Figma, y = 20), тому +1px. */
+.rulers__top,
+.rulers__left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: color-mix(in srgb, var(--color-bg) 70%, transparent);
+  border: 0 solid var(--color-border);
+  background-repeat: repeat-x;
+}
+
+.rulers__top {
+  right: 0;
+  height: calc(var(--ruler-size) + 1px);
+  border-bottom-width: 1px;
+}
+
+.rulers__left {
+  bottom: 0;
+  width: calc(var(--ruler-size) + 1px);
+  border-right-width: 1px;
+}
+
+/* ---------- Інтро (spec 4.1): лінійки виїжджають із країв, --duration-intro ----------
+   Рішення Насті 14.10: верхня виїжджає з-під хедера, ліва — зліва, одночасно з появою
+   (opacity 0 → 1). Шар фону hero обрізає все, що поза ним (overflow: hidden у hero.css),
+   тому лінійка «ховається» під хедер і не накладається на нього. Лише на старті;
+   reduced-motion — одразу. */
+.rulers__top {
+  animation: ruler-top-in var(--duration-intro) var(--ease-out) backwards;
+}
+
+.rulers__left {
+  animation: ruler-left-in var(--duration-intro) var(--ease-out) backwards;
+}
+
+@keyframes ruler-top-in {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes ruler-left-in {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+/* ---------- Риски: кожні 10 px — 3, кожні 50 — 6, кожні 100 — 10 ----------
+   Три шари в різних «поверхах» висоти, щоб на 100 px риски не накладались
+   і лишались одного кольору. Риски ростуть від внутрішнього краю лінійки. */
+.rulers__top {
+  background-image:
+    linear-gradient(to right, var(--ruler-tick) 1px, transparent 1px),
+    linear-gradient(to right, var(--ruler-tick) 1px, transparent 1px),
+    linear-gradient(to right, var(--ruler-tick) 1px, transparent 1px);
+  background-size: 10px 3px, 50px 3px, 100px 4px; /* check:ignore — риски з Figma (151:11) */
+  background-position: 0 100%, 0 calc(100% - 3px), 0 calc(100% - 6px); /* check:ignore */
+}
+
+.rulers__left {
+  background-image:
+    linear-gradient(to bottom, var(--ruler-tick) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ruler-tick) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ruler-tick) 1px, transparent 1px);
+  background-size: 3px 10px, 3px 50px, 4px 100px; /* check:ignore — риски з Figma (151:11) */
+  background-position: 100% 0, calc(100% - 3px) 0, calc(100% - 6px) 0; /* check:ignore */
+  background-repeat: repeat-y;
+}
+
+/* ---------- Діапазон виділення: смуга accent 14 % по межах рамки ----------
+   --x1 / --x2 і --y1 / --y2 (px від краю hero) ставить rulers.js. */
+.rulers__range {
+  position: absolute;
+  background: var(--ruler-range);
+}
+
+.rulers__top .rulers__range {
+  top: 0;
+  bottom: 0;
+  left: var(--x1);
+  width: calc(var(--x2) - var(--x1));
+}
+
+.rulers__left .rulers__range {
+  left: 0;
+  right: 0;
+  top: var(--y1);
+  height: calc(var(--y2) - var(--y1));
+}
+
+.rulers:not([data-ready]) .rulers__range {
+  display: none;
+}
+
+/* ---------- Підписи: Inter Medium 9 px (декоративні, виняток зі spec) ---------- */
+.rulers__label {
+  position: absolute;
+  font-size: 0.5625rem; /* check:ignore — 9 px, декоративний підпис лінійки (spec, виняток) */
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+}
+
+.rulers__top .rulers__label {
+  top: 2px; /* check:ignore — з Figma (151:12) */
+  left: calc(var(--pos) + 3px); /* check:ignore */
+}
+
+/* Підписи меж — accent: значення кроками 200 px ховаємо, коли вони ближче 45 px */
+.rulers__label--bound {
+  color: var(--color-accent);
+  opacity: 1;
+}
+
+/* Ліва лінійка: цифри повернуті на 90° (читаються знизу вгору, як у Figma 151:25) */
+.rulers__left .rulers__label {
+  left: 3px; /* check:ignore — з Figma (151:25) */
+  top: calc(var(--pos) + 3px); /* check:ignore */
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}

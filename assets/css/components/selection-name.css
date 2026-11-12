@@ -1,0 +1,16 @@
+/* ==========================================================================
+   selection-name.css — назва над рамкою Selection (компонент Selection/Name 918:57797)
+   Як ім'я шару у Figma над виділеним кадром. Радіус 4 — відомий виняток (у Space такого немає).
+   HTML: <span class="selection-name">Input field</span>
+   ========================================================================== */
+
+.selection-name {
+  align-self: flex-start;
+  padding: var(--space-4) var(--space-8);
+  border-radius: 4px; /* check:ignore — відомий виняток Selection/Name, рішення Насті 05.11 */
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  white-space: nowrap;
+}

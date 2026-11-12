@@ -1,0 +1,120 @@
+/* ==========================================================================
+   solution.css — картка рішення в Solutions
+   Figma: Solution 1–3 (74:133, 74:156, 74:172 — усі before/after з 20.10),
+   Solution/Mobile MVP (74:190). Spec: docs/specs/hifi-case.md, п. 7.
+   Варіанти: --full (Compare), --mvp (4 телефони).
+   ========================================================================== */
+
+/* Auto Layout vertical, gap 24; bg + border, radius/card, padding space/card-pad */
+.solution {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  min-width: 0;
+  padding: var(--space-card-pad);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-bg);
+}
+
+/* Solution/Head: статус → назва, gap 12 */
+.solution__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-12);
+}
+
+/* Семантично h4, вигляд heading/h3 */
+.solution__title {
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+}
+
+/* Вступний абзац MVP: body/case, у колонці читання 760 */
+.solution__lead {
+  max-width: var(--layout-reading);
+  font-size: var(--font-size-body-case);
+  line-height: var(--line-height-body-case);
+}
+
+/* Solution/Text (кейс DS): Before і After двома абзацами, body/case, gap 12; на Mobile body/base.
+   Продовження речення, яке на Mobile вже видно в медіа, — у .solution__more (на Mobile сховане) */
+.solution__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  font-size: var(--font-size-body-case);
+  line-height: var(--line-height-body-case);
+}
+
+.solution__text p {
+  margin: 0;
+}
+
+/* У картці рішення нижньої лінії рядка немає (правка Насті 12.10): картка сама є рамкою.
+   У Process рядки лишаються з лінією */
+.solution .details-row {
+  border-bottom: 0;
+}
+
+/* ---------- Logic from specs: вміст відкритого рядка (Figma 308:3035) ---------- */
+.logic {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  margin: 0;
+}
+
+.logic > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.logic dt {
+  font-size: var(--font-size-ui);
+  font-weight: 500;
+  line-height: var(--line-height-ui);
+}
+
+.logic dd {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+/* Кілька пунктів в одному dt — маркований список, як bullet list у тексті Figma (885:94160) */
+.logic__list {
+  max-width: 960px; /* check:ignore — ширина списку з Figma (885:94160), без токена */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding-inline-start: var(--space-24);
+  list-style: disc;
+}
+
+/* ---------- Mobile ---------- */
+@media (width < 768px) {
+  /* Logic from specs у картках рішень на Mobile прибрано (12.10, Настя).
+     У Process на Mobile рядки лишаються — тому правило тут, а не в details-row.css */
+  .solution .details-row {
+    display: none;
+  }
+
+  .solution__text {
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+  }
+
+  .solution__more {
+    display: none;
+  }
+
+  /* «Why this way» на Mobile прибрано в усіх картках — вони були задовгі (15.10, Настя); на Desktop видно */
+  .solution .why {
+    display: none;
+  }
+}

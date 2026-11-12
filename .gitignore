@@ -1,0 +1,13 @@
+.DS_Store
+*.swp
+.vscode/
+.idea/
+node_modules/
+
+# Ключі й паролі — ніколи не в git (рішення 11.11, безпека)
+.env*
+*.pem
+id_*
+
+# Локальні налаштування Claude Code (шляхи й дозволи конкретного комп’ютера)
+.claude/settings.local.json

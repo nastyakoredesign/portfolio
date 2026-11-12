@@ -1,0 +1,205 @@
+/* ==========================================================================
+   process.css — секція Process: шапка + два артефакти
+   Figma: Case/Process (74:107 Desktop, 142:97 Mobile), Process/Column (74:108), Process/Head (82:2),
+   Process/Artifacts (446:1081).
+   Spec: docs/specs/hifi-case.md, «Process». Padding секції — .case-section (64).
+   ========================================================================== */
+
+/* Auto Layout vertical: шапка → артефакти, gap 32 */
+.process__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+/* Шапка (82:2, змінено 20.10): заголовок і опис один під одним, gap 24 (Mobile 12);
+   опис — ширина для читання 760 */
+.process__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.process__lead {
+  max-width: var(--layout-reading);
+  font-size: var(--font-size-body-case);
+  line-height: var(--line-height-body-case);
+  text-wrap: wrap; /* рядки добивають до правого краю колонки, без вирівнювання «pretty» з base.css */
+}
+
+/* Process/Artifacts (446:1081, змінено 20.10): Desktop — демо 716 і картка спеки 460 в ряд, gap 24;
+   нижче 1024 — стовпчиком у тому ж порядку, gap 32. Колонки 716fr : 460fr — на 1200 рівно 716 і 460,
+   вужче — пропорційно, тож кадри однієї висоти (обидва 468 на 1200) без фіксованої висоти */
+.process__artifacts {
+  display: grid;
+  grid-template-columns: 716fr 460fr;
+  align-items: start;
+  gap: var(--space-24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Кадр → підпис: gap 12 (Mobile 8); підпис — ui/caption, як у Figma (рішення 20.10) */
+.process__artifacts .artifact {
+  gap: var(--space-12);
+}
+
+.process__artifacts .artifact__caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Картка спеки 460 × 468: пропорція — мінімальна висота, довший текст розтягує картку вниз */
+.process__artifacts .spec-card {
+  aspect-ratio: 460 / 468;
+}
+
+/* Кейс DS: один артефакт на всю ширину — скрін Variables у рамці Selection (Figma 811:39946, 811:41666).
+   Кадр 1200 × 956 (Mobile — кроп 358 × 246), рамка Selection назовні й маркери по кутах, тож без clip */
+.process__artifact .artifact__media {
+  position: relative;
+  aspect-ratio: 1200 / 956;
+  overflow: visible;
+}
+
+.process__artifact .artifact__media picture {
+  display: contents;
+}
+
+.process__artifact .artifact__media img {
+  border-radius: inherit;
+}
+
+.process__artifact .selection {
+  --selection-inset-x: var(--selection-stroke);
+  --selection-inset-y: var(--selection-stroke);
+}
+
+.process__inner > .artifact {
+  gap: var(--space-12);
+}
+
+.process__inner > .artifact .artifact__caption {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Revive (Figma 910:56746): спека 460 і три макети в ряд, gap 24; висота картки спеки 385 */
+.process__artifacts--spec-first {
+  grid-template-columns: 460fr 716fr;
+}
+
+.process__artifacts--spec-first .spec-card {
+  aspect-ratio: 460 / 385;
+}
+
+/* Панель макетів тієї ж висоти, що й картка спеки (Figma: обидві 385) */
+.process__artifacts--spec-first .layouts {
+  aspect-ratio: 716 / 385;
+}
+
+/* Три макети Add User на тінті accent-tint: padding 24, gap 24, radius/control.
+   Обводка 1 px accent-tint-active — як у картки спеки, але в тон тінту (Настя 09.11; так само principles.css).
+   Макет: схема модалки → назва (+ пігулка) → примітка, gap 12 (Figma 943:66582) */
+.layouts {
+  display: flex;
+  gap: var(--space-24);
+  padding: var(--space-24);
+  border: 1px solid var(--color-accent-tint-active);
+  border-radius: var(--radius-control);
+  background: var(--color-accent-tint);
+}
+
+.layouts__item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-12);
+  min-width: 0;
+}
+
+.layouts__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.layouts__text p {
+  margin: 0;
+}
+
+/* Title row: ui/label + пігулка, wrap, gap 8 */
+.layouts__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+  font-size: var(--font-size-ui);
+  font-weight: 500;
+  line-height: var(--line-height-ui);
+}
+
+.layouts__note {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* ---------- Нижче 1024 (iPad mini у портреті й Mobile): демо й картка одне під одним, gap 32 ----------
+   Настя 20.10: на 768 картка спеки 274 px завширшки і вдвічі вища за демо. Як TL;DR і Context:
+   окремий брейкпоінт лише для цього ряду, моди токенів (768) не змінюються */
+@media (width < 1024px) {
+  .process__artifacts {
+    grid-template-columns: 1fr;
+    gap: var(--space-32);
+  }
+
+  /* Висота картки — за вмістом */
+  .process__artifacts .spec-card {
+    aspect-ratio: auto;
+  }
+}
+
+@media (width < 768px) {
+  .process__head {
+    gap: var(--space-12);
+  }
+
+  .process__artifact .artifact__media {
+    aspect-ratio: 358 / 246;
+  }
+
+  /* Figma 811:41666: підпис на 24 під кадром (ручки Selection виходять на 4,5 вниз) */
+  .process__inner > .artifact {
+    gap: var(--space-24);
+  }
+
+  .process__artifacts .artifact {
+    gap: var(--space-8);
+  }
+}
+
+/* Mobile (Figma 910:58612): макети один під одним — схема 40 % ліворуч, текст праворуч, padding 16, gap 16 */
+@media (width < 768px) {
+  .layouts {
+    flex-direction: column;
+    gap: var(--space-24);
+    padding: var(--space-16);
+  }
+
+  .layouts__item {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-16);
+  }
+
+  .layouts__item .ux-screen {
+    flex: 0 0 40%;
+    width: 40%;
+  }
+
+  .layouts__text {
+    gap: var(--space-8);
+  }
+}

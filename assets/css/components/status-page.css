@@ -1,0 +1,189 @@
+/* ==========================================================================
+   status-page.css — основна секція службових сторінок: 404, далі «Кейс у роботі»
+   Figma: Hi-Fi → «Utility pages — 404 and Case in progress» (682:21181),
+   404 Desktop 682:21182 / Mobile 682:21366, шар «Main #main — 404» (682:21203);
+   «Кейс у роботі» Desktop 682:21235 / Mobile 682:21415 — модифікатор .status-page--case.
+   Шаблон спільний: пігулка-статус → h1 зі словом у рамці Selection → lead → картка або Text link.
+   Фон-сітка на 404 — наявний .cell-grid (cell-grid.css + cell-grid.js), як у Contact.
+   Тег курсора — наявний .cursor-tag (cursor-tag.css + cursor-tag.js).
+   ========================================================================== */
+
+/* Секція: Auto Layout vertical по центру, gap 48 (Content → посилання),
+   padding 64 зверху й знизу, з боків — .container у Content.
+   Висота — весь екран під хедером, як hero на Головній (рішення Насті 22.10):
+   футер видно лише після прокрутки. Вищий за екран вміст просто розтягує секцію */
+.status-page {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - var(--site-header-height)); /* --site-header-height — header.css */
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-48);
+  position: relative; /* фон-сітка .cell-grid */
+  isolation: isolate; /* сітка з z-index −1 — над фоном секції, під текстом */
+  padding-block: var(--space-64);
+  background: var(--color-accent-tint);
+}
+
+/* Content: пігулка → h1 → lead, gap 24, усе по центру */
+.status-page__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-24);
+  text-align: center;
+}
+
+/* Status pill (682:21205): padding 4 / 12, gap 8, body/base, text-secondary.
+   Як бейдж у hero, але без пульсу і з крапкою accent */
+.status-page__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--space-12);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+}
+
+/* Крапка 8 × 8: на 404 — accent, на «Кейсі у роботі» — колір статусу (--status-page-dot) */
+.status-page__dot {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: 50%;
+  background: var(--status-page-dot, var(--color-accent));
+}
+
+/* Пульс-ореол, як у бейджа hero (@keyframes badge-pulse — base.css), але одразу:
+   тут ні інтро, ні ротації. 3 цикли ≈ 5 с і стоп (WCAG 2.2.2, 11.11); знову — на hover
+   і після повернення до верху (motion-replay.js). Колір — від крапки (inherit) */
+.status-page__dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  opacity: 0;
+  animation: badge-pulse var(--duration-pulse) var(--ease-out) 3 forwards;
+}
+
+/* Title h1: heading/display (104 / Mobile 44 — мод перемикає tokens.css).
+   Ряд «Page» + слово в рамці, gap 24; не влазить — слово переходить на новий рядок (Wrap, gap 8) */
+.status-page__title {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-8) var(--space-24);
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-display);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Слово в рамці Selection (682:21212): рамка — частина розкладки, як у Figma
+   (padding 4 зверху, 8 знизу й з боків), тому inset рамки 0. Колір слова — accent */
+.status-page__accent {
+  --selection-inset-x: 0px;
+  --selection-inset-y: 0px;
+  position: relative;
+  padding: var(--space-4) var(--space-8) var(--space-8);
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+/* Lead: body/lead, не ширше layout/reading (760 у Figma) */
+.status-page__lead {
+  max-width: var(--layout-reading);
+  font-size: var(--font-size-lead);
+  line-height: var(--line-height-lead);
+  text-wrap: balance;
+}
+
+/* 404 Desktop (682:21203, правка Насті 22.10): між h1 і lead 48 — gap Content 24 + ще 24.
+   Пігулка → h1 лишається 24; на Mobile і на «Кейсі у роботі» lead іде через звичайний gap 24 */
+@media (width >= 768px) {
+  .status-page:not(.status-page--case) .status-page__lead {
+    margin-top: var(--space-24);
+  }
+}
+
+/* Картка кейсу між lead і посиланням: обгортка .status-page__card.container (ширину дає .container)
+   — зона тега курсора «Discover» над карткою (cursor-tag.js).
+   Назва картки тут h2 (під h1 сторінки), а на вигляд — heading/h3, як у картці на Головній */
+.status-page__card .case-card__title {
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+}
+
+/* ---------- «Кейс у роботі» (682:21256): білий фон, сітка з точок (.cell-grid--light) ----------
+   Заголовок — heading/h1 (56 / Mobile 36), а не display; між текстом і рамкою 12.
+   Lead — body/case (18, 1.6), text-secondary */
+.status-page--case {
+  --status-page-dot: var(--color-status-partly-text);
+  background: var(--color-bg);
+}
+
+.status-page--case .status-page__title {
+  column-gap: var(--space-12);
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+}
+
+/* Ширина як текстове поле Lead у Figma (682:21271, ≈ 0.8 × layout/reading): перший рядок
+   до «…portal and app» («I&nbsp;designed» склеєно в HTML), без вирівнювання рядків
+   (balance переносив уже після «take a look») */
+.status-page--case .status-page__lead {
+  max-width: calc(var(--layout-reading) * 0.8);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body-case);
+  line-height: var(--line-height-body-case);
+}
+
+@media (width >= 768px) {
+  .status-page--case .status-page__lead {
+    text-wrap: wrap;
+  }
+}
+
+/* Mobile: lead без висячого слова; між словом і рамкою 12, а не 24 (при 44 px 24 завелике, правка Насті 22.10), між рядками теж 12.
+   Заголовок переноситься сам, коли не влазить: на ~760 — один рядок */
+@media (width < 768px) {
+  /* Пігулка — як бейдж hero на Mobile (Figma 682:21383, 682:21432 = 66:177, 11.11):
+     ui/caption, точка 6 × 6, праворуч 14 */
+  .status-page__pill {
+    padding-right: 14px; /* check:ignore — 14 з Figma, токена немає */
+    font-size: var(--font-size-caption);
+    line-height: var(--line-height-caption);
+  }
+
+  .status-page__dot {
+    width: 6px;  /* check:ignore — токена 6 немає */
+    height: 6px; /* check:ignore */
+  }
+
+  .status-page__title {
+    gap: var(--space-12); /* між рядками й між словом і рамкою (Figma Title h1 682:21386, 682:21435: 12, 11.11) */
+  }
+
+  .status-page__lead {
+    text-wrap: pretty;
+  }
+}
+
+/* Телефон (< 480): 404 завжди у два рядки, як Figma Mobile 682:21386 — «Page not found» на 390 ще влазить
+   в один рядок, але впритул до краю. «Кейс у роботі» тут і так переноситься сам */
+@media (width < 480px) {
+  .status-page:not(.status-page--case) .status-page__title {
+    flex-direction: column;
+  }
+}
+
+/* Зменшити рух: сітка статична, без сліду клітинок (launch-checklist 3а → 404) */
+@media (prefers-reduced-motion: reduce) {
+  .status-page .cell-grid span {
+    display: none;
+  }
+}

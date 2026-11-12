@@ -1,0 +1,109 @@
+/* ==========================================================================
+   path.css — «маршрут» My path: три зупинки на пунктирній лінії
+   Figma: Path/Route (743:28136 Desktop, 743:28164 Mobile), Stop 1–3, Marker 48,
+   Route line (dashed, decorative). Іконки — Tabler outline, stroke 2.
+   Desktop: зупинки в ряд, пунктир через центри маркерів.
+   Нижче 1024: стовпчиком, маркер ліворуч, пунктир вертикальний.
+   Пунктир — відрізок від кожної зупинки до наступної (::after), тож він
+   закінчується рівно на останньому маркері за будь-якої довжини тексту.
+   ========================================================================== */
+
+/* Desktop: три колонки, gap 48 */
+.path {
+  --path-marker: var(--space-48); /* маркер 48 × 48 */
+  --path-gap: var(--space-48);
+  --path-dash: repeating-linear-gradient(var(--path-dir, to right), var(--color-accent) 0 var(--space-4), transparent var(--space-4) 10px); /* check:ignore — ритм пунктиру з Figma: штрих 4, крок 10 */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--path-gap);
+  padding: 0; /* <ol> без нумерації браузера */
+  list-style: none;
+}
+
+/* Зупинка: маркер → підпис → абзац, gap 16 */
+.path__stop {
+  position: relative; /* відрізок пунктиру */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* Відрізок 2 px accent: від правого краю маркера до маркера наступної зупинки, по центру висоти маркера */
+.path__stop:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--path-marker) / 2 - 1px);
+  left: var(--path-marker);
+  width: calc(100% - var(--path-marker) + var(--path-gap));
+  height: 2px;
+  background: var(--path-dash);
+}
+
+.path__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* Маркер: коло 48, обводка 2 accent, фон bg, іконка 24 accent */
+.path__marker {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--path-marker);
+  height: var(--path-marker);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  color: var(--color-accent);
+}
+
+/* Підпис — ui/label, text */
+.path__label {
+  font-weight: 500;
+  font-size: var(--font-size-ui);
+  line-height: var(--line-height-ui);
+}
+
+/* Абзац — body/case, text-secondary */
+.path__desc {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body-case);
+  line-height: var(--line-height-body-case);
+}
+
+/* Остання зупинка — «тепер»: маркер залитий accent, іконка on-accent, підпис accent */
+.path__stop--now .path__marker {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.path__stop--now .path__label {
+  color: var(--color-accent);
+}
+
+/* Нижче 1024 (як Mobile у Figma): стовпчиком, gap 32; маркер ліворуч, текст праворуч (gap 16),
+   підпис → абзац 8. Відрізок — вниз від маркера до маркера наступної зупинки */
+@media (width < 1024px) {
+  .path {
+    --path-gap: var(--space-32);
+    --path-dir: to bottom;
+    grid-template-columns: 1fr;
+    max-width: var(--layout-reading); /* на планшеті текст не ширший за рядок читання */
+  }
+
+  .path__stop {
+    flex-direction: row;
+  }
+
+  .path__stop:not(:last-child)::after {
+    top: var(--path-marker);
+    left: calc(var(--path-marker) / 2 - 1px);
+    width: 2px;
+    height: calc(100% - var(--path-marker) + var(--path-gap));
+  }
+
+  .path__text {
+    gap: var(--space-8);
+  }
+}

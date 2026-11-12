@@ -1,0 +1,202 @@
+/* ==========================================================================
+   quote-card.css — відгук про роботу над кейсом (компонент Quote card, набір 671:629: Type Curve 440:596 / Straight 672:607)
+   Секція Feedback (з 24.10; раніше — кінець Outcome), ряд «Quotes»: від 1024 — картки
+   поруч однакової висоти, нижче — одна під одною. Карусель від 4 карток — коли
+   з'явиться 4-й відгук (зараз їх 2).
+   HTML: <li><figure class="quote-card"><blockquote><p>…</p></blockquote>
+         <figcaption class="quote-card__caption"><span class="quote-card__who">
+         <span class="quote-card__name">…</span><span class="quote-card__role">…</span></span>
+         [<a class="text-link">…</a>]</figcaption></figure></li>
+   ========================================================================== */
+
+/* Ряд карток: від 1024 — 2 колонки, gap gutter; нижче — 1 колонка (див. кінець файлу) */
+.quote-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--layout-gutter);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Auto Layout vertical, gap 24, padding space/24 зверху й знизу, card-pad (32 / Mobile 24) з боків.
+   Без заливки, рамки й радіуса: ліворуч — «Figma-вектор» (.quote-card__path).
+   Підпис притиснуто донизу (margin-top: auto), щоб у двох картках він стояв на одному рівні */
+.quote-card {
+  position: relative; /* сюди прилипає лінія зліва */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  height: 100%;
+  margin: 0;
+  padding: var(--space-24) var(--space-card-pad);
+}
+
+/* body/case; лапки — частина тексту цитати, дослівно */
+.quote-card blockquote {
+  margin: 0;
+  font-size: var(--font-size-body-case);
+  line-height: var(--line-height-body-case);
+}
+
+/* Caption: Who ← → Link в один ряд (Auto Layout horizontal + wrap, space between, вирівнювання по низу),
+   gap 12. Коли обидва не вміщуються — посилання переходить на новий рядок */
+.quote-card__caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin-top: auto;
+}
+
+/* Who: ім'я (ui/label) → роль (body/base, text-secondary), gap 4 */
+.quote-card__who {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.quote-card__name {
+  font-size: var(--font-size-ui);
+  font-weight: 500;
+  line-height: var(--line-height-ui);
+}
+
+.quote-card__role {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-secondary);
+}
+
+/* ---------- Лінія зліва: «Figma-вектор» (Quote card, властивість Path line) ----------
+   Шар Path: 12 px завширшки, на всю висоту картки, flex-колонка з відступом 3 зверху й знизу.
+   Вузли (кружечки: заливка bg, обвідка accent) — вгорі й унизу; Desktop = Type Curve: S-крива
+   з середнім вузлом (залитий accent); Mobile = Type Straight: пряма. Один
+   компонент і одна розмітка, вигляд перемикає @media. Сегменти тягнуться по висоті картки:
+   SVG з preserveAspectRatio="none", а товщину 2 px тримає non-scaling-stroke.
+   Усе декоративне (aria-hidden); числа — геометрія з Figma (668:21780, 672:614). */
+.quote-card__path {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1px; /* check:ignore — геометрія Path з Figma */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 12px; /* check:ignore */
+  padding-block: 3px; /* check:ignore */
+  pointer-events: none;
+}
+
+.quote-card__path svg {
+  display: block;
+  overflow: visible;
+}
+
+.quote-card__path circle {
+  fill: var(--color-bg);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+.quote-path__vertex {
+  flex: none;
+}
+
+/* Сегмент тягнеться на вільну висоту; SVG трохи довший за нього (як у Figma), щоб кінець лінії
+   лягав під вузол */
+.quote-path__segment {
+  position: relative;
+  flex: 1 0 0;
+  width: 12px; /* check:ignore */
+  min-height: 1px;
+}
+
+.quote-path__segment svg {
+  position: absolute;
+  width: 6.23458px; /* check:ignore — з Figma */
+  height: 100.96%;
+}
+
+.quote-path__segment path,
+.quote-path__segment rect {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.quote-path__segment--curve-a svg {
+  top: 0;
+  left: 0.765px; /* check:ignore */
+}
+
+.quote-path__segment--curve-b svg {
+  top: -0.96%;
+  left: 5px; /* check:ignore */
+}
+
+/* Пряма: прямокутник 2 × висота, заливка accent (stroke не потрібен) */
+.quote-path__segment--line {
+  display: none;
+}
+
+.quote-path__segment--line svg {
+  top: 0;
+  left: 0;
+  width: 12px; /* check:ignore */
+  height: 100%;
+}
+
+.quote-path__segment--line rect {
+  fill: var(--color-accent);
+  stroke: none;
+}
+
+/* Середній вузол: 3 px у потоці, SVG 16 × 10 виходить за ці межі й центрується на ньому */
+.quote-path__mid {
+  position: relative;
+  flex: none;
+  width: 12px; /* check:ignore */
+  height: 3px; /* check:ignore */
+}
+
+.quote-path__mid svg {
+  position: absolute;
+  top: -3.5px; /* check:ignore */
+  left: -2px; /* check:ignore */
+  max-width: none; /* base.css: svg { max-width: 100% } стискав би 16 px до ширини слота 12 */
+}
+
+.quote-path__curve {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.quote-card__path .quote-path__vertex-mid {
+  fill: var(--color-accent);
+}
+
+/* Нижче 1024 (iPad mini у портреті, 768, і Mobile): відгуки одне під одним, на всю ширину —
+   у двох колонках по ~340 px текст тісниться. Той самий брейкпоінт, що й у картках TL;DR.
+   Лише для цього ряду; моди токенів не змінюються. */
+@media (width < 1024px) {
+  .quote-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile: Type=Straight замість Curve */
+@media (width < 768px) {
+  .quote-path__segment--curve-a,
+  .quote-path__segment--curve-b,
+  .quote-path__mid {
+    display: none;
+  }
+
+  .quote-path__segment--line {
+    display: block;
+  }
+}

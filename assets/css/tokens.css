@@ -1,0 +1,202 @@
+/* ==========================================================================
+   tokens.css — дизайн-токени сайту
+   Джерело правди: Figma «Portfolio» (tPVPydgz0leym8d6UrD6IH),
+   колекції змінних Color, Type, Space. Вивантажено 06.10.2026.
+
+   Як це читати, якщо думаєш у Figma:
+   - кожен рядок `--назва: значення;` = одна змінна (Variable) у Figma;
+   - назва змінної тут = Code syntax (WEB) цієї змінної у Figma,
+     тож у Dev Mode ти бачиш ту саму назву, що й у коді;
+   - `:root { … }` = мод Desktop (значення за замовчуванням);
+   - `@media (width < 768px) { :root { … } }` = мод Mobile:
+     браузер сам «перемикає мод», коли екран вужчий за 768 px.
+
+   Правило: змінив значення у Figma → зміни його тут (і навпаки).
+   Нові кольори й розміри спершу з'являються у Figma, потім тут.
+   ========================================================================== */
+
+:root {
+  /* ---------- Color (мод Light) ---------- */
+  /* Основа */
+  --color-bg: #ffffff;
+  --color-surface: #f7f7f7;
+  --color-text: #1a1a1a;
+  --color-text-secondary: #5c5c5c;
+  --color-border: #e4e4e4;
+  --color-placeholder: #ececec;        /* фон заглушок зображень */
+  --color-surface-sunken: #ececec;     /* підкладка Quote card; той самий колір, що placeholder, окрема змінна (рішення 15.10) */
+
+  /* Акцент */
+  --color-accent: #ae4f1d;
+  --color-accent-hover: #bc5522;
+  --color-accent-active: #9e4115;
+  --color-accent-tint: #fbf3ee;         /* фон hero і Contact */
+  --color-accent-tint-active: #f6e7de;
+  --color-on-accent: #ffffff;           /* текст на accent */
+
+  /* Темна зона: хедер, футер, секція Code, мобільне меню */
+  --color-ink: #1a1a1a;
+  --color-ink-raised: #262626;
+  --color-ink-border: #3d3d3d;
+  --color-on-ink: #ffffff;
+  --color-on-ink-secondary: #bdbdbd;
+  --color-accent-on-dark: #f0a47f;
+  --color-code-token: #7dd3c0;       /* підсвітка коду на ink: назви змінних, @media, курсор набору */
+
+  /* Контроли */
+  --color-control-border: rgb(26 26 26 / 0.2);
+  --color-control-bg: rgb(255 255 255 / 0.7);
+
+  /* Статуси */
+  --color-status-available: #2f9e57;    /* точка бейджа «Open to new roles» */
+  --color-status-shipped-bg: #e6f2ea;
+  --color-status-shipped-text: #1e6b3c;
+  --color-status-partly-bg: #fbf0d6;
+  --color-status-partly-text: #7a5200;
+  --color-status-concept-bg: #efefef;
+  --color-status-concept-text: #4d4d4d;
+
+  /* Колір клієнта в кейсі Centology (лише сторінка кейсу) */
+  --color-case-accent: #3e55ff;
+  /* Активний сегмент перемикача брендів у кейсі DS (Figma Color/brand-toggle/*, 05.11): Primary/600 бренду,
+     LCA і EBC трохи темніші заради контрасту 4,5:1 з білим текстом */
+  --color-brand-toggle-centology: #3e55ff;
+  --color-brand-toggle-lca: #007bb0;
+  --color-brand-toggle-ebc: #2e7aa9;
+  --color-brand-toggle-dma: #2f527a;
+  --color-case-accent-muted: #4f68bf;   /* приглушений синій: фон картки Centology на Home (Figma Color/case-accent-muted, 22.10) */
+  --color-case-revive-muted: #8156af;   /* приглушений фіолетовий Revive: фон картки Revive на Home (Figma Color/case-revive-muted, 22.10) */
+
+  /* ---------- Type: шрифти й розміри ---------- */
+  /* Розміри в rem: 1rem = 16px. Коментар праворуч — px як у Figma. */
+  --font-heading: "Commissioner", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-code: "JetBrains Mono", ui-monospace, monospace;
+
+  --font-size-display: 6.5rem;     /* 104 — лише роль у hero */
+  --font-size-h1: 3.5rem;          /* 56 */
+  --font-size-h2: 2.5rem;          /* 40 */
+  --font-size-h3: 1.75rem;         /* 28 */
+  --font-size-h4: 1.25rem;         /* 20 */
+  --font-size-lead: 1.75rem;       /* 28 */
+  --font-size-body-case: 1.125rem; /* 18 — лише текст сторінки кейсу */
+  --font-size-body: 1rem;          /* 16 */
+  --font-size-ui: 1rem;            /* 16 — підписи, кнопки, мітки */
+  --font-size-caption: 0.75rem;    /* 12 — стиль ui/caption: теги, статуси, бейдж hero на Mobile */
+  --font-size-wordmark: 1.3125rem; /* 21 — вордмарк (у коді це SVG) */
+
+  /* Висота рядка й трекінг — з текстових стилів Figma (відсотки → множник) */
+  --line-height-display: 1.05;
+  --line-height-h1: 1.15;
+  --line-height-h2: 1.2;
+  --line-height-h3: 1.25;
+  --line-height-h4: 1.3;
+  --line-height-lead: 1.5;
+  --line-height-body-case: 1.6;
+  --line-height-body: 1.5;
+  --line-height-ui: 1.3;
+  --line-height-caption: 1.3;      /* ui/caption: 130 % */
+  --letter-spacing-tight: -0.01em; /* display і h1: −1 % у Figma */
+
+  /* ---------- Space ---------- */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+  --space-128: 128px;
+
+  /* Семантичні (колекція Space, аліаси на примітиви, з 09.10).
+     На Mobile інші значення — див. мод Mobile нижче. */
+  --space-section: var(--space-96);   /* вертикальний padding секцій-«вітрин» */
+  --space-split-gap: var(--space-48); /* gap «основне + панель»; Outcome: заголовок → факти (24.10) */
+  --space-card-pad: var(--space-32);  /* padding карток рішень */
+  --space-section-bottom: var(--space-128); /* нижній padding секцій-«вітрин» кейсу: Solutions, From design to code, Outcome, Next case (12.10) */
+
+  --radius-control: 8px;   /* усе, що натискається */
+  --radius-card: 12px;     /* картки */
+  --radius-media: 12px;    /* кадри скрінів і медіа в кейсі; на Mobile 4 (див. нижче) */
+  --radius-pill: 999px;    /* лише неінтерактивні мітки */
+  --radius-phone: 24px;    /* екрани телефонів у Mobile app (MVP) */
+
+  /* Layout. У Figma мод Mobile має container 358 і reading 358 —
+     це результат на екрані 390 (390 − 2 × 16). У коді ширина гнучка:
+     .container = min(100% − 2 × gutter, --layout-container). */
+  --layout-container: 1200px;
+  --layout-reading: 760px;
+  --layout-gutter: 24px;
+  --layout-columns: 12;
+  --layout-carousel-inset: var(--space-24);
+
+  /* Розміри медіа й карток */
+  --size-card-media: 330px;
+  --size-card-media-featured: 440px;
+  --size-card-min-width: 420px;   /* мінімальна ширина картки в сітці Work (Desktop) */
+  --size-carousel-card: 280px;
+  --size-code-media: 232px;
+  --size-case-hero-media: 640px;
+  --size-case-media: 360px;
+  --size-case-compare: 640px;     /* кадр порівняння до/після (Desktop; на Mobile кадр за пропорцією скріна) */
+  --size-case-phone: 520px;
+  --size-case-phone-w: 266px;     /* ширина телефона; на Mobile 308 — значення для 390, у CSS пропорційно */
+  --size-case-artifact: 480px;
+  --size-process-media: 320px;
+  --size-tap-target: 44px; /* мінімум для кнопок (є лише у старій колекції WF/Size) */
+  --size-contact-button: 56px; /* кнопка-іконка контакту (Contact button), ≥ tap-target */
+
+  /* ---------- Motion (з hero-v2-spec і ds-components; у Figma не змінні — рішення 14.10: лише в CSS) ---------- */
+  --duration-fast: 120ms;   /* поява рамки Selection, тег курсора, вимірювання */
+  --duration-exit: 150ms;   /* вихід старого слова ролі (hero-v2-spec, розділ 2) */
+  --duration-base: 200ms;   /* меню, поява нового слова, згасання підказки */
+  --duration-slow: 300ms;   /* зміна ширини рамки, tween цифр */
+  --duration-medium: 400ms; /* поява лінійок в інтро */
+  --duration-intro: 700ms;  /* промальовування колонок в інтро (було 600, трохи повільніше 14.10) */
+  --duration-stagger: 40ms; /* затримка між колонками в інтро */
+  --duration-bob: 1200ms;   /* один цикл bob скрол-підказки (4 цикли ≈ 5 с, 11.11) */
+  --duration-pulse: 1600ms; /* один цикл пульсу бейджа (3 цикли ≈ 5 с, 11.11) */
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.42, 0, 0.58, 1); /* = ease-in-out: bob скрол-підказки */
+  --selection-stroke: 1.5px; /* рамка Selection на hover */
+  --selection-stroke-focus: 2px;
+  --selection-handle: 9px;   /* маркери по кутах рамки */
+}
+
+/* ---------- Мод Mobile (екран ≤ 767 px) ----------
+   Тут лише ті змінні, що в мобільному моді відрізняються від Desktop. */
+@media (width < 768px) {
+  :root {
+    --font-size-display: 2.75rem;  /* 44 */
+    --font-size-h1: 2.25rem;       /* 36 */
+    --font-size-h2: 1.75rem;       /* 28 */
+    --font-size-h3: 1.375rem;      /* 22 */
+    --font-size-lead: 1.125rem;    /* 18 */
+    --font-size-wordmark: 1rem;    /* 16 */
+
+    --space-section: var(--space-64);
+    --space-split-gap: var(--space-24);
+    --space-card-pad: var(--space-24);
+    --space-section-bottom: var(--space-64);
+
+    --layout-gutter: 16px;
+    --layout-columns: 4;
+
+    --radius-media: 4px;
+
+    --size-card-media: 280px;
+    --size-card-media-featured: 280px;
+    --size-carousel-card: 342px;
+    --size-code-media: 280px;
+    --size-case-hero-media: 240px;
+    --size-case-media: 220px;
+    --size-case-compare: 220px;
+    --size-case-phone: 600px;
+    --size-case-phone-w: 308px;
+    --size-case-artifact: 240px;
+    --size-process-media: 200px;
+  }
+}

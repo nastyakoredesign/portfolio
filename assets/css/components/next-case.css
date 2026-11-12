@@ -1,0 +1,20 @@
+/* ==========================================================================
+   next-case.css — секція Next case: шапка + CaseCard (Layout=Horizontal на Desktop)
+   Figma: Case/Next case (74:262 Desktop, 142:261 Mobile), Next case/Column (74:263),
+   Next case/Head (284:1682). Spec: docs/specs/hifi-case.md, п. 11.
+   Саму картку малює case-card.css (модифікатор --horizontal).
+   ========================================================================== */
+
+/* Секція: padding зверху space/section, знизу space/section-bottom.
+   Лінії зверху немає (прибрано на всіх сторінках, Настя 06.11) */
+.next-case {
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section-bottom);
+}
+
+/* Column: Auto Layout vertical, gap 32 (шапка .section-head → картка) */
+.next-case__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}

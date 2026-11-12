@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nastya-korenevych.vercel.app/sitemap.xml

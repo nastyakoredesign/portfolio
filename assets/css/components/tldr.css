@@ -1,0 +1,76 @@
+/* ==========================================================================
+   tldr.css — секція TL;DR і її пункти (компонент TL;DR item)
+   Figma: Case/TL;DR (74:50 Desktop, 142:38 Mobile), TL;DR item (300:2042).
+   Spec: docs/specs/hifi-case.md, п. 3. Лише Style=Card (Style=List прибрано, правка Насті 12.10):
+   від 1024 три картки в ряд, нижче — одна під одною (Mobile — те саме, на всю ширину).
+   ========================================================================== */
+
+/* ---------- Секція: шапка → список, gap 48 на Desktop (Figma 74:50, Настя 24.10; було 32),
+   32 на Mobile (142:38). Padding: space/section (96 / 64), знизу на Mobile 32 ---------- */
+.tldr {
+  padding-block: var(--space-section);
+}
+
+.tldr__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+}
+
+@media (width < 768px) {
+  .tldr {
+    padding-bottom: var(--space-32);
+  }
+
+  .tldr__inner {
+    gap: var(--space-32);
+  }
+}
+
+/* ---------- Список: <ol>, номери рахує CSS-лічильник ----------
+   Desktop: три колонки, gap 24; картки однакової висоти (stretch у grid) */
+.tldr__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-24);
+  padding: 0;
+  list-style: none;
+  counter-reset: tldr;
+}
+
+/* ---------- TL;DR item, Style=Card: surface + border, padding 24, gap 12 ---------- */
+.tldr-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: var(--space-24);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  font-size: var(--font-size-body-case);
+  line-height: var(--line-height-body-case);
+  counter-increment: tldr;
+}
+
+/* Номер 01–03: стиль heading/h2, accent (Figma 24.10; було h3). Декоративний: «/ ""» — порожній
+   текст для скрінрідера, номер він і так чує від <ol> */
+.tldr-item::before {
+  content: counter(tldr, decimal-leading-zero) / "";
+  color: var(--color-accent);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+  font-weight: 600;
+  font-variation-settings: "FLAR" 50;
+  line-height: var(--line-height-h2);
+}
+
+/* ---------- Нижче 1024 (планшет і Mobile): картки одна під одною, gap 24 ----------
+   Рішення Насті 12.10: на iPad mini у портреті (768) три картки по 224 px —
+   текст у 7 рядків. Від 1024 (iPad у ландшафті) — знову три в ряд.
+   На Mobile (Figma 142:38) — ті самі картки, на всю ширину; окремого вигляду списку немає.
+   Окремий брейкпоінт лише для цього ряду, моди токенів не змінюються. */
+@media (width < 1024px) {
+  .tldr__list {
+    grid-template-columns: 1fr;
+  }
+}

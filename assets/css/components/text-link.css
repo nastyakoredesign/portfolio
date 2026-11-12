@@ -1,0 +1,86 @@
+/* ==========================================================================
+   text-link.css — текстове посилання
+   Figma: компонент Text link (192:1637), Tone=Light і Dark. Spec: docs/specs/ds-components.md
+   Де стоїть: «Open case →» у CaseCard, далі — картки Code, футер, «← Work».
+   Default — підкреслене. Hover/Focus «стає фреймом»: рамка Selection поза текстом
+   (inset 8 / 4, макет не зсувається), підкреслення зникає, Light — текст accent-hover.
+   Розмітка: <a class="text-link" href="…">Текст <span class="selection selection--interactive"
+   aria-hidden="true"><i></i>…</span></a>. Без .selection посилання лишається Default:
+   так у CaseCard «Open case →» не має власних станів, рамку показує картка.
+   ========================================================================== */
+
+/* Стиль ui/label, accent, підкреслення (у Figma — окремий шар Underline) */
+.text-link {
+  position: relative; /* сюди «прилипає» рамка Selection */
+  --selection-inset-x: var(--space-8);
+  --selection-inset-y: var(--space-4);
+  color: var(--color-accent);
+  font-weight: 500;
+  font-size: var(--font-size-ui);
+  line-height: var(--line-height-ui);
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+
+/* Tone=Dark — на темних зонах (ink / ink-raised): секція Code, далі футер */
+.text-link--dark {
+  --selection-color: var(--color-accent-on-dark);
+  --selection-color-pressed: var(--color-accent-on-dark);
+  --selection-handle-fill: var(--color-ink);
+  color: var(--color-accent-on-dark);
+}
+
+/* Hover (лише з курсором) і Focus: підкреслення зникає, Light світлішає.
+   Прозорий outline — для Windows High Contrast. Dark колір не міняє. */
+@media (hover: hover) {
+  .text-link:has(> .selection):hover {
+    color: var(--color-accent-hover);
+    text-decoration: none;
+  }
+
+  .text-link--dark:has(> .selection):hover {
+    color: var(--color-accent-on-dark);
+  }
+}
+
+.text-link:has(> .selection):focus-visible {
+  color: var(--color-accent-hover);
+  text-decoration: none;
+  outline-color: transparent;
+}
+
+.text-link--dark:has(> .selection):focus-visible {
+  color: var(--color-accent-on-dark);
+}
+
+/* Pressed: фон під текстом (той самий розмір, що рамка), текст темніший.
+   Фон — ::before позаду тексту (z-index −1 у власному стековому контексті),
+   щоб не зсувати рядок. Light: accent-tint-active, Dark: ink-raised. */
+.text-link:has(> .selection) {
+  isolation: isolate;
+}
+
+.text-link:has(> .selection)::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--selection-inset-y)) calc(-1 * var(--selection-inset-x));
+  z-index: -1;
+}
+
+.text-link:has(> .selection):active {
+  color: var(--color-accent-active);
+  text-decoration: none;
+  outline-color: transparent;
+}
+
+.text-link:has(> .selection):active::before {
+  background: var(--color-accent-tint-active);
+}
+
+.text-link--dark:has(> .selection):active {
+  color: var(--color-accent-on-dark);
+}
+
+.text-link--dark:has(> .selection):active::before {
+  background: var(--color-ink-raised);
+}

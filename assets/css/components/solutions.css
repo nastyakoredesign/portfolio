@@ -1,0 +1,180 @@
+/* ==========================================================================
+   solutions.css — секція Solutions: шапка, групи, ряд карток, телефони
+   Figma: Case/Solutions (74:128 Desktop, 142:124 Mobile), Solutions/Groups (282:1678),
+   Group/Web portal (74:131), Group/Mobile app (74:188). Стани: 308:2125, 308:3035.
+   Spec: docs/specs/hifi-case.md, п. 7 і «Solutions (картки)». Фон секції — surface.
+   ========================================================================== */
+
+/* Solutions/Column: eyebrow → групи, gap 12; padding зверху space/section (96 / 64), знизу space/section-bottom (128 / 64) */
+.solutions {
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section-bottom);
+  background: var(--color-surface);
+}
+
+.solutions__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+/* Семантично h2, вигляд eyebrow (.eyebrow з section-head.css): шрифт тіла, не заголовка */
+.solutions__title {
+  font-family: var(--font-body);
+  font-variation-settings: normal;
+  text-align: center;
+}
+
+/* Solutions/Groups: gap space/section */
+.solutions__groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-section);
+}
+
+/* Group: назва → вміст, gap 48. Назва — семантично h3, вигляд heading/h2, по центру */
+.solutions-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+}
+
+.solutions-group__title {
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  text-align: center;
+}
+
+/* ---------- Web portal: Desktop і планшет — три рішення одне під одним, gap 48 (Figma 74:131, 20.10) ---------- */
+.solutions-carousel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.solutions-carousel__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+}
+
+/* ---------- Mobile app (MVP): 4 телефони в ряд ---------- */
+.phones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--layout-gutter);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Рамка телефона: 1px accent, radius/phone, екран обрізаний по кутах (Figma Phone 1, 74:197) */
+.phone {
+  aspect-ratio: 1 / var(--phone-ratio); /* на вужчих екранах телефон зменшується, а не витягується */
+  overflow: clip;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-phone);
+}
+
+.phone img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.phones-carousel {
+  --phone-ratio: 1.95; /* висота / ширина телефона: експорт 390 × 760 (у кейсі 266 × 520) */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+/* ---------- Планшет (768–1023): телефони 3 в ряд ----------
+   Локальний брейкпоінт 1024, як у TL;DR і .split (правка Насті 12.10: iPad mini).
+   Телефони зменшуються пропорційно (1 : 1.95, як на Mobile), четвертий прихований */
+@media (768px <= width < 1024px) {
+  .phones {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .phone:nth-child(4) {
+    display: none;
+  }
+}
+
+/* ---------- Mobile: каруселі, як Work на головній ---------- */
+@media (width < 768px) {
+  /* Фокус на ряді: рамка всередині, бо зовнішню обрізав би край екрана */
+  .solutions-carousel__row:focus-visible,
+  .phones:focus-visible {
+    outline-offset: -2px;
+  }
+
+  /* Ряд виходить за контейнер до країв екрана; padding-inline = carousel-inset (24),
+     тож перша картка стоїть зліва, а від другої видно 12 px */
+  .solutions-carousel__row {
+    flex-direction: row;
+    gap: var(--space-12);
+    margin-inline: calc(-1 * var(--layout-gutter));
+    padding-inline: var(--layout-carousel-inset);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .solutions-carousel__row::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Картки однакової висоти (align-items: stretch за замовчуванням) */
+  /* 100 % внутрішньої ширини ряду = екран − 2 × inset (на 390 — 342). Так, як у Work:
+     від наступної картки завжди видно 12 px, на 360 теж (фіксований 342 її ховав) */
+  .solutions-carousel__row > .solution {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+  }
+
+  /* Картка MVP: ряд телефонів — до самої рамки картки, поля лишаються в голови й «Why».
+     Перший телефон стоїть ліворуч, від другого видно край (як Work на головній) */
+  .phones {
+    display: flex;
+    gap: var(--space-12);
+    margin-inline: calc(-1 * var(--space-card-pad));
+    padding-inline: var(--layout-carousel-inset);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .phones::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Телефон: до 100 % внутрішньої ширини ряду (екран − 2 × inset, на 390 — 308), висота за
+     пропорцією. Стеля висоти — токен Mobile 600 (Figma) і 65 % видимої висоти екрана: на
+     невисоких телефонах кадр не займає весь екран, а з боків видно більше сусідніх екранів.
+     Ширину рахуємо зі стелі висоти (aspect-ratio сам її не зменшить, бо ширина задана) */
+  .phone {
+    flex: 0 0 min(100%, calc(var(--size-case-phone) / var(--phone-ratio)), calc(65svh / var(--phone-ratio)));
+    scroll-snap-align: center;
+  }
+}
+
+/* ---------- Лежачий телефон (Mobile-мод, але широкий і низький екран) ----------
+   У каруселі висоту телефона обмежує 65 % висоти екрана, тож у ландшафті кадри
+   ставали дрібними й не заповнювали ряд, а крапки показували карусель, якої немає.
+   Тут — як на десктопі: чотири телефони в ряд на всю ширину, без крапок. */
+@media (width < 768px) and (orientation: landscape) {
+  .phones {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+  }
+
+  .phones-carousel .carousel-dots {
+    display: none;
+  }
+}

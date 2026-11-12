@@ -1,0 +1,71 @@
+/* ==========================================================================
+   contact-button.css — кнопка контакту: іконка + видимий підпис (14.10)
+   Figma: компонент Contact button (set 185:1154), Tone=Light, State=Default/Hover/Focus/Pressed.
+   Spec: docs/specs/ds-components.md → «Contact (14.10)»
+
+   Розмітка: <a class="contact-button" href="…">
+             <svg … stroke="currentColor" aria-hidden="true">…</svg>LinkedIn
+             <span class="selection selection--interactive" aria-hidden="true"><i></i>…</span></a>
+   Hover/Focus «стає фреймом»: рамка Selection (selection.css), radius 12 → 0,
+   іконка accent → accent-hover. Усе це лише там, де в розмітці є .selection.
+   ========================================================================== */
+
+/* Іконка 24 + підпис ui/label, gap 8; висота 56, ширина за текстом (Hug) —
+   UA-підписи довші, фіксованої ширини немає (Auto Layout: center / center) */
+.contact-button {
+  position: relative; /* сюди «прилипає» рамка Selection */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  height: var(--size-contact-button);
+  padding-inline: var(--space-16);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-accent); /* колір іконки й підпису: stroke="currentColor" */
+  font-weight: 500;
+  font-size: var(--font-size-ui);
+  line-height: var(--line-height-ui);
+  text-decoration: none;
+  white-space: nowrap;
+  /* Рамка накриває 1px-бордер кнопки (у Figma Selection inset −1) */
+  --selection-inset-x: 1px;
+  --selection-inset-y: 1px;
+}
+
+/* Hover / Focus: кнопка «стає фреймом» — кути гострі, іконка світліша.
+   Hover — лише з курсором; Focus — завжди. Прозорий outline лишаємо для
+   Windows High Contrast (замість кільця з base.css малює рамка Selection). */
+@media (hover: hover) {
+  .contact-button:has(> .selection):hover {
+    border-radius: 0;
+    color: var(--color-accent-hover);
+  }
+}
+
+.contact-button:has(> .selection):focus-visible {
+  border-radius: 0;
+  color: var(--color-accent-hover);
+  outline-color: transparent;
+}
+
+.contact-button:has(> .selection) {
+  transition:
+    border-radius var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+/* Pressed: фон accent-tint-active, рамка 2 px accent-active (selection.css) */
+.contact-button:has(> .selection):active {
+  background: var(--color-accent-tint-active);
+  color: var(--color-accent-hover);
+}
+
+/* Кути → 0 на Pressed лише з мишкою: на touch кнопка не «стає фреймом» */
+@media (hover: hover) and (pointer: fine) {
+  .contact-button:has(> .selection):active {
+    border-radius: 0;
+  }
+}

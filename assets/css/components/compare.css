@@ -1,0 +1,271 @@
+/* ==========================================================================
+   compare.css — порівняння до/після (усі три рішення Web portal у кейсі)
+   Figma: компонент Compare (288:404); у кейсі Compare/Before-After 289:1827, 618:20916,
+   618:20951 (Desktop), 289:2858 (Mobile). Spec: docs/specs/before-after-spec.md.
+   Без JS:
+   - Desktop: два скріни поруч, кожен зі своєю міткою; повзунка не видно.
+   - Mobile: перемикач Before | After (.toggle, радіо + :has()), одне зображення, один підпис.
+   `.compare--enhanced` (додає compare.js, лише ≥ 768) накладає скріни й показує
+   лінію з ручкою; позиція — змінна --pos (за замовчуванням 50 %).
+   ========================================================================== */
+
+/* Auto Layout vertical, gap 12: [перемикач] → кадр → підписи */
+.compare {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  margin: 0;
+}
+
+/* ---------- Кадр ---------- */
+.compare__media {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--layout-gutter);
+}
+
+/* Шар = скрін + його тег (у Figma — фрейм з Clip content): маска шару «після»
+   обрізає і скрін, і тег After, тож тег ховається разом зі своїм боком */
+.compare__layer {
+  position: relative;
+}
+
+.compare__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-media);
+}
+
+/* Мітки Before / After: пігулки внизу свого шару. Before — ink, After — accent */
+.compare__tag {
+  position: absolute;
+  bottom: var(--space-16);
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-ui);
+  font-weight: 500;
+  line-height: var(--line-height-ui);
+}
+
+.compare__tag--before {
+  left: var(--space-16);
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+}
+
+.compare__tag--after {
+  right: var(--space-16);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* Лінія, ручка й повзунок з'являються лише з JS (.compare--enhanced) */
+.compare__line,
+.compare__handle,
+.compare__range {
+  display: none;
+}
+
+/* ---------- Підписи: Desktop — два стовпці під половинами ---------- */
+.compare__captions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--layout-gutter);
+}
+
+.compare__caption {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.compare__label {
+  font-size: var(--font-size-ui);
+  font-weight: 500;
+  line-height: var(--line-height-ui);
+}
+
+/* Назва «Before» / «Empty» — text, опис під нею лишається secondary (Настя 09.11; Figma Compare 288:375, 304:2232) */
+.compare__caption--before .compare__label {
+  color: var(--color-text);
+}
+
+.compare__caption--after .compare__label {
+  color: var(--color-accent);
+}
+
+/* Перемикач — лише Mobile. Вигляд і повзунок — спільний .toggle (toggle.css, toggle.js),
+   тут лише показ і колір вибраного сегмента */
+.compare__toggle {
+  display: none;
+}
+
+/* ---------- Desktop з JS: один кадр, лінія по центру ---------- */
+@media (width >= 768px) {
+  .compare--enhanced .compare__media {
+    display: block;
+    aspect-ratio: 1134 / 646; /* пропорція скріна; --size-case-compare — дзеркало Figma */
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-media);
+    overflow: clip;
+  }
+
+  /* Обидва шари в одному боксі й з однаковим кадруванням; «після» — зверху */
+  .compare--enhanced .compare__layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .compare--enhanced .compare__img {
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    object-fit: cover;
+  }
+
+  /* Маска шару «після»: видно праворуч від лінії. Тег Before ховається під шаром «після»,
+     тег After — обрізається маскою */
+  .compare--enhanced .compare__layer--after {
+    clip-path: inset(0 0 0 var(--pos, 50%));
+  }
+
+  /* Лінія 2 px і ручка 44 — по центру лінії (Divider / Handle у Figma) */
+  .compare--enhanced .compare__line {
+    position: absolute;
+    inset-block: 0;
+    left: var(--pos, 50%);
+    display: block;
+    width: 2px;
+    background: var(--color-accent);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .compare--enhanced .compare__handle {
+    position: absolute;
+    top: 50%;
+    left: var(--pos, 50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size-tap-target);
+    height: var(--size-tap-target);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius-pill);
+    background: var(--color-bg);
+    color: var(--color-accent);
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* тягнемо за будь-яку точку кадру, і за ручку теж — подія йде в повзунок під нею */
+  }
+
+  /* Нативний range на весь кадр, прозорий: миша, палець і стрілки керують ним */
+  .compare--enhanced .compare__range {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    appearance: none;
+    touch-action: pan-y; /* вертикальний скрол сторінки пальцем не блокується */
+  }
+
+  /* «Бігунок» повзунка вузький (2 px, як лінія): тоді значення = точка під курсором
+     і на краях кадру лінія не відстає від руки */
+  .compare--enhanced .compare__range::-webkit-slider-thumb {
+    width: 2px;
+    height: var(--size-tap-target);
+    appearance: none;
+  }
+
+  .compare--enhanced .compare__range::-moz-range-thumb {
+    width: 2px;
+    height: var(--size-tap-target);
+    border: 0;
+  }
+
+  /* Фокус: сам повзунок прозорий, тож кільце 2 px accent малюємо на ручці з відступом 2 px.
+     transparent-outline на повзунку лишаємо для Windows High Contrast */
+  .compare--enhanced .compare__range:focus-visible {
+    outline: 2px solid transparent;
+  }
+
+  .compare--enhanced .compare__range:focus-visible ~ .compare__handle {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* Курсор ↔ лише для миші */
+@media (width >= 768px) and (hover: hover) and (pointer: fine) {
+  .compare--enhanced .compare__range {
+    cursor: ew-resize;
+  }
+}
+
+/* ---------- Mobile: перемикач Before | After, одне зображення ---------- */
+@media (width < 768px) {
+  /* Перемикач — компонент Toggle (уніфікація повзунка, правка Насті 09.11): pill, padding 4, gap 4,
+     сегменти порівну. Вибраний сегмент: Before — ink, After — accent (як мітки на Desktop) */
+  .compare__toggle {
+    display: flex;
+  }
+
+  .compare__toggle:has(.compare__option--before input:checked) {
+    --toggle-active: var(--color-ink);
+  }
+
+  /* Два короткі сегменти — завжди порівну, і на вузьких телефонах (< 400 у toggle.css вони за вмістом) */
+  .compare__toggle .toggle__option {
+    flex: 1 1 0;
+  }
+
+  /* Кадр: скрін повністю, за пропорцією 1134 : 646 (без токена висоти) */
+  .compare__media {
+    display: block;
+  }
+
+  .compare__img {
+    aspect-ratio: 1134 / 646;
+    object-fit: contain;
+  }
+
+  .compare__tag {
+    display: none;
+  }
+
+  /* Показуємо лише вибраний стан: шар зі скріном і підпис */
+  .compare__layer--before,
+  .compare__caption--before {
+    display: none;
+  }
+
+  .compare:has(input[value="before"]:checked) .compare__layer--before {
+    display: block;
+  }
+
+  .compare:has(input[value="before"]:checked) .compare__layer--after {
+    display: none;
+  }
+
+  .compare:has(input[value="before"]:checked) .compare__caption--after {
+    display: none;
+  }
+
+  .compare__captions {
+    grid-template-columns: 1fr;
+  }
+
+  /* .compare__caption — flex; перевизначаємо display тільки для видимого */
+  .compare:has(input[value="before"]:checked) .compare__caption--before {
+    display: flex;
+  }
+}

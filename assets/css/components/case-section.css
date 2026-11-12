@@ -1,0 +1,57 @@
+/* ==========================================================================
+   case-section.css — текстова секція кейсу: заголовок ліворуч + вміст
+   Figma: Case/Context and problem (74:63 Desktop, 142:51 Mobile), Column (74:64).
+   Spec: docs/specs/hifi-case.md, «Відступи секцій». Використовують Context, My role, Process.
+   ========================================================================== */
+
+/* Auto Layout vertical: заголовок → вміст, gap 24; padding space/section (Desktop 96, Mobile 64) */
+.case-section {
+  padding-block: var(--space-section);
+}
+
+/* Варіант --tint: фон accent-tint на всю ширину (як у Contact і hero).
+   Секція — на всю ширину, .container усередині тримає колонку 1200 */
+.case-section--tint {
+  background: var(--color-accent-tint);
+}
+
+.case-section__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+/* Заголовок — h2 з base.css (heading/h2), лише без зайвих полів */
+.case-section__title {
+  text-align: left;
+}
+
+/* ---------- Підблок «заголовок h4 → список» (My role: What I did, Figma 74:83) ----------
+   Auto Layout vertical, gap 12. Desktop — padding 24 зверху й знизу (як у Figma),
+   Mobile — без нього (142:73). Мод Mobile = 768, як у токенів. */
+.case-section__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding-block: var(--space-24);
+}
+
+/* Структура h3, вигляд heading/h4 */
+.case-section__subtitle {
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
+}
+
+@media (width < 768px) {
+  .case-section__block {
+    padding-block: 0;
+  }
+}
+
+/* My role у .split: нижче 1024 панель Properties стоїть під списком, відступ до неї
+   дає лише gap .split (48 / 24) — без нижнього padding блоку (інакше на 768–1023 було 72) */
+@media (width < 1024px) {
+  .split > .case-section__block {
+    padding-bottom: 0;
+  }
+}

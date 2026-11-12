@@ -1,0 +1,128 @@
+/* ==========================================================================
+   toggle.css — сегментований перемикач (компонент Toggle 875:1694 + Toggle segment 875:1679)
+   Кейс DS: перемикач брендів (Options=4), перемикачі панелі властивостей (Off | On, Default | Error…),
+   Typography | Color на Mobile. Нативні радіо: role=radiogroup, input — .visually-hidden.
+   HTML: <div class="toggle" role="radiogroup" aria-label="…">
+           <label class="toggle__option"><input class="visually-hidden" type="radio" name="…" value="…" checked>Підпис</label>…
+   Варіанти: --small (caption, панель властивостей), --brand (активний сегмент — колір бренду, data-brand на label).
+   Вигляд сегмента 24–29 px, як у Figma; клікабельна зона ≥ 44 px (--size-tap-target) —
+   невидимий шар ::after (рішення Насті 05.11).
+   Перемикання стану — без JS: радіо + :has() у brand-switcher.css, stage.css, rules.css.
+   Повзунок (toggle.js, правка Насті 09.11): заливка вибраного сегмента переїжджає на новий,
+   як Smart Animate з Move. Без JS заливка стоїть на самому вибраному сегменті.
+   ========================================================================== */
+
+/* Auto Layout horizontal: pill, padding 4, gap 4.
+   --toggle-active — колір заливки вибраного сегмента (у --brand — колір бренду) */
+.toggle {
+  --toggle-active: var(--color-accent);
+  position: relative;
+  display: flex;
+  gap: var(--space-4);
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+}
+
+/* position: relative — прихований радіо (.visually-hidden, absolute) лишається в підписі */
+.toggle__option {
+  position: relative;
+  display: flex;
+  /* Як у Figma: сегменти ділять ширину порівну (FILL), а довший за свою частку
+     (Centology, Disabled) лишається за вмістом (HUG) — не ширший */
+  flex: 1 1 0;
+  min-width: max-content;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-ui);
+  font-weight: 500;
+  line-height: var(--line-height-ui);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--duration-slow) var(--ease-in-out); /* текст змінює колір разом із приїздом повзунка */
+}
+
+/* Невидимий шар до 44 px по висоті: 100 % = висота сегмента, тож шар виходить за нього порівну */
+.toggle__option::after {
+  content: "";
+  position: absolute;
+  inset: calc((100% - var(--size-tap-target)) / 2) 0;
+}
+
+.toggle__option:has(input:checked) {
+  background: var(--toggle-active);
+  color: var(--color-on-accent);
+}
+
+/* ---------- Повзунок (є лише з JS: toggle.js додає .toggle__thumb і .toggle--js) ----------
+   Одна заливка під сегментами; JS кладе в змінні позицію й розмір вибраного сегмента.
+   Сегменти йдуть у DOM після повзунка, тож текст лежить над ним */
+.toggle--js .toggle__option:has(input:checked) {
+  background: none;
+}
+
+.toggle__thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--thumb-w, 0);
+  height: var(--thumb-h, 0);
+  border-radius: var(--radius-pill);
+  background: var(--toggle-active);
+  transform: translate(var(--thumb-x, 0), var(--thumb-y, 0));
+  pointer-events: none;
+}
+
+/* Анімація — лише після першого розміщення, щоб повзунок не «приїжджав» при завантаженні */
+.toggle[data-ready] .toggle__thumb {
+  transition:
+    transform var(--duration-slow) var(--ease-out),
+    width var(--duration-slow) var(--ease-out),
+    background-color var(--duration-slow) var(--ease-in-out);
+}
+
+/* Сам input прихований, тож рамку фокуса малюємо на підписі */
+.toggle__option:has(input:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Small: панель властивостей (ui/caption, padding 8) ---------- */
+.toggle--small .toggle__option {
+  padding-inline: var(--space-8);
+  font-size: var(--font-size-caption);
+  font-weight: 400;
+  line-height: var(--line-height-caption);
+}
+
+/* ---------- Brand: активний сегмент — колір бренду (токени --color-brand-toggle-*) ---------- */
+.toggle--brand {
+  --toggle-active: var(--color-brand-toggle-centology);
+}
+
+.toggle--brand:has([data-brand="lca"] input:checked) {
+  --toggle-active: var(--color-brand-toggle-lca);
+}
+
+.toggle--brand:has([data-brand="ebc"] input:checked) {
+  --toggle-active: var(--color-brand-toggle-ebc);
+}
+
+.toggle--brand:has([data-brand="dma"] input:checked) {
+  --toggle-active: var(--color-brand-toggle-dma);
+}
+
+/* ---------- Вузькі телефони (< 400): сегменти за вмістом уже не влазять — стискаються
+   за рахунок padding, а не виходять за перемикач. Ширше — правило вище: порівну, а довший
+   за свою частку (Centology) — за вмістом, як у Figma 888:49434 ---------- */
+@media (width < 400px) {
+  .toggle__option {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}

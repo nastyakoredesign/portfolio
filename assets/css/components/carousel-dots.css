@@ -1,0 +1,38 @@
+/* ==========================================================================
+   carousel-dots.css — точки під каруселлю (Carousel/Dots), декор: Mobile, а з модифікатором --below-1024 — нижче 1024
+   Figma: Carousel/Dots (304:2979 — 3 точки, 287:1687 — 4). Спільні для Головної (Work) і кейсу (Solutions).
+   Активну ставить assets/js/carousel-dots.js (data-active); без JS — перша.
+   HTML: <div class="carousel-dots" aria-hidden="true"><span></span>…</div>
+   ========================================================================== */
+
+.carousel-dots {
+  display: none;
+  justify-content: center;
+  gap: var(--space-8);
+}
+
+/* Каруселі Work і Solutions — лише Mobile; журні UX analysis — нижче 1024 (модифікатор, 25.10) */
+@media (width < 768px) {
+  .carousel-dots {
+    display: flex;
+  }
+}
+
+@media (width < 1024px) {
+  .carousel-dots--below-1024 {
+    display: flex;
+  }
+}
+
+.carousel-dots span {
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: 50%;
+  background: var(--color-border);
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.carousel-dots:not([data-ready]) span:first-child,
+.carousel-dots span[data-active] {
+  background: var(--color-accent);
+}

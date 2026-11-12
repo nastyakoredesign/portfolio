@@ -1,0 +1,36 @@
+/* ==========================================================================
+   split.css — патерн «основне + панель»
+   Figma: Row/Context (79:2 Desktop, 142:54 Mobile). Spec: hifi-case.md, «Патерн».
+   Desktop: ліва колонка Fill, права панель 460, gap space-split-gap, вирівнювання по верху.
+   Нижче 1024 (планшет, рішення Насті 12.10): одна колонка, панель під основним
+   — на 768 основний текст інакше стискався б до 212 px. gap = токен (48 / 24).
+   ========================================================================== */
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 460px;
+  gap: var(--space-split-gap);
+  align-items: start;
+}
+
+/* Перший рядок основного тексту стає в лінію із заголовком панелі (padding панелі 24).
+   Лише Desktop: на Mobile панель під текстом, вирівнювати нема з чим */
+.split__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12); /* абзаци Context, у Figma відступ 12 */
+  padding-top: var(--space-24);
+  font-size: var(--font-size-body-case);
+  line-height: var(--line-height-body-case);
+}
+
+/* Окремий брейкпоінт лише для цього патерну, як у TL;DR; моди токенів не змінюються */
+@media (width < 1024px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .split__main {
+    padding-top: 0;
+  }
+}

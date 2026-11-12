@@ -1,0 +1,89 @@
+/* ==========================================================================
+   case-hero-stack.css — поява шарів стосу в hero кейсу DS (варіант --bare)
+   Задум Насті (ds-case-progress, 25.10): екрани з'являються по черзі один над одним.
+   Порядок у DOM = ззаду наперед: DMA, EBC, LCA, Centology. Кожен шар — fade + легкий підйом,
+   старт із 0 разом з лінійками й маркерами (case-hero.css); увесь рух ~1,3 с
+   (09.11 Настя: плавніше — довший прояв і більший крок між шарами).
+   Анімується лише opacity і transform: розкладка не зсувається.
+   HTML: .case-hero__media--bare > picture.case-hero__layer × 4
+   Кейс Revive (Настя 09.11): той самий стос із 2 шарів — екран, потім телефон; hover — зони data-layer
+   ========================================================================== */
+
+/* Smart Animate у Figma: Opacity 0 → 100 + Move In. Затримка = номер шару × 5 кроків stagger (200 мс) */
+.case-hero__media--bare .case-hero__layer {
+  animation: case-layer-in var(--duration-intro) var(--ease-out) backwards;
+  animation-delay: calc(var(--layer-index) * 5 * var(--duration-stagger));
+}
+
+.case-hero__media--bare .case-hero__layer:nth-child(1) { --layer-index: 0; }
+.case-hero__media--bare .case-hero__layer:nth-child(2) { --layer-index: 1; }
+.case-hero__media--bare .case-hero__layer:nth-child(3) { --layer-index: 2; }
+.case-hero__media--bare .case-hero__layer:nth-child(4) { --layer-index: 3; }
+
+@keyframes case-layer-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-16));
+  }
+}
+
+/* ---------- Hover: шар під мишею трохи піднімається (побажання Насті 09.11) ----------
+   Картинки шарів прозорі й накривають увесь кадр, тож «який екран під мишею» визначають
+   невидимі зони .case-hero__hit по межах самих екранів (у % від кадру 1200 × 706, без тіні).
+   Порядок зон = порядок шарів: зона Centology зверху, як і її екран. Як Hover-варіант зі Smart Animate:
+   Move вгору на 8. Лише Desktop і миша і без «зменшити рух» (тоді шари не рухаються, правка Насті 09.11) */
+.case-hero__hit {
+  display: none;
+}
+
+@media (width >= 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  /* Зона вмикається лише тоді, коли її шар повністю проявився (правка Насті 09.11):
+     інакше hover під час появи — і шар «стріляє» вгору. visibility: hidden до кінця
+     затримки + тривалості появи свого шару (той самий --layer-index, що й у шару) */
+  .case-hero__hit {
+    position: absolute;
+    display: block;
+    animation: case-hit-ready 0s backwards;
+    animation-delay: calc(var(--layer-index) * 5 * var(--duration-stagger) + var(--duration-intro));
+  }
+
+  .case-hero__hit:nth-of-type(1) { --layer-index: 0; }
+  .case-hero__hit:nth-of-type(2) { --layer-index: 1; }
+  .case-hero__hit:nth-of-type(3) { --layer-index: 2; }
+  .case-hero__hit:nth-of-type(4) { --layer-index: 3; }
+
+  @keyframes case-hit-ready {
+    from {
+      visibility: hidden;
+    }
+  }
+
+  .case-hero__hit[data-brand="dma"] { inset: 0.1% 3.6% 24.4% 31.3%; }
+  .case-hero__hit[data-brand="ebc"] { inset: 11.3% 14% 14% 21.2%; }
+  .case-hero__hit[data-brand="lca"] { inset: 15% 21.5% 11.2% 14%; }
+  .case-hero__hit[data-brand="centology"] { inset: 24.4% 31.3% 4.7% 5.3%; }
+
+  /* Revive: у % від кадру 1200 × 640 (Figma 934:61365 екран, 934:61662 телефон) */
+  .case-hero__hit[data-layer="screen"] { inset: 0 14.083% 15.156% 6.75%; }
+  .case-hero__hit[data-layer="phone"] { inset: 3.75% 6.667% 3.125% 67.833%; }
+
+  .case-hero__media--bare .case-hero__layer {
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  .case-hero__media--bare:has(.case-hero__hit[data-brand="dma"]:hover) .case-hero__layer[data-brand="dma"],
+  .case-hero__media--bare:has(.case-hero__hit[data-brand="ebc"]:hover) .case-hero__layer[data-brand="ebc"],
+  .case-hero__media--bare:has(.case-hero__hit[data-brand="lca"]:hover) .case-hero__layer[data-brand="lca"],
+  .case-hero__media--bare:has(.case-hero__hit[data-brand="centology"]:hover) .case-hero__layer[data-brand="centology"],
+  .case-hero__media--bare:has(.case-hero__hit[data-layer="screen"]:hover) .case-hero__layer[data-layer="screen"],
+  .case-hero__media--bare:has(.case-hero__hit[data-layer="phone"]:hover) .case-hero__layer[data-layer="phone"] {
+    transform: translateY(calc(-1 * var(--space-8)));
+  }
+}
+
+/* Reduced motion: одразу фінальний стан, без затримки (base.css лише скорочує тривалість) */
+@media (prefers-reduced-motion: reduce) {
+  .case-hero__media--bare .case-hero__layer {
+    animation: none;
+  }
+}

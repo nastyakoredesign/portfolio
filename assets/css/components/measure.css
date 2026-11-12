@@ -1,0 +1,93 @@
+/* ==========================================================================
+   measure.css — вимірювання відстаней у hero (як Alt у Figma)
+   Figma: measure/v, measure/h, tick, pill (148:1051 … 148:1070) у кадрі
+   «state 3 · hover» (148:200). Spec: docs/specs/hero-v2-spec.md, розділ 4.4.
+   Декоративний шар (aria-hidden), лише Desktop з мишею.
+
+   Що малює CSS: лінію 1 px accent, риски 9 px на кінцях, pill із числом.
+   Що рахує assets/js/hero-measure.js: відстані з getBoundingClientRect() і
+   позицію кожної лінії (--x, --y, --len). Число — справжнє, не з макета.
+   ========================================================================== */
+
+.measure {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+@media (width < 768px) {
+  .measure {
+    display: none;
+  }
+}
+
+/* Лінія: коробка 9 px завширшки (вертикальна) або заввишки (горизонтальна);
+   риски на кінцях — її рамки, сама лінія — ::before по центру */
+.measure__item {
+  --measure-color: var(--color-accent);
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.measure__item[data-on] {
+  opacity: 1;
+}
+
+.measure__item::before {
+  content: "";
+  position: absolute;
+  background: var(--measure-color);
+}
+
+.measure__item--v {
+  width: var(--selection-handle);
+  height: var(--len);
+  margin-left: calc(var(--selection-handle) / -2);
+  border-block: 1px solid var(--measure-color);
+}
+
+.measure__item--v::before {
+  inset: 0 auto 0 calc(50% - 0.5px);
+  width: 1px;
+}
+
+.measure__item--h {
+  width: var(--len);
+  height: var(--selection-handle);
+  margin-top: calc(var(--selection-handle) / -2);
+  border-inline: 1px solid var(--measure-color);
+}
+
+.measure__item--h::before {
+  inset: calc(50% - 0.5px) 0 auto;
+  height: 1px;
+}
+
+/* Pill: accent, on-accent, Inter Medium 11 px, radius 4, padding 2 / 6 (spec 4.4).
+   Вертикальна лінія — справа від неї; горизонтальна — над нею по центру. */
+.measure__pill {
+  position: absolute;
+  padding: 2px 6px;     /* check:ignore — з Figma (148:1054), токенів 2 і 6 немає */
+  border-radius: 4px;   /* check:ignore — з Figma, токена 4 немає */
+  background: var(--measure-color);
+  color: var(--color-on-accent);
+  font-size: 0.6875rem; /* check:ignore — 11 px, декоративний підпис (spec, виняток) */
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.measure__item--v .measure__pill {
+  top: 50%;
+  left: calc(100% + var(--space-4));
+  transform: translateY(-50%);
+}
+
+.measure__item--h .measure__pill {
+  bottom: calc(100% + 1px);
+  left: 50%;
+  transform: translateX(-50%);
+}

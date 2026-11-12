@@ -1,0 +1,176 @@
+/* ==========================================================================
+   email-copy.css — адреса email текстом + кнопка Copy
+   Figma: компонент Email link (set 389:592), State=Default/Hover/Focus/Pressed/Copied.
+   Spec: docs/specs/ds-components.md → «Contact (14.10)», рішення 14.10.
+
+   Розмітка: <div class="email-copy container" data-copied-label="Copied">
+               <div class="email-copy__row">
+                 <p class="email-copy__address">…</p>
+                 <button class="email-copy__button" hidden>…2 іконки + .selection</button>
+                 <span class="email-copy__status" aria-live="polite"></span>
+   Адреса — звичайний текст (не посилання): без hover і фокусу, її можна виділити.
+   Інтерактивна лише кнопка. Без JS кнопка лишається hidden (copy-email.js її знімає).
+   Стан «Copied» — атрибут data-copied на .email-copy, його ставить скрипт.
+   ========================================================================== */
+
+.email-copy {
+  display: flex;
+  justify-content: center;
+}
+
+/* Ряд: адреса + кнопка (gap 8, висота ≥ tap-target). position: relative —
+   щоб підпис «Copied» міг стояти поруч, не зсуваючи адресу.
+   flex-wrap: на 360 px адреса (278) + кнопка не влазять в 328 — кнопка йде під адресу. */
+.email-copy__row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: var(--size-tap-target);
+}
+
+/* Стиль heading/h4: Commissioner SemiBold, accent. Не <h4> — це не заголовок.
+   Адреса не ламається посеред слова */
+.email-copy__address {
+  color: var(--color-accent);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--font-size-h4);
+  font-variation-settings: "FLAR" 50; /* як у base.css для заголовків */
+  line-height: var(--line-height-h4);
+  white-space: nowrap;
+}
+
+/* Button Copy 44×44 (tap-target), іконка 24 по центру */
+.email-copy__button {
+  --selection-inset-x: 0px; /* check:ignore — рамка по межах кнопки, 0 без токена */
+  --selection-inset-y: 0px; /* check:ignore */
+  position: relative; /* сюди «прилипає» рамка Selection */
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: var(--size-tap-target);
+  height: var(--size-tap-target);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-control);
+  color: var(--color-accent);
+  cursor: pointer;
+  transition:
+    border-radius var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+/* display: grid вище перебиває hidden з браузера — повертаємо */
+.email-copy__button[hidden] {
+  display: none;
+}
+
+.email-copy__icon {
+  display: grid;
+  grid-area: 1 / 1; /* дві іконки в одній клітинці, видна одна */
+}
+
+.email-copy__icon--check,
+.email-copy[data-copied] .email-copy__icon--copy {
+  display: none;
+}
+
+.email-copy[data-copied] .email-copy__icon--check {
+  display: grid;
+  animation: email-copy-check var(--duration-fast) var(--ease-out);
+}
+
+@keyframes email-copy-check {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+/* «Зменшити рух»: іконка змінюється миттєво, без появи */
+@media (prefers-reduced-motion: reduce) {
+  .email-copy[data-copied] .email-copy__icon--check {
+    animation: none;
+  }
+}
+
+/* Hover (лише з курсором) / Focus: кути → 0, іконка світліша; рамка — selection.css.
+   Прозорий outline — для Windows High Contrast (замість кільця малює рамка). */
+@media (hover: hover) {
+  .email-copy__button:hover {
+    border-radius: 0;
+    color: var(--color-accent-hover);
+  }
+}
+
+.email-copy__button:focus-visible {
+  border-radius: 0;
+  color: var(--color-accent-hover);
+  outline-color: transparent;
+}
+
+/* Pressed: фон accent-tint-active, рамка 2 px accent-active (selection.css) */
+.email-copy__button:active {
+  background: var(--color-accent-tint-active);
+  color: var(--color-accent-hover);
+}
+
+/* Кути → 0 на Pressed лише з мишкою: на touch кнопка не «стає фреймом» */
+@media (hover: hover) and (pointer: fine) {
+  .email-copy__button:active {
+    border-radius: 0;
+  }
+}
+
+/* Copied (Figma: State=Copied): чек — просто іконка, без рамки Selection, без кутів 0
+   і без фону Pressed, навіть коли курсор ще над кнопкою. Клавіатурний фокус
+   (:focus-visible) лишається видимим — тому :not(:focus-visible). */
+.email-copy[data-copied] .email-copy__button:not(:focus-visible) {
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-accent);
+  cursor: default;
+}
+
+.email-copy[data-copied] .email-copy__button:not(:focus-visible) > .selection {
+  opacity: 0;
+}
+
+.email-copy[data-copied] .email-copy__button:not(:focus-visible) > .selection i {
+  transform: scale(0);
+}
+
+/* Підпис «Copied»: стиль ui/label, accent. Порожній, поки нічого не скопійовано.
+   Mobile: ховаємо візуально (збоку не вистачає місця, під рядком він ламав розкладку);
+   у дереві доступності лишається, тож aria-live усе одно озвучить «Copied»,
+   а бачить користувач чек. display: none тут не можна — скрінрідер промовчав би. */
+.email-copy__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  color: var(--color-accent);
+  font-weight: 500;
+  font-size: var(--font-size-ui);
+  line-height: var(--line-height-ui);
+}
+
+/* Desktop: видно, упритул до кнопки праворуч, gap 0, як у Figma (Copied, 403:5894) */
+@media (width >= 768px) {
+  .email-copy__status {
+    top: 50%;
+    left: 100%;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    translate: 0 -50%;
+  }
+}

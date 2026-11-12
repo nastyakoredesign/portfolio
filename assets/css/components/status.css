@@ -1,0 +1,41 @@
+/* ==========================================================================
+   status.css — мітка статусу рішення: Shipped / Partly shipped / Concept
+   Figma: компонент Status (286:316). Неінтерактивна, radius/pill (як Tag).
+   HTML: <span class="status status--shipped">Shipped</span>. Текст фіксований у варіанті.
+   ========================================================================== */
+
+/* Auto Layout: padding 4 / 12, ui/label (Desktop) */
+.status {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-ui);
+  font-weight: 500;
+  line-height: var(--line-height-ui);
+}
+
+.status--shipped {
+  background: var(--color-status-shipped-bg);
+  color: var(--color-status-shipped-text);
+}
+
+.status--partly {
+  background: var(--color-status-partly-bg);
+  color: var(--color-status-partly-text);
+}
+
+.status--concept {
+  background: var(--color-status-concept-bg);
+  color: var(--color-status-concept-text);
+}
+
+/* Mobile у Figma: padding 4 / 8, ui/caption (12, Regular) — як Tag на Mobile */
+@media (width < 768px) {
+  .status {
+    padding-inline: var(--space-8);
+    font-size: var(--font-size-caption);
+    font-weight: 400;
+    line-height: var(--line-height-caption);
+  }
+}

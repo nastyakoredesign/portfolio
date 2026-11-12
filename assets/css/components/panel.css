@@ -1,0 +1,22 @@
+/* ==========================================================================
+   panel.css — бічна панель кейсу (Constraints)
+   Figma: компонент Panel (286:352). Surface + border, radius/card, padding 24,
+   заголовок h4, gap 12. Ширину задає .split (460 на Desktop, Fill на Mobile).
+   HTML: <aside> з <h3> (розміром h4) і <ul class="case-list"> (маркер constraint, case-list.css).
+   ========================================================================== */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: var(--space-24);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+/* Структура h3, вигляд heading/h4 */
+.panel__title {
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
+}

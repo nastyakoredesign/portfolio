@@ -1,0 +1,67 @@
+/* ==========================================================================
+   cursor-tag.css — тег біля курсора: «Guest» у hero, «Discover» над картками Work
+   Figma: компонент Cursor tag (162:178). Spec: docs/specs/cursor-tag-spec.md.
+   Курсор лишається системним, тег — додатковий шар поруч (+12 / +16 від вістря).
+   Колір ink, а не accent: accent зливався б зі словом «engineer» і з pill-вимірюваннями.
+   Позицію ставить assets/js/cursor-tag.js (крім .cursor-tag--static). aria-hidden, без pointer-events.
+   Ширина — від тексту (UA «Ознайомитись» довший). Лише Desktop з мишею.
+   ========================================================================== */
+
+.cursor-tag {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  padding: var(--space-4) var(--space-8);
+  border-radius: 2px 6px 6px 6px; /* check:ignore — з Figma (162:174): верхній лівий кут 2, решта 6 */
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+  font-size: 0.8125rem; /* check:ignore — 13 px, декоративний, aria-hidden (spec) */
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-ink) 12%, transparent); /* check:ignore — з Figma */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.cursor-tag[data-visible] {
+  opacity: 1;
+}
+
+/* На темному (Text link Dark: футер, картки Code) тег акцентний:
+   ink на ink не було б видно */
+.text-link--dark .cursor-tag {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* «Coming soon…» для клавіатури й дотику: статичний тег праворуч від посилання,
+   по центру висоти, без JS. Посилання (position: relative) — його опорна точка.
+   Відступ 16: рамка Selection з ручками виступає за край посилання. Місця не займає. */
+.cursor-tag--static {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + var(--space-16));
+  translate: 0 -50%;
+  z-index: 1;
+}
+
+.text-link:focus-visible > .cursor-tag--static {
+  opacity: 1;
+}
+
+/* Без миші або на Mobile рухомого тега немає зовсім */
+@media (width < 768px), (hover: none), (pointer: coarse) {
+  .cursor-tag:not(.cursor-tag--static) {
+    display: none;
+  }
+}
+
+/* Дотик: статичний тег видно, поки посилання натиснуте або в фокусі */
+@media (hover: none), (pointer: coarse) {
+  .text-link:is(:active, :focus) > .cursor-tag--static {
+    opacity: 1;
+  }
+}

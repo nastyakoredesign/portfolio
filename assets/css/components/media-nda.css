@@ -1,0 +1,156 @@
+/* ==========================================================================
+   media-nda.css — вміст заглушки Media/NDA: розмитий скелет UI + чіп «Under NDA»
+   Figma: Media/NDA, Tone=Warm (168:471). Spec: docs/specs/hifi-tokens.md
+   Фон і колонки — у media.css (.media--nda).
+
+   Скелет — абстрактні смужки без жодних даних, лише декор (aria-hidden).
+   Розміри смужок — числом з Figma (168:479): це дрібні форми макета-імітації,
+   токенів для них немає і не потрібно (див. docs/decisions.md, 07.10).
+   Прозорість смужок у Figma (opacity) = color-mix з прозорим.
+   ========================================================================== */
+
+/* ---------- Скелет: «вікно» 300 × 188 по центру, розмите ----------
+   Layer blur 4 у Figma = CSS blur(4px) (порівняно в браузері зі скріном 168:471). */
+.media-nda__skeleton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: 300px;
+  height: 188px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  overflow: hidden;
+  filter: blur(4px);
+  translate: -50% -50%;
+}
+
+/* Усі смужки — заокруглені блоки кольору accent */
+.media-nda__skeleton i {
+  flex-shrink: 0;
+  height: 6px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--color-accent) 19%, transparent);
+}
+
+/* Сайдбар: лого-коло + 4 пункти меню */
+.media-nda__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: 56px;
+  padding: 14px 10px 0; /* check:ignore — з Figma (168:480) */
+  background: var(--color-accent-tint);
+}
+
+.media-nda__sidebar i {
+  width: 36px;
+}
+
+.media-nda__sidebar i:first-child {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 60%, transparent);
+}
+
+/* Основна частина: заголовок, 3 KPI, 4 рядки таблиці (gap 12) */
+.media-nda__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: 14px 14px 0; /* check:ignore — з Figma (168:486) */
+}
+
+.media-nda__main > i {
+  width: 96px;
+  height: 8px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-accent) 48%, transparent);
+}
+
+.media-nda__kpis {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.media-nda__kpis div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px; /* check:ignore — з Figma (168:489) */
+  padding: var(--space-8);
+  border-radius: 6px;
+  background: var(--color-accent-tint);
+}
+
+.media-nda__kpis i:first-child {
+  width: 32px;
+  height: 5px;
+}
+
+.media-nda__kpis i:last-child {
+  width: 44px;
+  height: 8px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-accent) 40%, transparent);
+}
+
+/* Рядок: аватар · ім'я · (порожньо) · статус */
+.media-nda__row {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* check:ignore — з Figma (168:498) */
+}
+
+.media-nda__row i:nth-child(1) {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 13%, transparent);
+}
+
+.media-nda__row i:nth-child(2) {
+  width: 72px;
+  background: color-mix(in srgb, var(--color-accent) 24%, transparent);
+}
+
+/* Статус праворуч: margin-left: auto = порожній Frame (Fill) між смужками у Figma */
+.media-nda__row i:nth-child(3) {
+  width: 28px;
+  margin-left: auto;
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+}
+
+/* Різна довжина «імен», як у Figma: 72 / 56 / 84 / 64.
+   nth-of-type рахує div-и в .media-nda__main: 1 — KPI, 2–5 — рядки. */
+.media-nda__row:nth-of-type(3) i:nth-child(2) { width: 56px; }
+.media-nda__row:nth-of-type(4) i:nth-child(2) { width: 84px; }
+.media-nda__row:nth-of-type(5) i:nth-child(2) { width: 64px; }
+
+/* ---------- Чіп «Under NDA»: пігулка accent по центру ----------
+   Не декор: це текст про NDA, тож скрінрідер його читає. */
+.nda-chip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) 14px var(--space-8) var(--space-12); /* check:ignore — 14 з Figma (168:518) */
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-text) 8%, transparent);
+  color: var(--color-on-accent);
+  font-weight: 500;
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  white-space: nowrap;
+  translate: -50% -50%;
+}
+
+.nda-chip svg {
+  flex-shrink: 0;
+}

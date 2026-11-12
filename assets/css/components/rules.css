@@ -1,0 +1,226 @@
+/* ==========================================================================
+   rules.css — картки правил Typography і Color + спільне правило (рішення 3 кейсу DS)
+   Figma: Media/S3 Rules (881:50775 Desktop, 888:49566 Mobile), Rules/Typography (881:50777),
+   Rules/Color (881:50796), Shared rule (881:50815).
+   Desktop: дві картки в ряд (по 4 правила), під ними смужка на accent-tint.
+   Mobile: перемикач Typography | Color (радіо, :has — без JS), видно одну картку з 2 правилами,
+   без заголовка, прикладу й підпису «Both guidelines»; спільне правило — accent-підпис під карткою.
+   ========================================================================== */
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  min-width: 0;
+}
+
+/* Перемикач карток — лише Mobile */
+.rules__toggle {
+  display: none;
+}
+
+.rules__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-24);
+}
+
+/* Картка: border + bg, padding 32, gap 24 */
+.rules-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  min-width: 0;
+  padding: var(--space-32);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-bg);
+  /* Рамка Selection на hover (нижче) накриває сіру рамку картки 1 px — як на CaseCard (Figma inset −1) */
+  position: relative;
+  --selection-inset-x: 1px;
+  --selection-inset-y: 1px;
+}
+
+/* Hover миші: картка «стає фреймом» (Selection). Картка не посилання і без фокусу,
+   тож лише миша; .selection--linked прихована, показуємо її тут. На touch — нічого */
+@media (hover: hover) and (pointer: fine) {
+  .rules-card:hover > .selection--linked {
+    opacity: 1;
+  }
+
+  .rules-card:hover > .selection--linked i {
+    transform: scale(1);
+  }
+}
+
+.rules-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Семантично h5, вигляд heading/h4 на accent */
+.rules-card__title {
+  margin: 0;
+  color: var(--color-accent);
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-ui);
+}
+
+.rules-card__sub {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Правила 1–2 і 3–4 — два списки підряд (другий з start="3"), щоб на Mobile 3–4 могли сховатися */
+.rules-card__rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.rules-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Правило: номер (JetBrains Mono, accent) → текст, gap 12 */
+.rules-card__list li {
+  display: flex;
+  gap: var(--space-12);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.rules-card__num {
+  color: var(--color-accent);
+  font-family: var(--font-code);
+}
+
+/* Моно-приклад: surface, radius/control, padding 8 × 12 */
+.rules-card__example {
+  align-self: flex-start;
+  margin: 0;
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  font-family: var(--font-code);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+/* Спільне правило: accent-tint, padding 24 × 32, підпис → текст, gap 16 */
+.rules__shared {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  margin: 0;
+  padding: var(--space-24) var(--space-32);
+  border-radius: var(--radius-control);
+  background: var(--color-accent-tint);
+}
+
+.rules__shared-label {
+  color: var(--color-accent);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.rules__shared-text {
+  font-size: var(--font-size-ui);
+  font-weight: 500;
+  line-height: var(--line-height-ui);
+}
+
+/* ---------- Mobile ---------- */
+@media (width < 768px) {
+  .rules {
+    gap: var(--space-12);
+  }
+
+  .rules__toggle {
+    display: flex;
+  }
+
+  /* Два сегменти порівну (Figma Toggle Options=2, FILL) */
+  .rules__toggle .toggle__option {
+    flex: 1 1 0;
+  }
+
+  /* Картки каруселі однакової висоти: правила забирають висоту, що лишилась у картці.
+     Ланцюжок flex: 1 від .solution до списку — як Fill по висоті у Figma */
+  .solution > .rules,
+  .rules-card {
+    flex: 1 1 auto;
+  }
+
+  .rules__cards {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+  }
+
+  /* Одна картка: за замовчуванням Typography, Color — коли вибрано її в перемикачі */
+  .rules-card--color,
+  .rules:has(input[value="color"]:checked) .rules-card--typography {
+    display: none;
+  }
+
+  .rules:has(input[value="color"]:checked) .rules-card--color {
+    display: flex;
+  }
+
+  .rules-card {
+    gap: var(--space-24);
+    padding: var(--space-24) var(--space-16);
+  }
+
+  /* Заголовок і приклад — лише Desktop */
+  .rules-card__title,
+  .rules-card__example {
+    display: none;
+  }
+
+  /* Правила 1–2 видно завжди; 3–4 — скільки влізе (правка Насті 05.11). Другий список не впливає
+     на висоту картки (flex-basis 0) і забирає місце, що лишилось; правило, яке не влазить повністю,
+     переноситься в другу «колонку» праворуч і ховається за overflow — обрізаних рядків немає */
+  .rules-card__rules {
+    flex: 1 1 auto;
+  }
+
+  .rules-card__list--more {
+    flex: 1 1 0;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    column-gap: var(--space-24);
+    min-height: 0;
+    overflow: clip;
+  }
+
+  .rules-card__list--more li {
+    inline-size: 100%;
+  }
+
+  /* Спільне правило — підпис accent caption під карткою, без заливки і слів «Both guidelines» */
+  .rules__shared {
+    padding: 0;
+    background: none;
+  }
+
+  .rules__shared-label {
+    display: none;
+  }
+
+  .rules__shared-text {
+    color: var(--color-accent);
+    font-size: var(--font-size-caption);
+    font-weight: 400;
+    line-height: var(--line-height-caption);
+  }
+}

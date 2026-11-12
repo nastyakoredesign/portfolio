@@ -1,0 +1,168 @@
+/* ==========================================================================
+   outcome.css — секція Outcome: факти, зміни у флоу, висновки + компоненти Fact card і Flow item
+   Figma: Case/Outcome (771:28355 Desktop, 771:28408 Mobile), Fact card (286:335),
+   Outcome/Flow item (774:28269: Edge=Top на Desktop, Edge=Left на Mobile).
+   Порядок з 24.10: заголовок + факти → What changed in the user flow → Takeaways.
+   Ряд відгуків — quote-card.css. Spec: docs/specs/hifi-case.md, п. 9.
+   Takeaways — .case-list (маркер ◇, case-list.css). Фон секції — bg, картки фактів — surface.
+   ========================================================================== */
+
+/* Column: Auto Layout vertical, gap 64; padding space/section зверху й знизу */
+.outcome {
+  padding-block: var(--space-section);
+  background: var(--color-bg);
+}
+
+.outcome__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-64);
+}
+
+/* Заголовок → факти: gap 48 / Mobile 24 (той самий крок, що split-gap) */
+.outcome__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-split-gap);
+}
+
+/* Flow і Takeaways: підзаголовок → вміст, gap 32 */
+.outcome__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+/* Структура h3, вигляд heading/h3 */
+.outcome__subtitle {
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+}
+
+/* Row/Facts і Flow: три в ряд, gap gutter (24 / Mobile 16) */
+.outcome__facts,
+.outcome__flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--layout-gutter);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Takeaways: дві колонки, gap gutter; на Mobile — звичайний стовпчик case-list (gap 12) */
+.outcome__takeaways {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--layout-gutter);
+}
+
+/* ---------- Fact card ----------
+   Auto Layout vertical, gap 8, padding 24; surface + border, radius/card.
+   Значення — heading/h2 accent (Настя 24.10; було h3), підпис — body/base text-secondary */
+.fact-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-24);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.fact-card__value {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-variation-settings: "FLAR" 50;
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  color: var(--color-accent);
+}
+
+.fact-card__label {
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-secondary);
+}
+
+/* ---------- Flow item (Outcome/Flow item) ----------
+   Грань рамки Selection: лінія accent 1.5 px зверху (Desktop) або зліва (Mobile),
+   на її кінцях — два маркери 9×9, як у selection.css. Маркери декоративні — псевдоелементи.
+   Назва — heading/h4, текст — body/case; gap 8, від лінії до тексту 16. */
+.flow-item {
+  --flow-handle-offset: calc(-1 * (var(--selection-handle) + var(--selection-stroke)) / 2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding-top: var(--space-16);
+  border-top: var(--selection-stroke) solid var(--color-accent);
+  font-size: var(--font-size-body-case);
+  line-height: var(--line-height-body-case);
+}
+
+.flow-item::before,
+.flow-item::after {
+  content: "";
+  position: absolute;
+  top: var(--flow-handle-offset);
+  width: var(--selection-handle);
+  height: var(--selection-handle);
+  border: var(--selection-stroke) solid var(--color-accent);
+  background: var(--color-bg);
+}
+
+.flow-item::before { left: calc(-1 * var(--selection-handle) / 2); }
+.flow-item::after { right: calc(-1 * var(--selection-handle) / 2); }
+
+/* Структура h4, вигляд heading/h4 */
+.flow-item__label {
+  font-size: var(--font-size-h4);
+  line-height: var(--line-height-h4);
+}
+
+/* Нижче 1024 (планшет і Mobile): Flow — пункти один під одним, як картки TL;DR і відгуки
+   (Настя 25.10: у три колонки на 768–1023 тексту тісно; факти лишаються в ряд до 768).
+   Flow стовпчиком — Edge=Left. Окремий брейкпоінт лише для цього ряду, моди токенів не змінюються. */
+@media (width < 1024px) {
+  /* Flow: стовпчиком, gap 32 */
+  .outcome__flow {
+    grid-template-columns: 1fr;
+    gap: var(--space-32);
+  }
+
+  /* Edge=Left: лінія зліва, маркери вгорі й унизу */
+  .flow-item {
+    padding-top: 0;
+    padding-left: var(--space-16);
+    border-top: 0;
+    border-left: var(--selection-stroke) solid var(--color-accent);
+  }
+
+  .flow-item::before,
+  .flow-item::after {
+    left: var(--flow-handle-offset);
+    right: auto;
+  }
+
+  .flow-item::before { top: calc(-1 * var(--selection-handle) / 2); }
+  .flow-item::after { top: auto; bottom: calc(-1 * var(--selection-handle) / 2); }
+}
+
+@media (width < 768px) {
+  .outcome__facts {
+    grid-template-columns: 1fr;
+  }
+
+  .outcome__takeaways {
+    display: flex;
+    gap: var(--space-12);
+  }
+}
+
+/* Кейс Revive (Figma 910:58089): Flow з чотирьох пунктів у ряд (282 px кожен); нижче 1024 — стовпчик, як у блоці вище */
+@media (width >= 1024px) {
+  .outcome__flow--four {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

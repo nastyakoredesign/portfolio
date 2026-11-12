@@ -1,0 +1,43 @@
+/* ==========================================================================
+   principles.css — How I work: чотири картки принципів 2 × 2
+   Figma: Principles/Row (710:22537 Desktop, 710:22788 Mobile), Principle 1–4 (710:22538 …).
+   ========================================================================== */
+
+/* Сітка 2 × 2, gap 24; картки в ряду однакової висоти. Mobile — одна колонка */
+.principles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-24);
+  padding: 0; /* <ol> без нумерації браузера */
+  list-style: none;
+}
+
+/* Картка: bg, обводка 1 px accent-tint-active, radius/card, padding card-pad (32 / 24), gap 12 */
+.principle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  padding: var(--space-card-pad);
+  border: 1px solid var(--color-accent-tint-active);
+  border-radius: var(--radius-card);
+  background: var(--color-bg);
+}
+
+/* Номер — ui/label, accent. Декоративний: порядок і так задає список <ol> */
+.principle__num {
+  color: var(--color-accent);
+  font-weight: 500;
+  font-size: var(--font-size-ui);
+  line-height: var(--line-height-ui);
+}
+
+/* Абзац — body/base, text-secondary */
+.principle__desc {
+  color: var(--color-text-secondary);
+}
+
+@media (width < 768px) {
+  .principles {
+    grid-template-columns: 1fr;
+  }
+}

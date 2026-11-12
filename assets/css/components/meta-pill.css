@@ -1,0 +1,34 @@
+/* ==========================================================================
+   meta-pill.css — факти проєкту в hero кейсу (роль, клієнт, період, платформи)
+   Figma: компонент Meta pill (286:319). Spec: docs/specs/hifi-case.md, п. 2
+   Неінтерактивна пігулка: як Tag, але текст --color-text і body/base 16
+   в обох модах (рішення 12.10: ключові факти першого екрана).
+   ========================================================================== */
+
+/* Case/Meta: ряд пігулок з переносом (Wrap), по центру, gap 8 */
+.meta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-8);
+  padding: 0;
+  list-style: none;
+}
+
+.meta-pill {
+  padding: var(--space-8) var(--space-12);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+}
+
+/* Варіант --stacked: на вузькому Mobile пігулки по одній у рядку, по центру
+   (кейс DS: «Figma · web portal and client app» не вміщується в рядок із сусідом; Figma 811:41321).
+   Від 560 дві перші пігулки (~528 px) вже стають поруч — далі звичайний Wrap, 2 + 2 (правка Насті 09.11).
+   560 — за шириною EN-текстів, не основний брейкпоінт */
+@media (width < 560px) {
+  .meta-pills--stacked {
+    flex-direction: column;
+    align-items: center;
+  }
+}

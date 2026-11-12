@@ -1,0 +1,1798 @@
+/* ==========================================================================
+   hero-flow.css — демо-флоу порталу в hero кейсу Centology
+   Figma: обгортка 493:17152 (13 станів), стан 01 — 495:21720.
+   Сцена завжди 1440 × 949 і масштабується як одна картинка (transform: scale),
+   тому всередині — px з макета продукту, а не токени сайту (рішення 16.10).
+   Кольори — лише var(--primary-…) тощо з hero-flow-tokens.css.
+   Стан = атрибути на .hero-flow: data-brand, data-playing, data-autoplay (ставить hero-flow.js).
+   ========================================================================== */
+
+/* ---------- Рамка: росте пропорційно, кадр медіа hero 1200 × 640 ----------
+   Та сама пропорція на всіх ширинах (рішення 16.10): сцена 1440 × 949
+   обрізається знизу, там лише порожній фон сторінки. */
+.hero-flow {
+  container-type: inline-size;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1200 / 640; /* без радіуса: рамка Selection лягає по прямих краях кадру */
+  background: var(--neutral-200);
+}
+
+/* Сцена 1440 × 949. Масштаб = ширина рамки / 1440 (tan(atan2()) ділить довжини без JS) */
+.hero-flow__stage {
+  --hf-scale: tan(atan2(100cqw, 1440px));
+  position: relative;
+  width: 1440px;
+  height: 949px;
+  /* Масштаб під рамку, далі камера: зсув і наближення (--hf-cam-*, ставить hero-flow.js) */
+  transform: scale(var(--hf-scale)) translate(var(--hf-cam-x, 0px), var(--hf-cam-y, 0px)) scale(var(--hf-cam-k, 1));
+  transform-origin: 0 0;
+  color: var(--neutral-400);
+  font-family: var(--hf-font);
+  font-size: var(--hf-font-size-body);
+  line-height: 18px;
+  user-select: none;
+}
+
+.hero-flow svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ---------- Шари: лежать один на одному, як фрейми в стані Figma ----------
+   Видимість і розмиття ставить hero-flow.js з hero-flow.config.js */
+.hf-layer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  isolation: isolate; /* z-index усередині шару (сайдбар над Top Bar) не виходить над затемненням */
+}
+
+.hf-layer[data-visible="false"] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Пауза з перемикачем: фон розмитий, Layer blur 6 */
+.hf-layer[data-blur="true"] {
+  filter: blur(6px);
+}
+
+/* ==========================================================================
+   Шар grid (стани 01, 12, 13)
+   ========================================================================== */
+
+.hf-grid {
+  left: 0;
+  display: flex;
+}
+
+/* data-rows 6 — шість портфелів, 7 — з новим «Balanced Growth» зверху (стан 12) */
+.hf-grid[data-rows="6"] [data-rows-only="7"],
+.hf-grid[data-rows="7"] [data-rows-only="6"] {
+  display: none;
+}
+
+/* ---------- Sidebar Menu (495:21722): 50 px, Auto Layout vertical, gap 24 ---------- */
+.hf-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 50px;
+  padding: 14px 10px;
+  position: relative;
+  z-index: 1; /* кнопка згортання виходить за край сайдбару на Top Bar */
+  border-right: 1px solid var(--primary-200);
+  background: var(--neutral-100);
+}
+
+.hf-sidebar__brand {
+  display: flex;
+  align-items: center;
+  align-self: flex-start; /* ряд ширший за сайдбар: кнопка виходить праворуч, як у Figma */
+  gap: 2px;
+  height: 35px;
+}
+
+/* Логотип бренду: слот 30 × 35 у всіх брендів (у Figma LCA/EBC/DMA — 35 × 35, але тоді
+   слот виходить за колонку 30 px і лого зі стрілкою зсуваються вправо; Настя 19.10 — як у Centology).
+   Чотири SVG один на одному, видно лише активний. У Figma — змінні Logo/<brand>/visible */
+.hf-sidebar__logo {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 35px;
+}
+
+.hf-logo {
+  grid-area: 1 / 1;
+  opacity: 0;
+}
+
+.hero-flow[data-brand="centology"] .hf-logo[data-logo="centology"],
+.hero-flow[data-brand="lca"] .hf-logo[data-logo="lca"],
+.hero-flow[data-brand="ebc"] .hf-logo[data-logo="ebc"],
+.hero-flow[data-brand="dma"] .hf-logo[data-logo="dma"] {
+  opacity: 1;
+}
+
+/* У шарі морфу (.hf-morph) бренд свій, а не кореня: сховати лого кореня, показати своє
+   (.hero-flow на початку — щоб перебити правило кореня вище) */
+.hero-flow .hf-morph .hf-logo[data-logo] {
+  opacity: 0;
+}
+
+.hf-morph[data-brand="centology"] .hf-logo[data-logo="centology"],
+.hf-morph[data-brand="lca"] .hf-logo[data-logo="lca"],
+.hf-morph[data-brand="ebc"] .hf-logo[data-logo="ebc"],
+.hf-morph[data-brand="dma"] .hf-logo[data-logo="dma"] {
+  opacity: 1;
+}
+
+.hf-sidebar__collapse {
+  display: flex;
+  flex-shrink: 0;
+  padding: 6px 2px;
+  border: 1px solid var(--primary-50);
+  border-radius: 100px;
+  background: var(--neutral-100);
+  color: var(--primary-500);
+}
+
+.hf-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.hf-sidebar__group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.hf-sidebar__group--muted {
+  opacity: 0.8;
+}
+
+/* Пункт меню 30 × 30, іконка 20 */
+.hf-sidebar__item {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--primary-500);
+}
+
+.hf-sidebar__item--active {
+  color: var(--primary-600);
+}
+
+/* Підпункти — крапки primary-300, gap 1 */
+.hf-sidebar__sub {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.hf-sidebar__sub .hf-sidebar__item {
+  color: var(--primary-300);
+}
+
+/* ---------- Права частина: Top Bar + вміст ---------- */
+.hf-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Top Bar (495:21724): 60 px, padding 10 / 28, нижня лінія primary-200 */
+.hf-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 10px 28px;
+  border-bottom: 1px solid var(--primary-200);
+  background: var(--neutral-100);
+}
+
+.hf-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--primary-400);
+  font-size: var(--hf-font-size-large);
+  line-height: 20px;
+}
+
+.hf-breadcrumb > span {
+  padding: 0 2px;
+}
+
+.hf-breadcrumb__sep {
+  font-size: var(--hf-font-size-medium);
+}
+
+.hf-breadcrumb__current {
+  color: var(--primary-500);
+  font-weight: 700;
+}
+
+.hf-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hf-topbar__icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Icon button 32: padding 4, іконка 24 */
+.hf-icon-button {
+  position: relative;
+  display: flex;
+  padding: 4px;
+  border-radius: 6px;
+  color: var(--primary-500);
+}
+
+.hf-icon-button--active {
+  background: var(--primary-100);
+  color: var(--primary-600);
+}
+
+/* Лічильник сповіщень: red-200, 10 / 14 bold, над правим верхнім кутом */
+.hf-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 1px; /* у Figma padding 3 + рядок 14 перекриваються; текст по центру висоти 16 */
+  border-radius: 8px;
+  background: var(--additional-red-200);
+  color: var(--neutral-100);
+  font-size: var(--hf-font-size-caption);
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.hf-badge--wide {
+  width: 24.667px;
+}
+
+.hf-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 100px;
+  background: var(--primary-600);
+  color: var(--neutral-100);
+  font-size: var(--hf-font-size-large);
+  font-weight: 700;
+  line-height: 20px;
+}
+
+/* Вміст сторінки: padding 18 / 24, gap 12 між панеллю дій і таблицею */
+.hf-page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 24px;
+  background: var(--neutral-200);
+}
+
+/* ---------- Панель дій над таблицею (495:21728) ---------- */
+.hf-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 36px;
+}
+
+.hf-toolbar__left {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+}
+
+.hf-toolbar__right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Tiles Switcher: список (активний) | плитки */
+.hf-view-switch {
+  display: flex;
+  gap: 3px;
+  padding: 5px 7px;
+  border: 1px solid var(--primary-200);
+  border-radius: 6px;
+  background: var(--neutral-100);
+}
+
+.hf-view-switch__on {
+  color: var(--primary-600);
+  --hf-icon-fill: var(--primary-100);
+}
+
+.hf-view-switch__off {
+  color: var(--primary-500);
+  --hf-icon-fill: var(--primary-50);
+}
+
+.hf-view-switch .hf-fill {
+  fill: var(--hf-icon-fill);
+}
+
+/* Фільтр і сортування — жовті secondary-кнопки */
+.hf-chip-button {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 5px;
+  border: 1px solid var(--secondary-300);
+  border-radius: 6px;
+  background: var(--secondary-200);
+  color: var(--secondary-600);
+}
+
+.hf-chip-button span {
+  padding-right: 2px;
+}
+
+/* Пошук (Input field): max 400, padding 8, іконка 16 */
+.hf-search {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 2px;
+  max-width: 400px;
+  height: 36px;
+  padding: 7px 8px;
+  border: 1px solid var(--primary-200);
+  border-radius: 6px;
+  background: var(--neutral-100);
+  color: var(--primary-400);
+}
+
+.hf-search__placeholder {
+  overflow: hidden;
+  padding-left: 4px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Лічильник «Total Portfolios» */
+.hf-total {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 36px;
+  padding: 7px 14px;
+  border: 1px solid var(--primary-200);
+  border-radius: 6px;
+  background: var(--primary-100);
+}
+
+.hf-total__label {
+  color: var(--primary-600);
+  font-size: var(--hf-font-size-small);
+  font-weight: 700;
+  line-height: 15px;
+}
+
+.hf-total__value {
+  color: var(--primary-900);
+  font-size: var(--hf-font-size-medium);
+  font-weight: 700;
+  line-height: 20px;
+}
+
+/* General Buttons, Size M: висота 36, padding 0 / 10, Label / Bold */
+.hf-button {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 36px;
+  padding: 0 9px; /* 10 у Figma мінус лінія 1 px */
+  border: 1px solid var(--primary-600);
+  border-radius: 6px;
+  font-size: var(--hf-font-size-body);
+  font-weight: 700;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.hf-button span {
+  padding: 0 4px;
+}
+
+.hf-button--secondary {
+  color: var(--primary-600);
+}
+
+.hf-button--primary {
+  background: var(--primary-600);
+  color: var(--neutral-100);
+}
+
+/* ---------- Таблиця (495:21746) + пагінація ---------- */
+.hf-table {
+  overflow: hidden;
+  outline: 1px solid var(--primary-200);
+  outline-offset: -1px;
+  border-radius: 6px;
+  background: var(--neutral-100);
+}
+
+/* Колонки як у Figma: Name і Adviser — Fill, решта фіксовані; остання — дії */
+.hf-table__row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 200px minmax(140px, 1fr) 200px 120px 130px 65px 78px;
+  align-items: center;
+}
+
+.hf-table__head {
+  background: var(--primary-600);
+  color: var(--neutral-100);
+  font-size: var(--hf-font-size-small);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 16px;
+}
+
+.hf-table__head > span {
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+
+.hf-table__body .hf-table__row {
+  height: 40px; /* лінія всередині 40, як stroke inside у Figma */
+  border-bottom: 1px solid var(--primary-200);
+}
+
+/* Hover рядка (дошка 509:28665): заливка на весь рядок, разом із колонкою дій */
+.hf-table__body .hf-table__row[data-hover="true"] {
+  background: var(--primary-50);
+}
+
+/* Новий рядок (стан 12) з'являється тим самим проявом, що й рядки шухляди */
+.hero-flow[data-playing="true"] .hf-grid[data-rows="7"] [data-target="new-row"] {
+  animation: hf-row-in var(--duration-slow) var(--ease-out);
+}
+
+.hf-table__body .hf-table__row > span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+
+.hf-table .hf-cell--end {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.hf-cell--type svg {
+  color: var(--primary-500);
+}
+
+.hf-cell--status {
+  gap: 6px;
+}
+
+/* Крапка статусу 7 px */
+.hf-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.hf-dot--proposed { color: var(--additional-blue); }
+.hf-dot--pending { color: var(--status-pending); }
+.hf-dot--active { color: var(--additional-green-500); }
+.hf-dot--inactive { color: var(--primary-400); }
+.hf-dot--closed { color: var(--additional-orange); }
+.hf-dot--cancelled { color: var(--additional-red-500); }
+
+/* Tag: primary-100, висота 21, Small / Tag */
+.hf-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 21px;
+  padding: 1px 7px;
+  border-radius: 12px;
+  background: var(--primary-100);
+  color: var(--primary-900);
+  font-size: var(--hf-font-size-small);
+  letter-spacing: 0.25px;
+  line-height: 1.2;
+}
+
+/* Toggle (увімкнено): 38 px, ручка 14 з галочкою */
+.hf-toggle {
+  display: flex;
+  justify-content: flex-end;
+  width: 38px;
+  padding: 3px;
+  border-radius: 100px;
+  background: var(--primary-600);
+  color: var(--primary-600);
+}
+
+.hf-toggle__handle {
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--neutral-100);
+}
+
+/* Дії рядка: переглянути, редагувати */
+.hf-table .hf-cell--actions {
+  justify-content: flex-end;
+  gap: 6px;
+  color: var(--primary-500);
+}
+
+.hf-cell--actions svg {
+  box-sizing: content-box;
+  padding: 2px;
+}
+
+/* Pagination Default (495:21871) */
+.hf-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 46px;
+  padding: 0 16px;
+  color: var(--neutral-300);
+  font-size: var(--hf-font-size-caption);
+  line-height: 14px;
+}
+
+.hf-pagination__rows {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hf-pagination__select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 50px;
+  height: 28px;
+  padding: 0 4px 0 2px;
+  border: 1px solid var(--primary-200);
+  border-radius: 4px;
+  color: var(--neutral-400);
+  font-size: var(--hf-font-size-body);
+  line-height: 18px;
+}
+
+.hf-pagination__count {
+  padding: 16px;
+}
+
+.hf-pagination__nav {
+  display: flex;
+  gap: 8px;
+  color: var(--neutral-400);
+}
+
+.hf-pagination__nav svg {
+  box-sizing: content-box;
+  padding: 5.6px;
+}
+
+/* ==========================================================================
+   Затемнення: overlay/dim — neutral-400 20 % (у стані 08 їх два, одне над одним)
+   ========================================================================== */
+.hf-dim {
+  left: 0;
+  background: color-mix(in srgb, var(--neutral-400) 20%, transparent);
+}
+
+/* ==========================================================================
+   Спільне для бічних панелей: Header/Pop-Up, картки, поля
+   ========================================================================== */
+
+/* Header/Pop-Up: 60, padding 12 / 24, нижня лінія */
+.hf-sheet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--primary-200);
+  background: var(--neutral-100);
+}
+
+.hf-sheet__title {
+  padding: 0 2px;
+  color: var(--primary-500);
+  font-size: var(--hf-font-size-large);
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.hf-sheet__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hf-sheet__icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary-500);
+}
+
+.hf-sheet__icons svg:last-child {
+  box-sizing: content-box;
+  padding: 2px;
+}
+
+/* Save: кнопка M фіксованої ширини 60 з Figma */
+.hf-button--save {
+  justify-content: center;
+  width: 60px;
+}
+
+/* Картка секції: біла, лінія primary-200, радіус 8; заголовок на primary-100 */
+.hf-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+  width: 752px;
+  border-radius: 8px;
+  outline: 1px solid var(--primary-200); /* stroke inside: лінія поверх вмісту, розмір не росте */
+  outline-offset: -1px;
+  background: var(--neutral-100);
+}
+
+/* Відкритий список виходить за низ картки й таблиці (Adviser, Risk, рядок шухляди) — тут вони не обрізають */
+.hf-card:has(.hf-field[data-open="true"]),
+.hf-dtable:has(.hf-field[data-open="true"]) {
+  overflow: visible;
+}
+
+.hf-card__title {
+  display: flex;
+  border-radius: 8px 8px 0 0; /* кути заголовка — і коли картка не обрізає */
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  padding: 8px 16px;
+  background: var(--primary-100);
+  color: var(--primary-600);
+  font-size: var(--hf-font-size-medium);
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.hf-card__body {
+  padding: 0 16px 16px;
+}
+
+.hf-card__tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Поле: підпис Label / Input + інпут 36 (padding 8, лінія primary-200, радіус 6) */
+.hf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.hf-field__label {
+  color: var(--neutral-250);
+  font-size: var(--hf-font-size-small);
+  font-weight: 700;
+  line-height: 14px;
+}
+
+.hf-field__label i {
+  color: var(--additional-red-200);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.hf-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  padding: 7px 8px;
+  border: 1px solid var(--primary-200);
+  border-radius: 6px;
+  background: var(--neutral-100);
+  color: var(--primary-400);
+}
+
+.hf-input__text {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 20px;
+  padding-left: 4px;
+  white-space: nowrap;
+}
+
+.hf-input__value {
+  display: flex;
+  gap: 4px;
+  overflow: hidden;
+  color: var(--neutral-400);
+  text-overflow: ellipsis;
+}
+
+.hf-input--disabled {
+  background: var(--primary-50);
+}
+
+.hf-input--area {
+  align-items: flex-start;
+  height: 114px;
+  padding-left: 12px;
+}
+
+/* Значення з’являються за рівнем data-fill шару; поле data-at — з якого рівня воно заповнене */
+.hf-field[data-at] .hf-input__value {
+  display: none;
+}
+
+.hf-popup[data-fill="1"] .hf-field[data-at="1"] .hf-input__value,
+.hf-popup[data-fill="2"] .hf-field[data-at] .hf-input__value,
+.hf-drawer[data-fill="1"] .hf-field[data-at] .hf-input__value {
+  display: flex;
+}
+
+.hf-popup[data-fill="1"] .hf-field[data-at="1"] .hf-input__ph,
+.hf-popup[data-fill="2"] .hf-field[data-at] .hf-input__ph,
+.hf-drawer[data-fill="1"] .hf-field[data-at] .hf-input__ph {
+  display: none;
+}
+
+/* Risk Profile вимкнене, доки не обрано Adviser Companies (правило продукту) */
+.hf-popup:not([data-fill="2"]):not(:has([data-target="advisers"][data-filled="true"])) .hf-field--risk .hf-input {
+  background: var(--primary-50);
+}
+
+.hf-drawer[data-fill="0"] [data-fill-only="1"] {
+  display: none;
+}
+
+/* Тег у полі мультивибору: хрестик праворуч, без чекбоксів у списку */
+.hf-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 1px 7px;
+  border-radius: 12px;
+  background: var(--primary-100);
+  color: var(--neutral-400);
+}
+
+.hf-chip svg {
+  margin-left: 4px;
+  color: var(--primary-400);
+}
+
+/* Toggle M у формі: 43 × 20 */
+.hf-toggle--m {
+  width: 43px;
+}
+
+/* Toggle вимкнений: обвідка й ручка primary-400, ручка ліворуч */
+.hf-toggle--off {
+  justify-content: flex-start;
+  width: 36px;
+  padding: 2px;
+  border: 1px solid var(--primary-400);
+  background: transparent;
+  color: var(--neutral-100);
+}
+
+.hf-toggle--off .hf-toggle__handle {
+  background: var(--primary-400);
+}
+
+/* Чекбокс «Default» 18: квадрат 13,5 з лінією primary-400, радіус 1,5 */
+.hf-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hf-check__box {
+  width: 13.5px;
+  height: 13.5px;
+  margin: 2.25px;
+  border: 1.4px solid var(--primary-400);
+  border-radius: 2px;
+}
+
+/* Кнопка S Light (Add Reference) і S Bold (Add Holdings) */
+.hf-button-s {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--primary-100);
+  color: var(--primary-600);
+  font-size: var(--hf-font-size-small);
+  font-weight: 400;
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+.hf-button-s--primary,
+.hf-button-s--disabled {
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  line-height: 15px;
+}
+
+.hf-button-s--primary span,
+.hf-button-s--disabled span {
+  padding: 0 2px;
+}
+
+.hf-button-s--primary {
+  background: var(--primary-600);
+  color: var(--neutral-100);
+}
+
+.hf-button-s--disabled {
+  background: var(--primary-200);
+  color: var(--primary-400);
+}
+
+.hf-danger {
+  display: flex;
+  justify-content: flex-end;
+  color: var(--additional-red-200);
+}
+
+/* ==========================================================================
+   Шар popup: New Portfolio — RHS panel 950
+   ========================================================================== */
+.hf-popup {
+  display: flex;
+  flex-direction: column;
+  width: 950px;
+  overflow: hidden;
+  background: var(--neutral-200);
+}
+
+.hf-popup__body {
+  display: flex;
+  flex: 1;
+  gap: 18px;
+}
+
+/* Side Tab: 138, Heading / Small; активна — primary-100 з лінією primary-600 */
+.hf-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 0 18px 18px;
+}
+
+.hf-tab {
+  width: 138px;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--primary-500);
+  font-size: var(--hf-font-size-medium);
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.hf-tab--disabled {
+  color: var(--primary-400);
+}
+
+/* Hover вкладки — primary-50 (дошка станів 509:29014) */
+.hf-tab[data-hover="true"] {
+  background: var(--primary-50);
+}
+
+.hf-popup[data-panel="general"] .hf-tab[data-tab="general"],
+.hf-popup[data-panel="holdings"] .hf-tab[data-tab="holdings"] {
+  border-color: var(--primary-600);
+  background: var(--primary-100);
+  color: var(--primary-600);
+}
+
+.hf-popup__content {
+  padding: 18px 24px 18px 0;
+}
+
+.hf-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hf-popup[data-panel="general"] .hf-panel[data-panel="holdings"],
+.hf-popup[data-panel="holdings"] .hf-panel[data-panel="general"],
+.hf-popup[data-holdings="empty"] [data-holdings-only="saved"],
+.hf-popup[data-holdings="saved"] [data-holdings-only="empty"] {
+  display: none;
+}
+
+/* ---------- Картка General: дві колонки по 348, gap 24 ---------- */
+.hf-form {
+  display: grid;
+  grid-template-columns: 348px 348px;
+  gap: 24px;
+}
+
+.hf-form__col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hf-form__row {
+  display: flex;
+  gap: 16px;
+}
+
+.hf-field--grow {
+  flex: 1;
+}
+
+.hf-field--toggle {
+  gap: 10px;
+}
+
+.hf-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hf-form__meta {
+  display: flex;
+  gap: 8px;
+}
+
+.hf-form__meta .hf-field {
+  flex: 1;
+}
+
+.hf-form__meta .hf-field--narrow {
+  flex: 0 0 80px;
+}
+
+/* References, Key Dates: заголовок + маленька таблиця з порожнім станом */
+.hf-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hf-block__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hf-block__title {
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.hf-mini {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  outline: 1px solid var(--primary-200);
+  outline-offset: -1px;
+  border-radius: 6px;
+  background: var(--neutral-100);
+}
+
+.hf-mini__head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 7px 10px;
+  background: var(--primary-300);
+  color: var(--primary-900);
+  font-size: var(--hf-font-size-caption);
+  font-weight: 700;
+  line-height: 14px;
+}
+
+.hf-mini--end .hf-mini__head span:last-child {
+  text-align: right;
+}
+
+.hf-mini__empty {
+  display: grid;
+  place-items: center;
+  height: 45px;
+  color: var(--primary-400);
+  font-size: var(--hf-font-size-caption);
+  line-height: 14px;
+}
+
+/* ---------- Таблиці в картках Holdings (720) ---------- */
+.hf-dtable {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  outline: 1px solid var(--primary-200);
+  outline-offset: -1px;
+  border-radius: 6px;
+  background: var(--neutral-100);
+}
+
+.hf-dtable__row {
+  display: grid;
+}
+
+.hf-dtable--holdings .hf-dtable__row { grid-template-columns: 120px 150px 1fr 110px 80px; }
+.hf-dtable--saved .hf-dtable__row { grid-template-columns: 100px 160px 1fr 110px 80px; }
+.hf-dtable--underlying .hf-dtable__row { grid-template-columns: 90px 140px 1fr 160px 90px 80px; }
+.hf-dtable--drawer .hf-dtable__row { grid-template-columns: 200px 1fr 110px 48px; }
+
+.hf-dtable__head {
+  background: var(--primary-300);
+  color: var(--primary-900);
+  font-size: var(--hf-font-size-small);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 16px;
+}
+
+.hf-dtable__head > span {
+  padding: 10px 12px;
+}
+
+/* Date і Percentage — праворуч */
+.hf-dtable--holdings .hf-dtable__head > span:nth-child(1),
+.hf-dtable--holdings .hf-dtable__head > span:nth-child(4),
+.hf-dtable--saved .hf-dtable__row > span:nth-child(1),
+.hf-dtable--saved .hf-dtable__row > span:nth-child(4),
+.hf-dtable--underlying .hf-dtable__head > span:nth-child(1),
+.hf-dtable--underlying .hf-dtable__head > span:nth-child(5) {
+  text-align: right;
+}
+
+.hf-dtable__empty {
+  display: grid;
+  place-items: center;
+  height: 103px;
+  color: var(--primary-400);
+  font-size: var(--hf-font-size-medium);
+  line-height: 20px;
+}
+
+.hf-pagination--inner {
+  border-top: 1px solid var(--primary-200);
+}
+
+/* Збережений холдинг: один рядок, кожна клітинка — стовпчик рядків по 18 */
+.hf-dtable__saved > span {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--primary-200);
+}
+
+.hf-dtable__saved b {
+  color: var(--primary-600);
+}
+
+.hf-dtable__link {
+  color: var(--primary-600);
+}
+
+.hf-dtable__saved .hf-cell--actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 6px;
+  color: var(--primary-500);
+}
+
+/* Перемикач Manual: Off — підкладні холдинги генеруються автоматично */
+.hf-manual {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary-900);
+  font-size: var(--hf-font-size-small);
+  line-height: 14px;
+}
+
+/* ---------- Holding Data: кругова діаграма + легенда ---------- */
+.hf-saved {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.hf-saved__chart {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  line-height: 16px;
+}
+
+.hf-saved__chart > b span {
+  color: var(--primary-500);
+}
+
+.hf-saved__row {
+  display: flex;
+  gap: 20px;
+}
+
+.hf-pie {
+  margin: 0 8px;
+}
+
+/* Кольори сегментів — токени бренду, як у Figma */
+.hf-pie--1 { fill: var(--primary-600); color: var(--primary-600); }
+.hf-pie--2 { fill: var(--additional-blue); color: var(--additional-blue); }
+.hf-pie--3 { fill: var(--secondary-400); color: var(--secondary-400); }
+.hf-pie--4 { fill: var(--additional-orange); color: var(--additional-orange); }
+
+.hf-legend {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.hf-legend__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 4px;
+  color: var(--primary-900);
+  font-size: var(--hf-font-size-small);
+  line-height: 14px;
+}
+
+.hf-legend__item span {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.hf-legend__dot {
+  width: 6px;
+  height: 6px;
+  margin: 4px 4px 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ==========================================================================
+   Шар drawer: Add Holding — RHS drawer 800 (над попапом)
+   ========================================================================== */
+.hf-drawer {
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  overflow: hidden;
+  background: var(--neutral-200);
+}
+
+.hf-drawer .hf-sheet__header {
+  padding-left: 22px;
+}
+
+.hf-drawer__body {
+  padding: 18px 24px;
+}
+
+.hf-holding {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hf-field--date {
+  width: 348px;
+}
+
+.hf-field--date svg {
+  color: var(--primary-400);
+}
+
+.hf-holding__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Рядок з полями: клітинка padding 8 / 12, лінія знизу */
+.hf-dtable--drawer .hf-dtable__row:not(.hf-dtable__head) > span {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px 7px; /* 52 з лінією, як у Figma */
+  border-bottom: 1px solid var(--primary-200);
+}
+
+.hf-dtable--drawer .hf-input {
+  flex: 1;
+}
+
+.hf-dtable--drawer .hf-dtable__row > span:nth-child(3) > .hf-input {
+  flex: 0 0 86px;
+}
+
+.hf-holding__total {
+  display: flex;
+  justify-content: space-between;
+  color: var(--primary-500);
+}
+
+.hf-holding__sum {
+  font-size: var(--hf-font-size-medium);
+  line-height: 20px;
+}
+
+.hf-holding__sum b {
+  color: var(--primary-600);
+}
+
+/* ---------- Заповнення шухляди в кроці 09 (рішення Насті 19.10) ----------
+   Рядок 1 — поля, які курсор заповнює (Type і Security зі списку, % набором);
+   рядки 2–4 з'являються по черзі. Скільки рядків видно й який Total — data-rows / data-total
+   на шухляді, їх ставить дія { set: "drawer", … } у конфігу. Без них: fill 0 — порожньо, fill 1 — усе */
+.hf-dtable--drawer .hf-field {
+  flex: 1;
+}
+
+.hf-dtable--drawer .hf-dtable__row > span:nth-child(3) .hf-field {
+  flex: 0 0 86px;
+}
+
+/* Рядок 1 у порожній шухляді схований, доки курсор не почав його заповнювати */
+.hf-drawer[data-fill="0"]:not([data-rows]) [data-row="1"] {
+  display: none;
+}
+
+/* Рядки 2–4 (data-fill-only="1") показуються раніше за fill 1 — за data-rows */
+.hf-drawer[data-rows="2"] [data-row="2"],
+.hf-drawer[data-rows="3"] :is([data-row="2"], [data-row="3"]),
+.hf-drawer[data-rows="4"] :is([data-row="2"], [data-row="3"], [data-row="4"]) {
+  display: grid;
+}
+
+/* Новий рядок з'являється коротким проявом зверху (лише під час програвання) */
+.hero-flow[data-playing="true"] .hf-drawer[data-rows] :is([data-row]:not([data-row="1"]), .hf-dtable__row--empty) {
+  /* рядок 1 не проявляється: він стає на місце порожнього, візуально той самий */
+  animation: hf-row-in var(--duration-slow) var(--ease-out);
+}
+
+@keyframes hf-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+/* Доки в рядку 1 нічого не обрано, він і є «порожнім» рядком; щойно обрано Type —
+   під ним з'являється новий порожній рядок і кошик (Настя 19.10).
+   Security вимкнене, доки не обрано Type (правило продукту) */
+.hf-drawer:has([data-target="h-type"]:not([data-filled="true"]))[data-rows="1"] .hf-dtable__row--empty,
+.hf-drawer[data-fill="0"]:has([data-target="h-type"]:not([data-filled="true"])) [data-row="1"] .hf-danger {
+  display: none;
+}
+
+.hf-drawer[data-fill="0"]:has([data-target="h-type"]:not([data-filled="true"])) [data-target="h-security"] .hf-input {
+  background: var(--primary-50);
+}
+
+/* Total, що не дорівнює 100 %, — колір помилки продукту (Additional/Red/500, Настя 19.10) */
+.hf-drawer:not([data-fill="1"], [data-total="100"]) .hf-holding__sum b,
+.hf-drawer[data-fill="1"][data-total]:not([data-total="100"]) .hf-holding__sum b {
+  color: var(--additional-red-500);
+}
+
+/* Total: 0 % (порожньо), 100 % (заповнено) або проміжна сума з data-total */
+.hf-holding__sum [data-sum] {
+  display: none;
+}
+
+.hf-drawer[data-fill="0"]:not([data-total]) [data-sum="0"],
+.hf-drawer[data-fill="1"]:not([data-total]) [data-sum="100"],
+.hf-drawer[data-total="40"] [data-sum="40"],
+.hf-drawer[data-total="65"] [data-sum="65"],
+.hf-drawer[data-total="85"] [data-sum="85"],
+.hf-drawer[data-total="100"] [data-sum="100"] {
+  display: inline;
+}
+
+/* ==========================================================================
+   Шар switcher: «Switch label» — демо-пристрій сайту, а не продукт (токени сайту)
+   Figma: Brand switcher (demo) 499:21118, 380 × 374; у коді — по центру видимого кадру (рішення Насті 16.10)
+   ========================================================================== */
+.hf-switcher {
+  /* Суворо по центру видимого кадру: сцена 1440 × 949 обрізана до 1440 × 768 (1200 : 640).
+     inset + margin: auto, а не translate: курсор і морф беруть центр варіанта з розкладки */
+  top: 0;
+  right: 0;
+  bottom: 181px; /* 949 − 768 */
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  width: 380px;
+  height: fit-content;
+  margin: auto;
+  padding: var(--space-24);
+  border-radius: var(--radius-phone);
+  background: var(--color-bg);
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--neutral-400) 28%, transparent);
+}
+
+.hf-switcher__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  line-height: 1.3;
+}
+
+/* heading/h4 і ui/caption у px Figma: сцена масштабується цілою, мобільні токени тут не потрібні */
+.hf-switcher__title {
+  color: var(--neutral-400);
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 600;
+  font-variation-settings: "FLAR" 50;
+}
+
+.hf-switcher__lead {
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 12px;
+}
+
+.hf-switcher__options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Варіант — як Contact button сайту (185:1154): фон bg, лінія border, радіус картки;
+   hover / pressed / обраний «стає фреймом» — рамка Selection, кути гострі (рішення Насті 16.10).
+   59 заввишки, лого 35 по центру */
+.hf-switcher__option {
+  position: relative; /* сюди «прилипає» рамка Selection */
+  display: grid;
+  place-items: center;
+  min-height: 59px; /* лого 35 + padding 12 / 12 */
+  padding: 11px var(--space-16);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-bg);
+  /* Рамка накриває 1px-лінію варіанта, як у Contact button */
+  --selection-inset-x: 1px;
+  --selection-inset-y: 1px;
+}
+
+/* Рамка схована: керують атрибути демо, а не справжній :hover — сцена на мишу не реагує.
+   will-change тримає рамку на постійному шарі відмальовки: інакше на час її анімації
+   браузер перемальовує сусідів, і волосяний контур лого EBC (0.26 px) блимає */
+.hf-switcher__option > .selection {
+  opacity: 0;
+  will-change: opacity;
+}
+
+.hf-switcher__option > .selection i {
+  transform: scale(0);
+  will-change: transform;
+}
+
+/* Hover (курсор демо): рамка 1.5, кути гострі */
+.hf-switcher__option[data-hover="true"] {
+  border-radius: 0;
+}
+
+.hf-switcher__option[data-hover="true"] > .selection {
+  opacity: 1;
+}
+
+.hf-switcher__option[data-hover="true"] > .selection i {
+  transform: scale(1);
+}
+
+/* Pressed: лише товща рамка (2 px), фон не змінюється (Настя 16.10) */
+.hf-switcher__option[data-pressed="true"] {
+  border-radius: 0;
+}
+
+.hf-switcher__option[data-pressed="true"] > .selection {
+  --selection-width: var(--selection-stroke-focus);
+  opacity: 1;
+}
+
+.hf-switcher__option[data-pressed="true"] > .selection i {
+  transform: scale(1);
+}
+
+/* Обраний бренд: рамка лишається (як виділений шар у Figma) тієї ж товщини, що й pressed (2 px):
+   після кліку товщина не стрибає 2 → 1.5, тож маркери по кутах не смикаються; фон surface */
+.hf-switcher[data-selected="centology"] [data-option="centology"],
+.hf-switcher[data-selected="lca"] [data-option="lca"],
+.hf-switcher[data-selected="ebc"] [data-option="ebc"],
+.hf-switcher[data-selected="dma"] [data-option="dma"] {
+  border-radius: 0;
+  background: var(--color-surface);
+}
+
+:is(
+  .hf-switcher[data-selected="centology"] [data-option="centology"],
+  .hf-switcher[data-selected="lca"] [data-option="lca"],
+  .hf-switcher[data-selected="ebc"] [data-option="ebc"],
+  .hf-switcher[data-selected="dma"] [data-option="dma"]
+) > .selection {
+  --selection-width: var(--selection-stroke-focus);
+  opacity: 1;
+}
+
+:is(
+  .hf-switcher[data-selected="centology"] [data-option="centology"],
+  .hf-switcher[data-selected="lca"] [data-option="lca"],
+  .hf-switcher[data-selected="ebc"] [data-option="ebc"],
+  .hf-switcher[data-selected="dma"] [data-option="dma"]
+) > .selection i {
+  transform: scale(1);
+}
+
+/* ==========================================================================
+   Програвання (крок 3 брифу): курсор, натискання, набір, поява панелей
+   ========================================================================== */
+
+/* Курсор: координати й тривалість ставить hero-flow.js.
+   Швидкий старт і довге гальмування, як у руки. X і Y — трохи різні криві
+   (translate і transform — окремі властивості), тож шлях ледь вигнутий, а не лінійка */
+.hf-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  color: var(--neutral-400);
+  opacity: 0;
+  translate: var(--hf-x, 900px) 0;
+  transform: translateY(var(--hf-y, 520px));
+  transition:
+    translate var(--hf-move, 0ms) cubic-bezier(0.3, 0, 0.15, 1),
+    transform var(--hf-move, 0ms) cubic-bezier(0.25, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+/* Три форми в одній точці (вістря стрілки — 4 × 2.5): стрілка, рука над кнопками й списками,
+   риска вводу над текстовими полями. Форму ставить hero-flow.js, коли курсор заходить на ціль */
+.hf-cursor > svg {
+  position: absolute;
+  display: none;
+}
+
+.hf-cursor__arrow { top: 0; left: 0; }
+.hf-cursor__hand { top: 1px; left: -4px; } /* кінчик пальця 8 × 1.5 */
+.hf-cursor__text { top: -6.5px; left: -1px; } /* центр риски 5 × 9 */
+
+.hf-cursor[data-shape="arrow"] .hf-cursor__arrow,
+.hf-cursor[data-shape="hand"] .hf-cursor__hand,
+.hf-cursor[data-shape="text"] .hf-cursor__text {
+  display: block;
+}
+
+/* Камера: наближення до активних елементів лише під час програвання (не в заморозці ?step) */
+.hero-flow[data-autoplay="true"] .hero-flow__stage {
+  transition: transform var(--hf-cam-ms, 0ms) var(--ease-in-out);
+}
+
+/* Видно, поки йде демо, і на паузі; у заморозці ?step і без JS — ні */
+.hero-flow[data-autoplay="true"] .hf-cursor {
+  opacity: 1;
+}
+
+/* Hover і pressed кнопок Primary (дошка станів 509:28665) */
+.hf-button-s--primary[data-hover="true"],
+.hf-button--primary[data-hover="true"] {
+  border-color: var(--primary-700);
+  background: var(--primary-700);
+}
+
+.hf-button-s--primary[data-pressed="true"],
+.hf-button--primary[data-pressed="true"] {
+  border-color: var(--primary-800);
+  background: var(--primary-800);
+}
+
+/* Клік по полю — фокус: лінія primary-600 */
+.hf-field[data-pressed="true"] .hf-input,
+.hf-field[data-typing="true"] .hf-input {
+  border-color: var(--primary-600);
+}
+
+/* Набір: значення з розмітки відкривається по символу; каретка — після набраного */
+.hf-field[data-typing="true"] .hf-input__value,
+.hf-field[data-filled="true"] .hf-input__value {
+  display: flex;
+}
+
+.hf-field[data-typing="true"] .hf-input__ph,
+.hf-field[data-filled="true"] .hf-input__ph {
+  display: none;
+}
+
+.hf-field[data-typing="true"] .hf-input__value {
+  clip-path: inset(0 calc(100% - var(--hf-typed, 0px)) 0 0);
+}
+
+.hf-input__text {
+  position: relative;
+}
+
+.hf-field[data-typing="true"] .hf-input__text::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: calc(4px + var(--hf-typed, 0px));
+  width: 1px;
+  height: 16px;
+  background: var(--neutral-400);
+}
+
+/* Поява панелей лише під час програвання; заморозка ?step показує стан одразу */
+.hero-flow[data-playing="true"] .hf-dim {
+  transition: opacity var(--duration-base) var(--ease-out), visibility 0s var(--duration-base);
+}
+
+.hero-flow[data-playing="true"] .hf-dim[data-visible="true"] {
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+/* Попап і шухляда виїжджають справа, а не згасають */
+.hf-popup[data-visible="false"],
+.hf-drawer[data-visible="false"] {
+  opacity: 1;
+  transform: translateX(100%);
+}
+
+.hero-flow[data-playing="true"] :is(.hf-popup, .hf-drawer) {
+  transition: transform var(--hf-duration-panel) var(--hf-ease-panel), filter var(--hf-duration-switch) var(--ease-in-out), visibility 0s var(--hf-duration-panel);
+}
+
+.hero-flow[data-playing="true"] :is(.hf-popup, .hf-drawer)[data-visible="true"] {
+  transition: transform var(--hf-duration-panel) var(--hf-ease-panel), filter var(--hf-duration-switch) var(--ease-in-out);
+}
+
+/* Пауза з перемикачем: фон розмивається, перемикач згасає й з'являється, як затемнення */
+.hero-flow[data-playing="true"] .hf-grid {
+  transition: filter var(--hf-duration-switch) var(--ease-in-out);
+}
+
+/* Перемикач згасає й з'являється */
+.hero-flow[data-playing="true"] .hf-switcher {
+  transition: opacity var(--hf-duration-switch) var(--ease-in-out), visibility 0s var(--hf-duration-switch);
+}
+
+.hero-flow[data-playing="true"] .hf-switcher[data-visible="true"] {
+  transition: opacity var(--hf-duration-switch) var(--ease-in-out);
+}
+
+/* Стани варіанта — з тими ж переходами, що й Contact button і selection.css */
+.hero-flow[data-playing="true"] .hf-switcher__option {
+  transition:
+    border-radius var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.hero-flow[data-playing="true"] .hf-switcher__option > .selection {
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.hero-flow[data-playing="true"] .hf-switcher__option > .selection i {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+/* Поки шар схований, стан у ньому ставиться без анімації:
+   інакше при появі перемикача видно, як рамка «перескакує» з минулого бренду */
+.hero-flow .hf-layer[data-visible="false"] * {
+  transition: none;
+}
+
+/* ---------- Кнопка пауза / відтворення: поза сценою, токени сайту ---------- */
+.hero-flow__toggle {
+  position: absolute;
+  right: var(--space-12);
+  bottom: var(--space-12);
+  display: grid;
+  place-items: center;
+  width: var(--size-tap-target);
+  height: var(--size-tap-target);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.hero-flow__toggle[hidden] {
+  display: none;
+}
+
+/* aria-pressed="true" = на паузі: показуємо «відтворити».
+   Через .hero-flow__toggle — сильніше за .hero-flow svg { display: block } */
+.hero-flow__toggle .hero-flow__icon-play,
+.hero-flow__toggle[aria-pressed="true"] .hero-flow__icon-pause {
+  display: none;
+}
+
+.hero-flow__toggle[aria-pressed="true"] .hero-flow__icon-play {
+  display: block;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-flow__toggle:hover {
+    background: var(--color-surface);
+  }
+}
+
+/* ---------- Дропдаун: відкритий список (Dropdown menu бібліотеки, дошка 509:32901) ----------
+   Статус і Тип не набираються: поле відкривається, курсор вибирає варіант (рішення Насті 16.10) */
+.hf-field:has(.hf-menu) {
+  position: relative;
+}
+
+.hf-menu {
+  position: absolute;
+  top: calc(100% + 2px); /* прилягає до поля, ширина = ширина поля (приклад Насті 16.10) */
+  right: 0;
+  left: 0;
+  z-index: 2;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 0 0 6px 6px;
+  background: var(--neutral-100);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--neutral-400) 10%, transparent),
+    0 2px 6px color-mix(in srgb, var(--neutral-400) 10%, transparent);
+}
+
+.hf-field[data-open="true"] .hf-menu {
+  display: flex;
+}
+
+/* Відкрите поле: лінія primary-600, шеврон догори */
+.hf-field[data-open="true"] .hf-input {
+  border-color: var(--primary-600);
+}
+
+.hf-field[data-open="true"] .hf-input > svg {
+  rotate: 180deg;
+}
+
+/* Поки список відкритий, поле порожнє — підказку ховаємо */
+.hf-field[data-open="true"] .hf-input__ph {
+  visibility: hidden;
+}
+
+/* Рядок списку на всю ширину, 36, Body / Medium neutral-300; hover — primary-50, текст neutral-400 */
+.hf-menu__item {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  color: var(--neutral-300);
+  font-size: var(--hf-font-size-medium);
+  line-height: 20px;
+}
+
+.hf-menu__item[data-hover="true"],
+.hf-menu__item[data-pressed="true"] {
+  background: var(--primary-50);
+  color: var(--neutral-400);
+}
+
+/* ---------- Мультивибір (Adviser Companies, дошка 509:32987) ----------
+   Обране стає тегом у полі й зникає зі списку; чекбоксів у списку немає */
+.hf-field--multi[data-open="true"] .hf-input__value {
+  display: flex;
+}
+
+/* Підказка не займає місця, щойно в полі з'явився тег */
+.hf-field--multi[data-open="true"]:has(.hf-chip[data-picked="true"]) .hf-input__ph {
+  display: none;
+}
+
+.hf-field--multi[data-open="true"] .hf-chip:not([data-picked="true"]),
+.hf-menu__item[data-picked="true"] {
+  display: none;
+}
+
+/* ==========================================================================
+   Морф бренду (бриф §5): новий бренд — окремий шар-копія сцени,
+   що відкривається колом від обраного варіанта перемикача. Кольори не перефарбовуються по одному.
+   Центр і радіус кола ставить hero-flow.js (--hf-morph-*)
+   ========================================================================== */
+.hf-morph {
+  position: absolute;
+  inset: 0;
+  background: var(--neutral-200);
+  clip-path: circle(var(--hf-morph-r, 0px) at var(--hf-morph-x, 50%) var(--hf-morph-y, 50%));
+  transition: clip-path var(--hf-morph-ms, 0ms) var(--ease-in-out);
+  pointer-events: none;
+}
+
+/* ---------- «Зменшити рух»: постер і кнопка запуску (бриф §6) ----------
+   Кнопка — компонент CV button (cv-button.css, рамка Selection на станах), там само, де кнопка паузи
+   (Настя 19.10). Через .hero-flow — сильніше за position: relative у .cv-button */
+.hero-flow .hero-flow__play {
+  position: absolute;
+  right: var(--space-12);
+  bottom: var(--space-12);
+  border: 0;
+  cursor: pointer;
+}
+
+.hero-flow .hero-flow__play[hidden] {
+  display: none;
+}
+
+/* ---------- Підпис під демо: завжди видно (бриф §6) ---------- */
+.case-hero__caption {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* На Mobile підпис менший — стиль ui/caption (Настя 19.10) */
+@media (width < 768px) {
+  .case-hero__caption {
+    font-size: var(--font-size-caption);
+    line-height: var(--line-height-caption);
+  }
+}

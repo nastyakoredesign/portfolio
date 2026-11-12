@@ -1,0 +1,50 @@
+/* ==========================================================================
+   cv-button.css — кнопка «Download CV» у секції Contact
+   Figma: компонент CV button (set 393:575), State=Default/Hover/Focus/Pressed.
+   Spec: docs/specs/ds-components.md → «Contact (14.10)».
+   НЕ плутати з .nav-cv-button у хедері (header.css): інші висота, кольори й контекст.
+
+   Розмітка: <a class="cv-button" href="…pdf" download><svg …/>Download CV<span class="selection …"/></a>
+   Заливка accent-tint-active без рамки; висота й радіус — як у Contact button,
+   щоб ряд мав одну висоту. Ширина за текстом (UA довший за EN).
+   ========================================================================== */
+
+.cv-button {
+  --selection-inset-x: 0px; /* check:ignore — без бордера рамка по межах кнопки */
+  --selection-inset-y: 0px; /* check:ignore */
+  position: relative; /* сюди «прилипає» рамка Selection */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  height: var(--size-contact-button);
+  padding-inline: var(--space-16);
+  background: var(--color-accent-tint-active);
+  border-radius: var(--radius-card);
+  color: var(--color-accent-active); /* колір іконки: stroke="currentColor" */
+  font-weight: 500;
+  font-size: var(--font-size-ui);
+  line-height: var(--line-height-ui);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-radius var(--duration-fast) var(--ease-out);
+}
+
+/* Hover (лише з курсором) / Focus / Pressed: кути → 0, рамка Selection (selection.css).
+   Pressed фон не змінює (як CaseCard). Прозорий outline — для Windows High Contrast. */
+@media (hover: hover) {
+  .cv-button:has(> .selection):hover {
+    border-radius: 0;
+  }
+}
+
+.cv-button:has(> .selection):focus-visible {
+  border-radius: 0;
+  outline-color: transparent;
+}
+
+/* Кути → 0 на Pressed лише з мишкою: на touch кнопка не «стає фреймом» */
+@media (hover: hover) and (pointer: fine) {
+  .cv-button:has(> .selection):active {
+    border-radius: 0;
+  }
+}

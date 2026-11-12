@@ -1,0 +1,252 @@
+/* ==========================================================================
+   stage.css — сцена «компонент + панель властивостей» у рішенні 2 (Figma: Stage 871:52295,
+   Preview 876:50765, Panel/Properties 876:50766, Property/* 876:50821…)
+   Як панель Properties у Figma: ліворуч превʼю компонента в рамці Selection, праворуч — властивості.
+   Mobile (Figma 888:49534): превʼю зверху, панель під ним; без Brand, Type, Left/Right icon, Tag
+   і без Selection (свідоме рішення Насті 05.11) — лишаються State (без View), Label, Hint text.
+   Перемикачі — .toggle--small, нативні радіо; вибір міняє превʼю без JS (блок «Властивості → превʼю» внизу).
+   ========================================================================== */
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px; /* check:ignore — панель 400, Figma 876:50766 */
+  overflow: clip;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+}
+
+/* Превʼю: компонент по центру, padding 48 / 32 */
+.stage__preview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* на узькому превʼю поле стискається, а не виходить за рамку */
+  place-items: center;
+  padding: var(--space-48) var(--space-32);
+}
+
+/* Selected/Input field: назва → рамка; Selection box — padding 24, рамка поверх (inset 0) */
+.stage__selected {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: 100%;
+}
+
+.stage__box {
+  --selection-inset-x: 0px;
+  --selection-inset-y: 0px;
+  position: relative;
+  padding: var(--space-24);
+}
+
+/* Поле не ширше 440 (Figma) — коли превʼю ширше (планшет, широкий Mobile), стоїть по центру */
+.stage .input-field {
+  margin-inline: auto;
+}
+
+/* Panel/Properties: біла колонка, лінія зліва */
+.stage__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-24);
+  border-inline-start: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.stage__panel-title {
+  margin: 0;
+  font-size: var(--font-size-ui);
+  font-weight: 500;
+  line-height: var(--line-height-ui);
+}
+
+/* Property: назва ліворуч, перемикач праворуч, gap 12; --stacked — назва над перемикачем (State) */
+.property {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin: 0;
+}
+
+.property--stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-8);
+}
+
+.property__name {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+/* Рядки State: п'ять сегментів ділять ширину порівну */
+.property--stacked .toggle {
+  justify-content: space-between;
+}
+
+/* ---------- Властивості → превʼю (без JS: радіо в панелі + :has() на .stage) ----------
+   Вигляд кожного варіанта — Figma Input field 854:85260 (Type × State) і ряд станів 884:49917.
+   Колір бренду (Active, фон тегів…) бере токени --primary-* з hero-flow-tokens.css: мод змінює Brand над сценою */
+
+/* State: Typed — введений текст замість плейсхолдера (neutral/400) */
+.stage:has(input[name="s2-state"][value="typed"]:checked) .input-field__control,
+.stage:has(input[name="s2-state"][value="active"]:checked) .input-field__control {
+  color: var(--neutral-400);
+}
+
+/* State: Active — рамка і шеврон вгору в Primary/600 */
+.stage:has(input[name="s2-state"][value="active"]:checked) .input-field__control {
+  border-color: var(--primary-600);
+}
+
+.stage:has(input[name="s2-state"][value="active"]:checked) .input-field__icon-right--down {
+  display: none;
+}
+
+.stage:has(input[name="s2-state"][value="active"]:checked) .input-field__icon-right--up {
+  display: block;
+  color: var(--primary-600);
+}
+
+/* State: Disabled — заливка primary/50; теги без хрестика (видалити не можна, правка Насті 09.11) */
+.stage:has(input[name="s2-state"][value="disabled"]:checked) .input-field__control {
+  background: var(--primary-50);
+}
+
+.stage:has(input[name="s2-state"][value="disabled"]:checked) .input-field__tag svg {
+  display: none;
+}
+
+/* Label / Hint text: Off — прибирає елемент */
+.stage:has(input[name="s2-label"][value="off"]:checked) .input-field__label,
+.stage:has(input[name="s2-hint"][value="off"]:checked) .input-field__hint {
+  display: none;
+}
+
+/* Властивості лише з Desktop (Type, View, Left/Right icon, Tag): на Mobile їх немає в панелі,
+   тож вибір, зроблений на ширшому екрані (напр. телефон у ландшафті), не застрягає в превʼю */
+@media (width >= 768px) {
+  /* Type: Error — червона рамка, шеврон Active і підказка (після Active: Error перекриває) */
+  .stage:has(input[name="s2-type"][value="error"]:checked) .input-field__control {
+    border-color: var(--additional-red-200);
+  }
+
+  .stage:has(input[name="s2-type"][value="error"]:checked) .input-field__icon-right--up,
+  .stage:has(input[name="s2-type"][value="error"]:checked) .input-field__hint {
+    color: var(--additional-red-200);
+  }
+
+  /* State: View — звичайний текст без рамки, фону, іконок, зірочки й підказки (Figma 854:85394) */
+  .stage:has(input[name="s2-state"][value="view"]:checked) .input-field__control {
+    min-height: 0;
+    padding: 0;
+    border-color: transparent;
+    background: none;
+    color: var(--neutral-400);
+  }
+
+  .stage:has(input[name="s2-state"][value="view"]:checked) .input-field__control svg,
+  .stage:has(input[name="s2-state"][value="view"]:checked) .input-field__tag,
+  .stage:has(input[name="s2-state"][value="view"]:checked) .input-field__label i,
+  .stage:has(input[name="s2-state"][value="view"]:checked) .input-field__hint {
+    display: none;
+  }
+
+  .stage:has(input[name="s2-state"][value="view"]:checked) .input-field__content {
+    padding-inline-start: 0;
+  }
+
+  .stage:has(input[name="s2-state"][value="view"]:checked) .input-field__placeholder {
+    text-transform: lowercase; /* у Figma View — «placeholder» малими */
+  }
+
+  /* Left icon / Right icon: Off — прибирає іконку */
+  .stage:has(input[name="s2-left"][value="off"]:checked) .input-field__icon-left,
+  .stage:has(input[name="s2-right"][value="off"]:checked) .input-field__icon-right {
+    display: none;
+  }
+
+  /* Tag: On — чотири теги перед плейсхолдером (Figma: 4 інстанси Tag у Content) */
+  .stage:has(input[name="s2-tag"][value="on"]:checked) .input-field__tag {
+    display: flex;
+  }
+
+  /* Є теги — плейсхолдер ховаємо (правка Насті 09.11); у View тегів немає, тож там лишається */
+  .stage:has(input[name="s2-tag"][value="on"]:checked):not(:has(input[name="s2-state"][value="view"]:checked)) .input-field__placeholder {
+    display: none;
+  }
+}
+
+/* ---------- Планшет (768–1023, напр. iPad mini): превʼю вузьке — без рамки Selection,
+   поле на всю ширину превʼю, щоб підказка влізла (правка Насті 05.11) ---------- */
+@media (768px <= width < 1024px) {
+  /* center stretch: по вертикалі — по центру, по горизонталі — на всю ширину */
+  .stage__preview {
+    place-items: center stretch;
+    padding-inline: var(--space-24);
+  }
+
+  .stage .selection-name,
+  .stage .selection {
+    display: none;
+  }
+
+  .stage__box {
+    padding: 0;
+  }
+}
+
+/* ---------- Mobile: превʼю зверху, панель знизу, лише State / Label / Hint text ---------- */
+@media (width < 768px) {
+  /* Картки каруселі однакової висоти: у ширшій за типову картці (напр. 500–767) зайве місце
+     забирає превʼю (рядок 1fr), а не порожнеча під текстом */
+  .brand-switcher:has(> .stage) {
+    flex: 1 1 auto;
+  }
+
+  .stage {
+    flex: 1 1 auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+  }
+
+  /* Поле на всю ширину превʼю, по вертикалі — по центру */
+  .stage__preview {
+    place-items: center stretch;
+    padding: var(--space-16) var(--space-24);
+  }
+
+  .stage__panel {
+    padding: var(--space-16);
+    border-block-start: 1px solid var(--color-border);
+    border-inline-start: 0;
+  }
+
+  /* State на Mobile — 4 сегменти, без View (Figma 888:49438) */
+  .stage__panel-title,
+  .property--desktop-only,
+  .stage .toggle__option--desktop-only,
+  .stage .selection-name,
+  .stage .selection {
+    display: none;
+  }
+
+  .stage__box {
+    padding: 0;
+  }
+
+  /* Поле на Mobile завжди в моді Centology (правка Насті 09.11): перемикача Brand тут немає,
+     тож бренд, вибраний на ширшому екрані, не лишається. initial = initial-value з @property
+     у hero-flow-tokens.css — мод Centology. Селектор довший за правила брендів, щоб їх перекрити */
+  .brand-switcher:has(.toggle--brand input:checked) .stage .input-field {
+    --primary-50: initial;
+    --primary-100: initial;
+    --primary-200: initial;
+    --primary-400: initial;
+    --primary-600: initial;
+    --primary-900: initial;
+  }
+}
