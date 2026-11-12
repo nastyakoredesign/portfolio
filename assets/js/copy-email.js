@@ -1,10 +1,3 @@
-/* ==========================================================================
-   copy-email.js — кнопка Copy біля email у секції Contact
-   Spec: docs/specs/ds-components.md → «Contact (14.10)»; рішення 14.10.
-   Прогресивне покращення: кнопка в розмітці має hidden. Якщо JS вимкнено
-   або немає Clipboard API, вона лишається схованою — адресу видно текстом.
-   Текст «Copied» лежить у HTML (data-copied-label), не тут.
-   ========================================================================== */
 
 (() => {
   const COPIED_MS = 2000;
@@ -22,12 +15,10 @@
       try {
         await navigator.clipboard.writeText(address.textContent.trim());
       } catch {
-        // Браузер не дав доступ до буфера: ховаємо кнопку, адреса лишається текстом
         button.hidden = true;
         return;
       }
 
-      // data-copied перемикає іконку copy → check (CSS), aria-live читає підпис
       root.setAttribute('data-copied', '');
       status.textContent = root.dataset.copiedLabel;
 

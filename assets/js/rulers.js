@@ -1,19 +1,8 @@
-/* ==========================================================================
-   rulers.js — цифри на лінійках hero і діапазон виділення
-   CSS: components/rulers.css. Spec: docs/specs/hero-v2-spec.md, розділ 4.
-   Читає межі рамки Selection (getBoundingClientRect — справжні значення,
-   як панель розмірів у Figma) і:
-   - ставить --x1 / --x2 / --y1 / --y2 (px від лівого й верхнього краю hero);
-   - підписує межі й ставить підписи кожні 200 px, ховаючи ті, що ближче 45 px до меж.
-   Слідкує за рамкою (ResizeObserver): коли ширина рамки змінюється — на ресайзі,
-   після завантаження шрифтів, а далі й при ротації ролі — діапазон їде разом з нею.
-   Без JS лінійки лишаються з рисками, без цифр і діапазону.
-   ========================================================================== */
 (function () {
   if (!('ResizeObserver' in window)) return;
 
-  var STEP = 200;       // крок підписів, px
-  var MIN_GAP = 45;     // ближче до межі підпис ховаємо, px
+  var STEP = 200;
+  var MIN_GAP = 45;
 
   document.querySelectorAll('.rulers[data-target]').forEach(function (rulers) {
     var target = document.querySelector(rulers.getAttribute('data-target'));
@@ -42,7 +31,7 @@
 
     function update() {
       var box = rulers.getBoundingClientRect();
-      if (!box.width) return; // Mobile: лінійки сховані
+      if (!box.width) return;
 
       var rect = target.getBoundingClientRect();
       var x1 = Math.round(rect.left - box.left);

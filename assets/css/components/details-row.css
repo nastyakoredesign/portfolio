@@ -1,22 +1,9 @@
-/* ==========================================================================
-   details-row.css — рядок гармошки (компонент Details row, 288:339)
-   Process і «Logic from specs» у рішеннях. Нативний <details>/<summary>, без JS.
-   Layout=Inline (Desktop): chevron, мітка, підказка праворуч.
-   Layout=Stacked (Mobile): підказка під міткою, chevron по центру висоти.
-   Figma: Process/Details (74:111); відкритий стан — 81:2 (Desktop), 151:73 (Mobile).
-   ========================================================================== */
 
-/* Лінія під рядком — на всій <details>, тому відкритий блок закінчується однією лінією */
 .details-row {
   border-bottom: 1px solid var(--color-border);
-  interpolate-size: allow-keywords; /* дозволяє анімувати висоту до auto */
+  interpolate-size: allow-keywords;
 }
 
-/* ---------- Відкривання / закривання (анімація, прогресивне покращення) ----------
-   Вміст — ::details-content: висота 0 → auto, content-visibility тримає його намальованим,
-   поки йде закриття. Текст проявляється трохи пізніше за висоту, chevron повертається
-   разом із нею. Браузери без ::details-content (і reduced-motion, base.css) показують
-   зміну одразу — нативна поведінка <details> лишається. */
 .details-row__chevron {
   transition: transform var(--duration-base) var(--ease-out);
 }
@@ -44,7 +31,6 @@
     transition-delay: var(--duration-fast);
   }
 
-  /* Початкові значення для відкривання: без цього висота «стрибає» на повну одразу */
   @starting-style {
     .details-row[open]::details-content {
       block-size: 0;
@@ -67,12 +53,10 @@
   list-style: none;
 }
 
-/* Прибрати стандартний трикутник (Safari — окремий псевдоелемент) */
 .details-row__summary::-webkit-details-marker {
   display: none;
 }
 
-/* Tabler chevron-right, accent; у відкритому стані повертається на 90° (= chevron-down) */
 .details-row__chevron {
   width: 20px;
   height: 20px;
@@ -83,14 +67,12 @@
   transform: rotate(90deg);
 }
 
-/* ui/label */
 .details-row__label {
   font-size: var(--font-size-ui);
   font-weight: 500;
   line-height: var(--line-height-ui);
 }
 
-/* body/base, text-secondary; на Desktop — праворуч */
 .details-row__hint {
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
@@ -98,7 +80,6 @@
   text-align: right;
 }
 
-/* Вміст відкритого рядка: відступ зліва 32 під chevron, знизу 24 */
 .details-row__content {
   padding: var(--space-12) 0 var(--space-24) var(--space-32);
 }

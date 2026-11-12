@@ -1,27 +1,9 @@
-/* ==========================================================================
-   media.css — медіа в картці кейсу: фон + колонки-лінії + вміст по центру
-   Figma: Media/Temp — Centology portal + app (176:558), Centology design system
-   (176:635), This site (176:1068); рамка Media/NDA (168:471);
-   Media/Centology portal + app — 682:21098 (Desktop 1198×440), 682:21109 (Mobile 340×260).
-   Шапки v2 (секція 712:21887, 22.10): Centology design system 715:1006 / 715:1362,
-   Revive telehealth CRM 722:1290 / 722:2529, This site 727:1654 / 727:1756.
-   Spec: docs/specs/hifi-tokens.md → «Рішення 05.10: заглушки зображень»
 
-   Як у Figma: фон і 6 колонок тягнуться на всю ширину медіа, а композиція
-   в центрі має сталий розмір. Тому фон і колонки — CSS, а композиція —
-   SVG, експортований з Figma (assets/img/work-*.svg). Висоту задає картка.
-   Варіант centology-app: композиція — WebP зі скрінами (assets/img/case/centology/card-*.webp,
-   прозорий фон із тінями), фон і колонки лишаються CSS.
-   ========================================================================== */
-
-/* Рамка медіа. Тон (фон і колір колонок) задає модифікатор */
 .media {
   position: relative;
   background: var(--media-bg);
 }
 
-/* Колонки-лінії: 6 колонок, gap 16, бічний відступ 24 — як Layout grid у Figma.
-   Колонка — лише лінії по краях (stroke left/right), без заливки. */
 .media__columns {
   position: absolute;
   inset: 0;
@@ -35,9 +17,6 @@
   border-inline: 1px solid var(--media-columns-color);
 }
 
-/* Композиція по центру у своєму розмірі (у Figma — Fixed, по центру).
-   На вузьких картках (Mobile, 768 px) SVG зменшується, щоб малюнок не обрізався.
-   +24 px: тінь (вона є в SVG по краях) може трохи зайти за край медіа, малюнок — ні. */
 .media__composition {
   position: absolute;
   top: 50%;
@@ -46,13 +25,7 @@
   translate: -50% -50%;
 }
 
-/* ---------- Тони ---------- */
 
-/* Centology portal + app (Figma 682:21098 / 682:21109): фон case-accent-muted, колонки білі 18 %.
-   Desktop: композиція притиснута до низу й обрізана рамкою медіа (у Figma знизу виходить за кадр,
-   Clip content), по центру горизонтально. Mobile: по центру, як інші композиції.
-   aspect-ratio — пропорція файлу. Ширину дає атрибут width (Mobile — width у <source>), висоту —
-   пропорція: так Chrome знає розмір картинки ще до завантаження (lazy) і не пише Issue. */
 .media--centology-app {
   --media-bg: var(--color-case-accent-muted);
   --media-columns-color: color-mix(in srgb, var(--color-on-accent) 18%, transparent);
@@ -70,15 +43,13 @@
   .media--centology-app .media__composition {
     top: 50%;
     bottom: auto;
-    width: min(calc(366 / 340 * 100%), 366px); /* мобільний файл 366 (із тінню) у кадрі 340; вужче — пропорційно */
+    width: min(calc(366 / 340 * 100%), 366px);
     aspect-ratio: 366 / 311;
-    max-width: none; /* тінь по краях можуть обрізати краї медіа, малюнок (286 у Figma) — ні */
+    max-width: none;
     translate: -50% -50%;
   }
 }
 
-/* Layout=Horizontal (картка на «Кейсі у роботі», 687:21749): медіа — половина картки,
-   тож у ній Mobile-композиція (вибирає <source> у розмітці) і теж по центру, як у Figma */
 @media (width >= 1024px) {
   .case-card--horizontal .media--centology-app .media__composition {
     top: 50%;
@@ -89,10 +60,6 @@
   }
 }
 
-/* ---------- Шапки v2: design system, Revive, This site ----------
-   Композиція — WebP на весь кадр Figma (586×330, Mobile 340×260) з прозорим фоном;
-   знизу вона обрізана краєм кадру (Clip content), тож притискаємо її до низу медіа,
-   по центру горизонтально. Mobile-файл має власні width/height у <source>. */
 .media--design-system,
 .media--revive,
 .media--this-site {
@@ -106,32 +73,26 @@
   translate: -50% 0;
 }
 
-/* Mobile: у кадрах 340×260 знизу нічого не обрізано, а висоту медіа в каруселі
-   задає екран (work.css), тож композиція — по центру, як Centology portal + app */
 @media (width < 768px) {
   :is(.media--design-system, .media--revive, .media--this-site) .media__composition {
     top: 50%;
     bottom: auto;
-    width: min(100%, 340px); /* кадр 340 × 260; вужче — пропорційно */
+    width: min(100%, 340px);
     aspect-ratio: 340 / 260;
     translate: -50% -50%;
   }
 }
 
-/* Desktop (хотфікс 12.11): композиція — частка ширини кадру, як у Figma, тож зменшується разом
-   із кадром (кадр пропорційний — case-card.css). Mobile — правила вище; у Horizontal від 1024 px
-   ширину дає атрибут width (Centology — мобільний файл із <source>), тому її тут немає. */
 @media (width >= 768px) {
   .case-card:not(.case-card--horizontal) .media--centology-app .media__composition {
-    width: calc(956 / 1198 * 100%); /* 956 із кадру 1198 */
+    width: calc(956 / 1198 * 100%);
   }
 
   .case-card:not(.case-card--horizontal) :is(.media--design-system, .media--revive, .media--this-site) .media__composition {
-    width: 100%; /* на весь кадр 586 × 330 */
+    width: 100%;
   }
 }
 
-/* Horizontal на 768–1023 — вертикальна картка, як звичайна */
 @media (768px <= width < 1024px) {
   .case-card--horizontal .media--centology-app .media__composition {
     width: calc(956 / 1198 * 100%);
@@ -142,28 +103,23 @@
   }
 }
 
-/* Centology design system: фон case-accent-muted, колонки білі 18 % (як Centology portal + app) */
 .media--design-system {
   --media-bg: var(--color-case-accent-muted);
   --media-columns-color: color-mix(in srgb, var(--color-on-accent) 18%, transparent);
 }
 
-/* Revive: фон case-revive-muted, колонки білі 18 % */
 .media--revive {
   --media-bg: var(--color-case-revive-muted);
   --media-columns-color: color-mix(in srgb, var(--color-on-accent) 18%, transparent);
 }
 
-/* «This site»: темна, як хедер (ink). Замість колонок — сітка крапок (Figma Dot grid 736:2452 / 736:2789):
-   сітку 16 px Настя збільшила в 1.3125 раза (22.10) — крок 21, крапка ~2 px (радіус 1), code-token 18 % */
 .media--this-site {
   --media-bg: var(--color-ink);
   --dot-step: calc(var(--space-16) * 1.3125);
-  background-image: radial-gradient(circle, color-mix(in srgb, var(--color-code-token) 18%, transparent) 1px, transparent 1.25px); /* check:ignore — крапка 2 px з Figma */
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--color-code-token) 18%, transparent) 1px, transparent 1.25px); /* check:ignore */
   background-size: var(--dot-step) var(--dot-step);
 }
 
-/* NDA: теплий тон сайту (accent-tint), колонки accent 10 % */
 .media--nda {
   --media-bg: var(--color-accent-tint);
   --media-columns-color: color-mix(in srgb, var(--color-accent) 10%, transparent);

@@ -1,21 +1,4 @@
-/* ==========================================================================
-   case-list.css — список кейсу з маркером-іконкою (рішення 20.10)
-   Figma: List item (612:667) з List marker (607:639).
-   Текст — body/case; маркер 16 × 16 text-secondary, по центру першого рядка.
-   Використовують What I did, Constraints, Flow, Takeaways.
 
-   HTML: <ul class="case-list"><li><svg class="list-marker" …>…</svg>Текст</li></ul>
-   Маркер — інлайн SVG з aria-hidden="true" (скрінрідер читає <ul>, а не ромби).
-   Варіант маркера (Figma Marker=Component / Constraint) задає сама іконка:
-   - ◇ ромб: <path class="list-marker__fill">;
-   - constraint: рамка + <path class="list-marker__pins"> + <path class="list-marker__fill"> (квадрат у центрі).
-
-   Hover (Figma State=Hover): маркер стає accent, ромб / квадрат заливається,
-   у constraint з'являються 4 піни. Лише миша: на touch стан «залипав» би після тапу.
-   «Зменшити рух» вимикає переходи глобально (base.css) — лишається тільки зміна кольору.
-   ========================================================================== */
-
-/* Auto Layout vertical, gap 12 */
 .case-list {
   display: flex;
   flex-direction: column;
@@ -27,16 +10,12 @@
   line-height: var(--line-height-body-case);
 }
 
-/* List item: маркер + текст, Auto Layout horizontal, gap 12 */
 .case-list li {
   display: flex;
   gap: var(--space-12);
   align-items: flex-start;
 }
 
-/* Обгортка Bullet у Figma (16 × 28.8) = висота одного рядка (1lh).
-   SVG сам ставить іконку 16 × 16 по центру своєї рамки — тож вона стоїть
-   посередині першого рядка без окремої обгортки. */
 .list-marker {
   flex: none;
   height: 1lh;
@@ -54,7 +33,6 @@
   transition: opacity var(--duration-fast) var(--ease-out);
 }
 
-/* Стан Hover. Той самий вигляд вмикає зв'язаний hover у My role (properties.css) */
 @media (hover: hover) and (pointer: fine) {
   .case-list li:hover .list-marker {
     color: var(--color-accent);

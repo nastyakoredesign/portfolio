@@ -1,49 +1,34 @@
-/* ==========================================================================
-   header.css — хедер і мобільне меню
-   Figma: компонент Header (156:57) — варіанти Desktop / Mobile / Mobile Menu=Open;
-   відкрите меню — фрейм 156:128. Spec: docs/specs/header-v2-spec.md
-   ========================================================================== */
 
-/* Висота хедера — одне джерело для всієї сторінки:
-   кнопка 44 + padding 16 зверху й знизу = 76 (як у Figma).
-   Hero віднімає її від висоти екрана, меню рахує від неї центр бургера. */
 :root {
   --site-header-height: calc(var(--size-tap-target) + 2 * var(--space-16));
 }
 
-/* ---------- Хедер: темна смуга (фон ink), не sticky ---------- */
 .site-header {
   background: var(--color-ink);
   color: var(--color-on-ink);
 }
 
-/* Ряд хедера = Auto Layout horizontal, space-between.
-   Той самий ряд стоїть зверху відкритого меню. */
 .site-header__bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-16); /* мінімальний проміжок, щоб вордмарк і кнопки не злипались */
-  min-height: var(--site-header-height); /* вміст по центру по вертикалі = padding 16 */
+  gap: var(--space-16);
+  min-height: var(--site-header-height);
 }
 
-/* Фокус на темному фоні — світлий акцент (контраст ≈ 8:1 замість 3.3:1) */
 .site-header :focus-visible,
 .site-menu :focus-visible {
   outline-color: var(--color-accent-on-dark);
 }
 
-/* Вордмарк і перемикач мови — окремі компоненти: wordmark.css, lang-switch.css */
 
-/* ---------- Праворуч: Header/Nav (gap 24) ---------- */
 .site-header__actions {
   display: flex;
-  flex-shrink: 0; /* кнопки не стискаються на вузьких екранах (як Fixed width у Figma) */
+  flex-shrink: 0;
   align-items: center;
   gap: var(--space-24);
 }
 
-/* Header/Links: Work · About · Contact · CV (gap 8) */
 .site-header__nav {
   display: flex;
   align-items: center;
@@ -51,14 +36,13 @@
 }
 
 .site-header__link {
-  /* Nav link (Figma 362:448): рамка по межах посилання, без відступу */
   --selection-color: var(--color-accent-on-dark);
   --selection-color-pressed: var(--color-accent-on-dark);
   --selection-handle-fill: var(--color-ink);
   --selection-width-pressed: var(--selection-stroke);
-  --selection-inset-x: 0px; /* check:ignore — 0 без токена */
+  --selection-inset-x: 0px; /* check:ignore */
   --selection-inset-y: 0px; /* check:ignore */
-  position: relative; /* сюди «прилипає» рамка Selection */
+  position: relative;
   padding: var(--space-12);
   font-weight: 500;
   font-size: var(--font-size-ui);
@@ -66,8 +50,6 @@
   text-decoration: none;
 }
 
-/* Hover / Focus: рамка Selection (selection.css). Pressed — ще й фон ink-raised.
-   Прозорий outline — для Windows High Contrast (замість кільця малює рамка). */
 .site-header__link:has(> .selection):focus-visible,
 .site-header__link:has(> .selection):active {
   outline-color: transparent;
@@ -77,23 +59,19 @@
   background: var(--color-ink-raised);
 }
 
-/* Роздільник 1 × 20 між навігацією і мовою */
 .site-header__divider {
   width: 1px;
   height: 20px;
   background: var(--color-ink-border);
 }
 
-/* ---------- Кнопка CV (Nav СV Button) — Figma: компонент Nav СV Button (214:4022), State=Default/Hover/Focus ----------
-   Однакова на Desktop і Mobile. Hover і Focus «стає фреймом»: рамка Selection
-   у світлому акценті, маркери ink. Hover 1.5 px, Focus 2 px — як в усіх компонентах. */
 .nav-cv-button {
   --selection-color: var(--color-accent-on-dark);
   --selection-color-pressed: var(--color-accent-on-dark);
   --selection-handle-fill: var(--color-ink);
-  --selection-inset-x: 1px; /* рамка накриває 1px-бордер, як у Figma (inset −1) */
+  --selection-inset-x: 1px;
   --selection-inset-y: 1px;
-  position: relative; /* сюди «прилипає» рамка Selection */
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
@@ -108,8 +86,6 @@
   text-decoration: none;
 }
 
-/* Кути → 0, як у Contact button. Прозорий outline — для Windows High Contrast
-   (замість кільця з правила «.site-header :focus-visible» малює рамка). */
 .nav-cv-button:has(> .selection) {
   transition: border-radius var(--duration-fast) var(--ease-out);
 }
@@ -125,29 +101,25 @@
   outline-color: transparent;
 }
 
-/* Pressed: фон ink-raised, рамка 2 px accent-on-dark */
 .nav-cv-button:has(> .selection):active {
   background: var(--color-ink-raised);
   outline-color: transparent;
 }
 
-/* Кути → 0 на Pressed лише з мишкою: на touch кнопка не «стає фреймом» */
 @media (hover: hover) and (pointer: fine) {
   .nav-cv-button:has(> .selection):active {
     border-radius: 0;
   }
 }
 
-/* ---------- Кнопка меню: бургер і «Закрити» (44 × 44) ---------- */
 .menu-button {
-  /* Menu button (Figma 362:580): рамка накриває 1px-бордер, кути 8 → 0 */
   --selection-color: var(--color-accent-on-dark);
   --selection-color-pressed: var(--color-accent-on-dark);
   --selection-handle-fill: var(--color-ink);
   --selection-width-pressed: var(--selection-stroke);
   --selection-inset-x: 1px;
   --selection-inset-y: 1px;
-  position: relative; /* сюди «прилипає» рамка Selection */
+  position: relative;
   display: grid;
   place-items: center;
   width: var(--size-tap-target);
@@ -155,17 +127,15 @@
   padding: 0;
   border: 1px solid var(--color-ink-border);
   border-radius: var(--radius-control);
-  background: var(--color-ink); /* Menu=Open: фон ink */
+  background: var(--color-ink);
   color: var(--color-on-ink);
   cursor: pointer;
 }
 
 .site-header__burger {
-  background: var(--color-ink-raised); /* Menu=Closed: фон ink-raised */
+  background: var(--color-ink-raised);
 }
 
-/* Hover / Focus / Pressed: кнопка «стає фреймом», кути → 0.
-   Pressed на крок світліший: бургер ink-raised → ink-border, «Закрити» ink → ink-raised. */
 .menu-button:has(> .selection) {
   transition:
     border-radius var(--duration-fast) var(--ease-out),
@@ -187,7 +157,6 @@
   outline-color: transparent;
 }
 
-/* Кути → 0 на Pressed лише з мишкою: на touch кнопка не «стає фреймом» */
 @media (hover: hover) and (pointer: fine) {
   .menu-button:has(> .selection):active {
     border-radius: 0;
@@ -202,9 +171,7 @@
   background: var(--color-ink-border);
 }
 
-/* ---------- Мобільне меню (popover на весь екран) ---------- */
 .site-menu {
-  /* скидаємо стандартний вигляд popover (рамка, відступи, розмір за вмістом) */
   inset: 0;
   width: 100%;
   height: 100%;
@@ -215,34 +182,19 @@
   border: 0;
   background: var(--color-ink);
   color: var(--color-on-ink);
-  /* Auto Layout vertical: ряд хедера + тіло на всю решту висоти.
-     Напрямок — тут, а не в :popover-open, щоб він не зникав під час анімації закриття
-     (меню ще видно, але вже «не відкрите»). display: flex — лише у відкритому стані,
-     бо закрите меню браузер ховає через display: none. */
   flex-direction: column;
 
-  /* Поява «з кнопки» (як petermarc.com): меню нікуди не рухається, його відкриває
-     коло-маска (clip-path), що росте з центру бургера. У Figma — маска-еліпс,
-     яку Smart Animate збільшує з 44 px до всього екрана.
-     Центр кола = центр бургера: справа gutter + пів кнопки, зверху пів висоти хедера. */
   --menu-origin: calc(100% - var(--layout-gutter) - var(--size-tap-target) / 2)
                  calc(var(--site-header-height) / 2);
-  /* Коло закритого меню — розміром з кнопку; відкритого — діагональ екрана,
-     тобто рівно стільки, щоб накрити дальній кут (без зайвого запасу, який «з'їдав» час). */
   --menu-closed: circle(calc(var(--size-tap-target) / 2) at var(--menu-origin));
   --menu-open: circle(hypot(100vw, 100dvh) at var(--menu-origin));
   clip-path: var(--menu-closed);
-  /* Закриття: коло стягується назад у кнопку. display і overlay тримають меню
-     на екрані, поки йде анімація. «Зменшити рух» — base.css робить усе миттєвим. */
   transition:
     clip-path var(--duration-slow) var(--ease-out),
     display var(--duration-slow) allow-discrete,
     overlay var(--duration-slow) allow-discrete;
 }
 
-/* Відкриття: та сама тривалість і крива, що й закриття.
-   Ключові кадри (як Smart Animate від «кола-кнопки» до «всього екрана») запускаються
-   щоразу, коли меню з'являється, — надійніше за @starting-style у різних браузерах. */
 .site-menu:popover-open {
   display: flex;
   clip-path: var(--menu-open);
@@ -255,12 +207,9 @@
   }
 }
 
-/* Закриття кнопкою чи пунктом меню: menu.js ставить data-closing, коло стягується
-   в кнопку, і лише після цього меню ховається. Так працює і в Safari, де CSS-перехід
-   закриття popover не видно (меню одразу випадає з верхнього шару). */
 .site-menu[data-closing] {
   animation: site-menu-close var(--duration-slow) var(--ease-out) forwards;
-  transition: none; /* меню ховається вже закритим — без другого кола */
+  transition: none;
 }
 
 @keyframes site-menu-close {
@@ -269,12 +218,10 @@
   }
 }
 
-/* Фокус на самому меню (після тапу, menu.js) — без кільця: вміст і так на екрані */
 .site-menu:focus {
   outline-color: transparent;
 }
 
-/* Menu/Body: посилання по центру, мова внизу (gap 48, padding 32 / gutter) */
 .site-menu__body {
   display: flex;
   flex: 1;
@@ -283,7 +230,6 @@
   padding: var(--space-32) var(--layout-gutter);
 }
 
-/* Menu/Links: займає весь вільний простір, вміст по центру (gap 12) */
 .site-menu__nav {
   display: flex;
   flex: 1;
@@ -293,17 +239,14 @@
   gap: var(--space-12);
 }
 
-/* Посилання меню — текстовий стиль heading/h1 */
 .site-menu__link {
-  /* Menu link (Figma 362:621): рамка 8 по горизонталі й 4 над і під текстом
-     (у link padding-block 8, тож рамка лежить на 4 всередині його box) */
   --selection-color: var(--color-accent-on-dark);
   --selection-color-pressed: var(--color-accent-on-dark);
   --selection-handle-fill: var(--color-ink);
   --selection-width-pressed: var(--selection-stroke);
   --selection-inset-x: var(--space-8);
   --selection-inset-y: calc(-1 * var(--space-4));
-  position: relative; /* сюди «прилипає» рамка Selection */
+  position: relative;
   isolation: isolate;
   padding-block: var(--space-8);
   color: var(--color-on-ink);
@@ -316,8 +259,6 @@
   text-decoration: none;
 }
 
-/* Hover / Focus / Pressed: рамка Selection; Pressed додає фон ink-raised
-   (::before позаду тексту, того ж розміру, що рамка). Прозорий outline — для Windows High Contrast. */
 .site-menu__link:has(> .selection)::before {
   content: "";
   position: absolute;
@@ -334,7 +275,6 @@
   background: var(--color-ink-raised);
 }
 
-/* Menu/Language: лінія зверху, «Language» ліворуч, EN UA праворуч */
 .site-menu__language {
   display: flex;
   align-items: center;
@@ -347,26 +287,22 @@
   color: var(--color-on-ink-secondary);
 }
 
-/* ---------- Мод Mobile (≤ 767 px): вордмарк + CV + бургер ---------- */
 @media (width < 768px) {
   .site-header__actions {
     gap: var(--space-8);
   }
 
-  /* Work, About і Contact — у меню; CV лишається видимим у хедері */
   .site-header__link,
   .site-header__divider,
   .site-header__lang {
     display: none;
   }
 
-  /* Поки меню відкрите, сторінка під ним не гортається */
   body:has(.site-menu:popover-open) {
     overflow: hidden;
   }
 }
 
-/* ---------- Мод Desktop (≥ 768 px): бургера й меню немає ---------- */
 @media (width >= 768px) {
   .site-header__burger,
   .site-menu:popover-open {

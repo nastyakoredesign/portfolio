@@ -1,20 +1,11 @@
-/* ==========================================================================
-   about-hero.css — перший екран About: текст + фото в рамці Selection
-   Figma: About/Hero (710:22456 Desktop, 710:22707 Mobile), Hero/Row (710:22458),
-   Photo frame (Selection) 738:28130. Фон — Dot grid Light, як на «Кейсі у роботі»
-   (cell-grid.css --dots --light + cell-grid.js).
-   ========================================================================== */
 
-/* Секція: padding 64 зверху / space-section знизу (Mobile 48 / 64), бокові — .container */
 .about-hero {
-  position: relative; /* фон-сітка .cell-grid */
-  isolation: isolate; /* сітка з z-index −1 — над фоном секції, під текстом і фото */
+  position: relative;
+  isolation: isolate;
   padding-top: var(--space-64);
   padding-bottom: var(--space-section);
 }
 
-/* Desktop: текст ліворуч (Fill), фото 460 праворуч, gap split-gap; текст по центру висоти фото.
-   Рядки 1fr зверху й знизу центрують пару «вступ + факти» біля фото */
 .about-hero__inner {
   display: grid;
   grid-template-columns: 1fr 460px;
@@ -41,20 +32,16 @@
   grid-row: 3;
 }
 
-/* Лід — body/lead, text-secondary */
 .about-hero__lead {
   color: var(--color-text-secondary);
   font-size: var(--font-size-lead);
   line-height: var(--line-height-lead);
 }
 
-/* Рядок фактів — body/base, text-secondary */
 .about-hero__facts {
   color: var(--color-text-secondary);
 }
 
-/* Фото: кадр 460 × 500 (Mobile 358 × 390 — та сама пропорція), фон accent-tint,
-   портрет без фону притиснутий до низу на всю ширину. Рамка Selection — постійна, по краю кадру */
 .about-hero__photo {
   position: relative;
   display: flex;
@@ -70,8 +57,6 @@
   height: auto;
 }
 
-/* Нижче 1024 — стовпчиком, як у Figma Mobile: вступ → фото → факти.
-   Вступ → фото 24 (row-gap), фото → факти 32 (Column, 710:22708) */
 @media (width < 1024px) {
   .about-hero__inner {
     grid-template-columns: 1fr;
@@ -85,7 +70,6 @@
     grid-row: auto;
   }
 
-  /* На планшеті колонка широка: текст — не ширше layout/reading, фото — не більше за Desktop (460) */
   .about-hero__intro {
     max-width: var(--layout-reading);
   }
@@ -95,7 +79,7 @@
   }
 
   .about-hero__facts {
-    margin-top: var(--space-8); /* 24 row-gap + 8 = 32, як Column у Figma */
+    margin-top: var(--space-8);
   }
 }
 

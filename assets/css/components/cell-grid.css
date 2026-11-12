@@ -1,34 +1,20 @@
-/* ==========================================================================
-   cell-grid.css — фон секції Contact: сітка з дрібних клітинок (15.10, Настя)
-   Родич column-grid у hero: ті самі тонкі лінії accent, але не колонки, а клітинки
-   48 × 48 (space/48, кратні 8-px сітці). Клітинка під курсором підсвічується,
-   як колонка в hero, і повільно гасне, коли курсор іде далі — за мишею лишається слід.
-   Декоративна, aria-hidden, без pointer-events.
-   Розмітка: <div class="cell-grid" aria-hidden="true"></div> першим у секції
-   з position: relative. Підсвітки (<span>) створює assets/js/cell-grid.js.
-   ========================================================================== */
 
 .cell-grid {
   --cell-size: var(--space-48);
   --grid-line-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
-  --cell-highlight: color-mix(in srgb, var(--color-accent) 6%, transparent); /* клітинка під курсором */
+  --cell-highlight: color-mix(in srgb, var(--color-accent) 6%, transparent);
   position: absolute;
   inset: 0;
-  z-index: -1; /* під текстом і кнопками; секція має isolation: isolate */
+  z-index: -1;
   overflow: hidden;
-  /* Лінія ліворуч і згори кожної клітинки; плитка по центру — середня клітинка
-     стоїть рівно на осі секції, як і текст */
   background-image:
     linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
   background-size: var(--cell-size) var(--cell-size);
   background-position: center top;
-  /* Без маски-овалу (11.11, Настя): сітка рівна на всю секцію, як у Figma
-     (шар «Mask / radial fade» тепер суцільний). Раніше овал ховав сітку під текстом */
   pointer-events: none;
 }
 
-/* Клітинка під курсором: у Contact заливка accent 6 %, як колонка hero (column-grid.css) */
 .cell-grid span {
   position: absolute;
   left: 0;
@@ -45,24 +31,17 @@
   transition-duration: var(--duration-fast);
 }
 
-/* ---------- Варіант Dots: From design to code (Figma 647:21914, hifi-case п. 8) ----------
-   Замість ліній — точки 2 × 2 у перетинах тієї самої плитки 48 × 48, on-ink 20 %.
-   Підсвітка — code-token 16 % */
 .cell-grid--dots {
   --grid-dot-color: color-mix(in srgb, var(--color-on-ink) 20%, transparent);
   --cell-highlight: color-mix(in srgb, var(--color-code-token) 16%, transparent);
-  /* Точка в лівому верхньому куті клітинки — там, де в Contact перетинаються лінії */
-  background-image: radial-gradient(circle at 1px 1px, var(--grid-dot-color) 1px, transparent 1.5px); /* check:ignore — точка 2 × 2 з Figma */
+  background-image: radial-gradient(circle at 1px 1px, var(--grid-dot-color) 1px, transparent 1.5px); /* check:ignore */
 }
 
-/* Dots на світлому (Light): фон «Кейсу у роботі», Figma Dot grid 699:21648 / 699:22555.
-   Точки — колір тексту 20 %, підсвітка клітинки — accent 16 % (рішення Насті 22.10) */
 .cell-grid--light {
   --grid-dot-color: color-mix(in srgb, var(--color-text) 20%, transparent);
   --cell-highlight: color-mix(in srgb, var(--color-accent) 16%, transparent);
 }
 
-/* Зменшити рух: у Dots сліду немає — лише статичні точки (spec п. 8) */
 @media (prefers-reduced-motion: reduce) {
   .cell-grid--dots span {
     display: none;

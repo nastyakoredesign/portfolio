@@ -1,13 +1,3 @@
-/* ==========================================================================
-   measure.css — вимірювання відстаней у hero (як Alt у Figma)
-   Figma: measure/v, measure/h, tick, pill (148:1051 … 148:1070) у кадрі
-   «state 3 · hover» (148:200). Spec: docs/specs/hero-v2-spec.md, розділ 4.4.
-   Декоративний шар (aria-hidden), лише Desktop з мишею.
-
-   Що малює CSS: лінію 1 px accent, риски 9 px на кінцях, pill із числом.
-   Що рахує assets/js/hero-measure.js: відстані з getBoundingClientRect() і
-   позицію кожної лінії (--x, --y, --len). Число — справжнє, не з макета.
-   ========================================================================== */
 
 .measure {
   position: absolute;
@@ -21,8 +11,6 @@
   }
 }
 
-/* Лінія: коробка 9 px завширшки (вертикальна) або заввишки (горизонтальна);
-   риски на кінцях — її рамки, сама лінія — ::before по центру */
 .measure__item {
   --measure-color: var(--color-accent);
   position: absolute;
@@ -66,15 +54,13 @@
   height: 1px;
 }
 
-/* Pill: accent, on-accent, Inter Medium 11 px, radius 4, padding 2 / 6 (spec 4.4).
-   Вертикальна лінія — справа від неї; горизонтальна — над нею по центру. */
 .measure__pill {
   position: absolute;
-  padding: 2px 6px;     /* check:ignore — з Figma (148:1054), токенів 2 і 6 немає */
-  border-radius: 4px;   /* check:ignore — з Figma, токена 4 немає */
+  padding: 2px 6px;     /* check:ignore */
+  border-radius: 4px;   /* check:ignore */
   background: var(--measure-color);
   color: var(--color-on-accent);
-  font-size: 0.6875rem; /* check:ignore — 11 px, декоративний підпис (spec, виняток) */
+  font-size: 0.6875rem; /* check:ignore */
   font-weight: 500;
   line-height: 1.2;
   white-space: nowrap;

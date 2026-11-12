@@ -1,41 +1,23 @@
-/* ==========================================================================
-   case-hero.css — перший екран сторінки кейсу
-   Figma: Case/Hero у «Case — Desktop 1440» (162:993) і «Case — Mobile 390» (142:19).
-   Spec: docs/specs/hifi-case.md → «Hero кейсу: фон і анімація».
-   Прохід 3 (21.10): лінійки з діапазоном по межах медіа (rulers.css + rulers.js), інтро колонок
-   (column-grid.css), рамка одразу + маркери «хоп» разом із лінійками, пігулка, реальне число в пігулці (hero-size.js),
-   підсвітка колонки під курсором (hero-cursor.js) і вимірювання на наведенні (hero-measure.js).
-   Згасання при скролі не робимо — як на Головній (рішення 15.10).
-   ========================================================================== */
 
-/* ---------- Hero: Auto Layout vertical, фон surface ---------- */
 .case-hero {
   position: relative;
   padding-top: var(--space-48);
   padding-bottom: var(--space-64);
   background: var(--color-surface);
-  /* Шари медіа з тінню ширші за кадр (Revive: 106–109 %) — обрізаємо лише по краях екрана,
-     інакше горизонтальний скрол на 400–1280 (Настя 09.11). clip, не hidden: тінь униз лишається */
   overflow-x: clip;
 }
 
-/* ---------- Фон (декоративний шар, aria-hidden) ----------
-   Колонки-лінії — спільний components/column-grid.css: 12 на Desktop, 4 на Mobile.
-   Колір text 8 % (на Головній — accent 16 %, свідомо, рішення 05.10).
-   Лінійки (rulers.css) — лише Desktop, колонки стартують під верхньою лінійкою (y 20).
-   На кейсі лінійки й підсвітка колонки сірі, не кольорові (spec): діапазон text 7 %,
-   підписи меж text-secondary, колонка під курсором text 4 %. */
 .case-hero__bg {
   --grid-line-color: color-mix(in srgb, var(--color-text) 8%, transparent);
   position: absolute;
   inset: 0;
-  overflow: hidden; /* лінійки в інтро виїжджають з-під хедера й зліва */
+  overflow: hidden;
   pointer-events: none;
 }
 
 @media (width >= 768px) {
   .case-hero {
-    --ruler-size: 20px; /* check:ignore — товщина лінійки з Figma (151:8), токена немає */
+    --ruler-size: 20px; /* check:ignore */
   }
 
   .case-hero__bg {
@@ -55,15 +37,13 @@
   background-color: color-mix(in srgb, var(--color-text) 4%, transparent);
 }
 
-/* ---------- Вміст: Hero/Column — заголовний блок → медіа, gap 48 ---------- */
 .case-hero__content {
-  position: relative; /* над фоном */
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-48);
 }
 
-/* Case/Title block: усе по центру, gap 24 */
 .case-hero__head {
   display: flex;
   flex-direction: column;
@@ -72,32 +52,23 @@
   text-align: center;
 }
 
-/* Lead: body/lead text-secondary. Ширина 900 з Figma (токена немає): у 760 схвалений лід
-   (127 символів) ішов у 3 рядки, у 900 — у 2 (рішення Насті 16.10). balance ділить рядки рівно */
 .case-hero__lead {
-  max-width: 900px; /* check:ignore — ширина з Figma, без токена */
+  max-width: 900px; /* check:ignore */
   color: var(--color-text-secondary);
   font-size: var(--font-size-lead);
   line-height: var(--line-height-lead);
   text-wrap: balance;
 }
 
-/* Варіант --wide (кейс DS): лід довший за Centology. Figma 811:39622 — 1058 px,
-   звичайне перенесення (без балансування): «…on the same» / «components, with…» */
 .case-hero__lead--wide {
-  max-width: 1058px; /* check:ignore — ширина з Figma, без токена */
+  max-width: 1058px; /* check:ignore */
   text-wrap: wrap;
 }
 
-/* ---------- Головне медіа + рамка Selection у кольорі проєкту ---------- */
 .case-hero__frame {
   position: relative;
 }
 
-/* Кадр медіа росте пропорційно: Desktop 1200 : 640, Mobile 358 : 240 (як у Figma).
-   Висоти немає, лише aspect-ratio; size/case-hero-media лишається дзеркалом Figma.
-   placeholder — фон, поки картинка вантажиться (або в кадрі без медіа).
-   display: block — бо кадр буває <picture>, а той за замовчуванням рядковий. */
 .case-hero__media {
   display: block;
   overflow: clip;
@@ -107,7 +78,6 @@
   background: var(--color-placeholder);
 }
 
-/* Медіа як <picture> зі скріном: заповнює кадр, радіус бере від кадру */
 .case-hero__media img {
   display: block;
   width: 100%;
@@ -116,9 +86,6 @@
   object-fit: cover;
 }
 
-/* Варіант Bare (кейс DS, Hero B 936:64020 / 936:68459; так само задумано для Revive):
-   композиція з тінями на прозорому фоні — без заливки, радіуса й обрізання; рамки Selection немає.
-   Кадр — Desktop 1200 : 706, Mobile 358 : 249 (як у Figma) */
 .case-hero__media--bare {
   position: relative;
   overflow: visible;
@@ -127,9 +94,6 @@
   background: none;
 }
 
-/* Шар стосу — один екран із тінню на весь кадр, шари лежать один на одному (як Frame без
-   Auto Layout у Figma). Desktop: картинка 1200 × 754 — тінь виходить на 24 над кадром
-   (24 / 706 = 3,4 %), бо у Figma стос притиснуто до верху кадру, а тінь не обрізано */
 .case-hero__layer {
   position: absolute;
   top: -3.4%;
@@ -141,25 +105,17 @@
   border-radius: 0;
 }
 
-/* Декор навколо медіа — поза потоком, не зсуває розкладку */
 .case-hero__marks {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-/* Рамка точно по межах медіа, stroke назовні; колір — accent сайту з selection.css
-   (не колір кейсу: рішення Насті 19.10, компонент Selection 918:57796) */
 .case-hero__marks .selection {
   --selection-inset-x: var(--selection-stroke);
   --selection-inset-y: var(--selection-stroke);
 }
 
-/* ---------- Поява (рішення Насті 21.10): рамка одразу, маркери «хоп» ----------
-   Рамка стоїть на місці з першого кадру. Чотири маркери одночасно з появою лінійок
-   (rulers.css, старт без затримки) виростають з нуля з легким перельотом — як «хоп».
-   Пігулка розміру проявляється, коли маркери виросли. Reduced-motion: base.css скорочує
-   анімації — усе одразу на місці. */
 .case-hero__marks .selection i {
   animation: case-handle-pop var(--duration-slow) var(--ease-out) backwards;
 }
@@ -174,12 +130,11 @@
   }
 }
 
-/* Пігулка розміру під медіа по центру, відступ 10 (Mobile 6) */
 .case-hero__size {
   position: absolute;
-  top: calc(100% + 10px); /* check:ignore — відступ з Figma (162:1081) */
+  top: calc(100% + 10px); /* check:ignore */
   left: 50%;
-  padding: 2px 6px; /* check:ignore — пігулка розміру, декоративний виняток зі spec */
+  padding: 2px 6px; /* check:ignore */
   border-radius: 4px; /* check:ignore */
   background: var(--color-accent);
   color: var(--color-on-accent);
@@ -202,7 +157,6 @@
   display: none;
 }
 
-/* ---------- Мод Mobile (≤ 767 px) ---------- */
 @media (width < 768px) {
   .case-hero {
     padding-bottom: var(--space-24);
@@ -212,7 +166,6 @@
     aspect-ratio: 358 / 240;
   }
 
-  /* Mobile: шар 358 × 249 = кадр, тінь уже всередині */
   .case-hero__media--bare {
     aspect-ratio: 358 / 249;
   }
@@ -222,7 +175,7 @@
   }
 
   .case-hero__size {
-    top: calc(100% + 6px); /* check:ignore — з Figma (162:1313) */
+    top: calc(100% + 6px); /* check:ignore */
   }
 
   .case-hero__size-desktop {
@@ -234,9 +187,6 @@
   }
 }
 
-/* Варіант Revive (Figma: Desktop 934:61364, Mobile 934:62419): кадр 1200 : 640 (Mobile 358 : 236);
-   картинка більша за кадр і лежить зі зсувом −40 / −32 (Mobile −16 / −12), бо тримає тіні.
-   Відсотки — геометрія кадру, не відступи */
 .case-hero__media--revive {
   aspect-ratio: 1200 / 640;
 }

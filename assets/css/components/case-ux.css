@@ -1,12 +1,4 @@
-/* ==========================================================================
-   case-ux.css — секція UX research: шапка, Journey map, How might we…
-   Figma: case.ux (779:28136 Desktop, 780:28157 Mobile). Копі — у приватних нотатках кейсу.
-   Пункти HMW — case-list.css, посилання — text-link.css.
-   Журні — одна розмітка: <ol> етапів, у кожному назва, схема (інлайн SVG) і <dl> Doing / Friction / Opportunity.
-   Від 1024 — сітка «мітки рядків + 6 етапів»: етап займає стовпчик, рядки вирівнює subgrid.
-   ========================================================================== */
 
-/* Фон bg (Настя 25.10). Padding space/section (96 / 64). Column: шапка → журні → HMW, gap 48 */
 .case-ux {
   padding-block: var(--space-section);
   background: var(--color-bg);
@@ -18,21 +10,18 @@
   gap: var(--space-48);
 }
 
-/* Head: заголовок «UX research» → лід, gap 24 */
 .case-ux__head {
   display: flex;
   flex-direction: column;
   gap: var(--space-24);
 }
 
-/* body/case, ширина рядка — layout/reading (760) */
 .case-ux__lead {
   max-width: var(--layout-reading);
   font-size: var(--font-size-body-case);
   line-height: var(--line-height-body-case);
 }
 
-/* Journey: підзаголовок (h3) → вміст, gap 32; HMW: підзаголовок → список, gap 24 (Figma, Настя 04.11) */
 .case-ux__journey,
 .case-ux__hmw {
   display: flex;
@@ -48,15 +37,12 @@
   margin: 0;
 }
 
-/* Підпис під журні: ui/caption, text-secondary */
 .case-ux__caption {
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
   line-height: var(--line-height-caption);
 }
 
-/* ---------- Journey: етап ----------
-   Номер — ui/caption text-secondary, назва — heading/h4, gap 4 */
 .journey__stages {
   margin: 0;
   padding: 0;
@@ -85,7 +71,6 @@
   margin: 0;
 }
 
-/* Doing — body/base text-secondary; Friction — ui/label text; Opportunity — ui/label accent */
 .journey__note--doing dd {
   color: var(--color-text-secondary);
   font-size: var(--font-size-body);
@@ -103,7 +88,6 @@
   color: var(--color-accent);
 }
 
-/* Мітки рядків і назви в <dt>: ui/caption text-secondary */
 .journey__labels span,
 .journey__note dt {
   color: var(--color-text-secondary);
@@ -111,9 +95,6 @@
   line-height: var(--line-height-caption);
 }
 
-/* ---------- Схема екрана (Figma: case.ux.journey.stages[n].screen) ----------
-   Кадр 168 × 105: bg + border, radius/media; пропорцію тримає aspect-ratio (рішення 12.10).
-   Лінії не товщають при масштабуванні (vector-effect). Рамка Selection — місце проблеми */
 .ux-screen {
   display: block;
   width: 100%;
@@ -157,10 +138,6 @@
   font-size: var(--font-size-caption);
 }
 
-/* ---------- Desktop від 1024: сітка ----------
-   Колонка міток 96 + 6 етапів. Між колонками gap 0, а відступ 16 — padding-left у клітинок:
-   так лінії між рядками йдуть суцільно на всю ширину, як у Figma (Row/Doing, Row/Friction…).
-   Рядки: назва, схема, Doing, Friction, Opportunity; між ними 16 */
 @media (width >= 1024px) {
   .journey {
     display: grid;
@@ -181,7 +158,7 @@
   }
 
   .journey__stage {
-    position: relative; /* тут лишається прихований <dt> */
+    position: relative;
     display: grid;
     grid-row: 1 / 6;
     grid-template-rows: subgrid;
@@ -201,14 +178,12 @@
     margin-left: var(--space-16);
   }
 
-  /* Лінія 1 px над кожним рядком тексту, від мітки до правого краю */
   .journey__labels span,
   .journey__note {
     padding-top: var(--space-16);
     border-top: 1px solid var(--color-border);
   }
 
-  /* Підписи рядків уже є в колонці міток — <dt> лишається для скрінрідера */
   .journey__note dt {
     position: absolute;
     width: 1px;
@@ -219,9 +194,6 @@
   }
 }
 
-/* Hover на стовпчику етапу (Настя 25.10): лише фон surface, без рамки Selection.
-   Підкладка — псевдоелемент: виходить на 8 з усіх боків від вмісту стовпчика
-   (зліва — у його 16 px відступу), тож стоїть симетрично. Лише миша */
 @media (width >= 1024px) and (hover: hover) and (pointer: fine) {
   .journey__stage {
     isolation: isolate;
@@ -243,10 +215,6 @@
   }
 }
 
-/* ---------- Нижче 1024: карусель карток, як Solutions на Mobile (Figma 782:28215) ----------
-   Ряд виходить за контейнер до країв екрана, padding-inline = carousel-inset (24), gap 12.
-   Картка: surface + border (Настя 25.10: на білій секції, як картки фактів в Outcome), radius/card, padding card-pad, gap 24; на Mobile — на всю ширину ряду
-   (від наступної видно 12), на планшеті — size/carousel-card (280). Doing у картках немає */
 @media (width < 1024px) {
   .journey {
     display: flex;
@@ -272,7 +240,6 @@
     display: none;
   }
 
-  /* Фокус на ряді: рамка всередині, бо зовнішню обрізав би край екрана */
   .journey__stages:focus-visible {
     outline-offset: -2px;
   }
@@ -289,7 +256,6 @@
     scroll-snap-align: center;
   }
 
-  /* Head: номер і назва в рядок, gap 12, по нижньому краю */
   .journey__name {
     flex-direction: row;
     align-items: baseline;
@@ -302,29 +268,23 @@
     gap: var(--space-24);
   }
 
-  /* Мітка (ui/caption) → текст, gap 4 */
   .journey__note {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
   }
 
-  /* Doing у картках немає (Figma Mobile) — після .journey__note, щоб не перебив display */
   .journey__note--doing {
     display: none;
   }
 }
 
-/* Рамка на кнопці Save — лише в картках каруселі (у Figma Desktop її немає) */
 @media (width >= 1024px) {
   .ux-screen__carousel-only {
     display: none;
   }
 }
 
-/* ---------- How might we… ----------
-   Рядок: питання (маркер ◇ + текст, gap 12) ← → Text link; gap 24, padding 8 зверху й знизу
-   (Figma 04.11; на Mobile — 16), без ліній */
 .case-ux__hmw-list {
   gap: 0;
 }
@@ -342,7 +302,6 @@
   gap: var(--space-12);
 }
 
-/* Mobile: посилання під питанням, від лівого краю (Figma 780:28157) */
 @media (width < 768px) {
   .case-ux__hmw-list li {
     flex-direction: column;
@@ -352,9 +311,6 @@
   }
 }
 
-/* ---------- Revive: 5 етапів замість 6 (Figma 910:56540) ----------
-   Схема Revive ширша: кадр 205 × 105 (Figma ux-1…5, 910:56570), viewBox 203 × 103 у розмітці.
-   У каруселі (< 1024) кадр як у Centology 168 : 105 — схема вписується по ширині (Figma Mobile 910:58233) */
 @media (width >= 1024px) {
   .journey--five {
     grid-template-columns: var(--space-96) repeat(5, 1fr);
@@ -365,7 +321,6 @@
   }
 }
 
-/* Revive у каруселі: роль із номером — дрібним рядком над назвою етапу (Настя 06.11, Figma Mobile) */
 @media (width < 1024px) {
   .journey--five .journey__name {
     flex-direction: column;
@@ -374,7 +329,6 @@
   }
 }
 
-/* Додаткові заливки схем Revive: bg без рамки (підписи кнопок), пунктир (порожні поля), роздільник */
 .ux-screen__bg { fill: var(--color-bg); }
 .ux-screen__divider { fill: var(--color-border); }
 
@@ -386,8 +340,6 @@
   vector-effect: non-scaling-stroke;
 }
 
-/* Схема модалки Add User для Process (Figma 943:66582): кадр 206 × 260, рамку малює сама схема,
-   рамка Selection виходить за кадр, тож без clip */
 .ux-screen--modal {
   aspect-ratio: 206 / 260;
   overflow: visible;

@@ -1,90 +1,52 @@
-/* ==========================================================================
-   work.css — секція Work на Головній
-   Figma: Work #work у «Home — Desktop 1440» (55:18) і «Home — Mobile 390» (66:187),
-   прогорнута карусель — 141:3. Spec: docs/specs/work-grid-v2.md
-   Desktop — сітка «featured + 2×2», Mobile — горизонтальна карусель без JS.
-   Точки під каруселлю — спільний компонент carousel-dots.css (+ carousel-dots.js).
-   ========================================================================== */
 
-/* ---------- Секція: заголовок → картки, gap 48 ----------
-   Grid з одною колонкою = Auto Layout vertical. Grid, а не flex, бо на Mobile
-   секція тягнеться на висоту екрана і віддає вільне місце рядку з картками. */
 .work {
   display: grid;
-  /* Колонка = ширина секції (Fill). Без цього вона розтягувалась би
-     під довгий ряд каруселі (Hug) і на Mobile з'являвся б скрол сторінки */
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-48);
-  padding-block: var(--space-section); /* 96 / 64 — мод Mobile перемикає tokens.css */
+  padding-block: var(--space-section);
 }
 
-/* Work/Carousel: ряд карток + точки (gap 16). На Desktop точок немає */
 .work__carousel {
   display: flex;
   flex-direction: column;
   gap: var(--space-16);
 }
 
-/* ---------- Desktop: одна сітка, 2 колонки або 1 ----------
-   Перша картка (featured) займає весь ряд, решта — 2×2.
-   Колонок стільки, скільки влазить карток шириною ≥ size/card-min-width (420):
-   від ~912 px — дві, на 768–911 (iPad у портреті) — одна, як featured.
-   Як Auto Layout з Wrap і min width у Figma — без окремого брейкпоінта.
-   Картки в ряду тягнуться до однакової висоти (stretch — за замовчуванням у grid). */
 .work__list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--size-card-min-width)), 1fr));
   gap: var(--space-24);
 }
 
-/* ---------- Мод Mobile (≤ 767 px): карусель ---------- */
 @media (width < 768px) {
-  /* Секція — на висоту екрана (svh: висота з панелями браузера, не стрибає
-     під час скролу, як і в hero). Усе вільне місце дістається каруселі (1fr). */
   .work {
     grid-template-rows: auto 1fr;
     gap: var(--space-32);
     min-height: 100svh;
   }
 
-  /* Ряд карток:
-     - на всю ширину екрана (full-bleed): скидаємо ширину й поля .container;
-     - горизонтальний скрол лише всередині ряду, картка «прилипає» до центру
-       (як Overflow scrolling: Horizontal + snap у прототипі Figma);
-     - забирає всю висоту каруселі (flex: 1), точки лишаються знизу;
-     - картка = ширина ряду без бічних відступів (Fill): росте разом з екраном
-       до брейкпоінта, на екрані одна картка + край сусідньої 12 px.
-       На 390 це рівно 342, як size/carousel-card у Figma (= 390 − 2 × inset);
-     - два спільні ряди для всіх карток: «зображення» і «текст». Текстовий —
-       за найвищою карткою, зображення — усе, що лишилось (мінімум 280,
-       size/card-media). Тож зображення однакові, а назви на одній лінії. */
   .work__list {
     display: grid;
     flex: 1;
     grid-auto-flow: column;
     grid-auto-columns: 100%;
     grid-template-columns: none;
-    /* + 1px — верхня рамка картки лежить у тому ж ряду, що й зображення */
     grid-template-rows: minmax(calc(var(--size-card-media) + 1px), 1fr) auto;
     gap: 0 var(--space-12);
     width: auto;
     margin-inline: 0;
     padding-inline: var(--layout-carousel-inset);
-    /* Ряд скролиться, тож обрізає все, що виходить за його край: маркери рамки
-       Selection виступають на 6 px. Padding дає їм місце, від'ємний margin
-       повертає картки на колишню висоту */
     padding-block: var(--space-8);
     margin-block: calc(-1 * var(--space-8));
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* смуги в Figma немає, її роль грають точки */
+    scrollbar-width: none;
   }
 
   .work__list::-webkit-scrollbar {
-    display: none; /* Safari: те саме, що scrollbar-width: none */
+    display: none;
   }
 
-  /* Картка займає обидва спільні ряди (subgrid): медіа — верхній, Card/Body — нижній */
   .work__list > .case-card {
     display: grid;
     grid-row: 1 / -1;
@@ -92,7 +54,6 @@
     scroll-snap-align: center;
   }
 
-  /* Висоту медіа задає спільний ряд, а не токен */
   .work__list .case-card__media {
     height: auto;
   }
