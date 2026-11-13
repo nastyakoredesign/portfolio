@@ -2,7 +2,7 @@
 
 Product Designer (UX/UI) with design-to-code skills. This is the source of my portfolio site.
 
-**Live:** https://nastya-korenevych.vercel.app
+**Live:** https://nastyakore.com
 
 ## How it was made
 
