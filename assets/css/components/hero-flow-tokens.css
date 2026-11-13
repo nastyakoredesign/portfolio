@@ -27,7 +27,7 @@
   --additional-red-400: #d73232;
   --status-pending: #eab400;
 
-  --hf-font: "Akkurat", "Inter", system-ui, sans-serif;
+  --hf-font: "Akkurat", "Inter", "Inter Fallback", system-ui, sans-serif;
   --hf-font-size-caption: 10px;
   --hf-font-size-small: 11px;
   --hf-font-size-body: 12px;

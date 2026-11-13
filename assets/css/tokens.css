@@ -43,8 +43,8 @@
   --color-case-revive-muted: #8156af;
 
   --font-heading: "Commissioner", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-code: "JetBrains Mono", ui-monospace, monospace;
+  --font-body: "Inter", "Inter Fallback", system-ui, sans-serif;
+  --font-code: "JetBrains Mono", "JetBrains Mono Fallback", ui-monospace, monospace;
 
   --font-size-display: 6.5rem;
   --font-size-h1: 3.5rem;

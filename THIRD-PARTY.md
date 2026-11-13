@@ -32,6 +32,10 @@ SOFTWARE.
 
 Copyright 2019 The Commissioner Project Authors, SIL Open Font License 1.1: see [`assets/fonts/OFL.txt`](assets/fonts/OFL.txt).
 
-## Inter and JetBrains Mono
+## Inter
 
-Loaded from Google Fonts, SIL Open Font License 1.1.
+Copyright 2016 The Inter Project Authors, SIL Open Font License 1.1: see [`assets/fonts/OFL-Inter.txt`](assets/fonts/OFL-Inter.txt). Hosted on this site (`assets/fonts/inter-*.woff2`, Latin and Cyrillic subsets as served by Google Fonts).
+
+## JetBrains Mono
+
+Copyright 2020 The JetBrains Mono Project Authors, SIL Open Font License 1.1: see [`assets/fonts/OFL-JetBrainsMono.txt`](assets/fonts/OFL-JetBrainsMono.txt). Hosted on this site (`assets/fonts/jetbrains-mono-*.woff2`, Latin and Cyrillic subsets as served by Google Fonts).
