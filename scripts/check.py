@@ -256,6 +256,16 @@ for p in html_files:
     for m in re.finditer(r"<[a-z][^>]*\son[a-z]+=", raw):
         err(p, raw.count("\n", 0, m.start()) + 1, "обробник on…= в HTML — CSP його заблокує, перенеси в assets/js/")
 
+# ---------------------------------------------------------------- Шрифти лише з нашого сайту (рішення 13.11)
+# Inter, JetBrains Mono і Commissioner лежать в assets/fonts/. Запит до Google Fonts — зайвий
+# сторонній сервер, і CSP його однаково заблокує.
+for p in html_files + css_files + js_files + [vercel]:
+    if not p.exists() or (UK_FROZEN and rel(p).parts[0] == "uk"):
+        continue
+    for i, line in enumerate(p.read_text(encoding="utf-8").splitlines(), 1):
+        if re.search(r"fonts\.(googleapis|gstatic)\.com", line) and "check:ignore" not in line:
+            err(p, i, "Google Fonts — шрифти беремо з assets/fonts/ (@font-face у base.css)")
+
 # ---------------------------------------------------------------- JS
 for p in js_files:
     for i, line in enumerate(p.read_text(encoding="utf-8").splitlines(), 1):

@@ -40,5 +40,5 @@ Use a local server rather than opening the file directly: pages link to each oth
 
 - **Code** (HTML, CSS, JavaScript, scripts): [MIT](LICENSE).
 - **Content** (texts, images, case study materials, CV): © 2026 Nastya Korenevych, all rights reserved. Client work is shown with permission.
-- **Font** Commissioner: SIL Open Font License 1.1, see [`assets/fonts/OFL.txt`](assets/fonts/OFL.txt).
+- **Fonts** Commissioner, Inter, JetBrains Mono: SIL Open Font License 1.1, all hosted on this site, see [`THIRD-PARTY.md`](THIRD-PARTY.md).
 - **Icons** Tabler Icons: MIT, see [`THIRD-PARTY.md`](THIRD-PARTY.md).
